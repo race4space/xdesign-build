@@ -612,29 +612,54 @@ class XDesign{
 
       //$this->fn_addEcho("START fn_sendOTPMail");
 
-        $to = $this->AuthorizeUserEmail; // note the comma
+      /*
+      //WORKING COMMAND LINE
+      echo "email body" | mail -s "email subject" nameto@domain.com
+      //*/
+      
 
-        // Subject
-        $subject = 'One Time Pass';
+      /*
+      //WORKING TELNET
+      MAIL from: neverseen@domain.com
+      RCPT to: chris.owtram@gmail.com
+      DATA  
+      from: marketing@myrsstestdomain.com
+      to: displayto@domain.com
+      Subject: abc
+      .
+      //*/                
 
-        // Message
-        $message = <<<END
+      /*
+      $message = <<<END
         <html><head><title>One Time Passcode</title></head><body><p>Here is your One Time Pass:</p><p>$this->AuthorizeSentPass</p></body></html>
         END;
+      //*/        
 
+      $to      = 'chris.owtram@gmail.com';
+      $subject = 'the subject';
+      $message = 'hello';
+      $headers = 'From: marketing@myrsstestdomain.com' . "\r\n" .
+      'Reply-To: marketing@myrsstestdomain.com' . "\r\n" .
+      'X-Mailer: PHP/' . phpversion();
+      //ini_set ( "SMTP", "smtp-server.example.com" );
+      //date_default_timezone_set('America/New_York');
+      //mail($to, $subject, $message, $headers);
+
+/*
+
+        $to = $this->AuthorizeUserEmail; // note the comma
+        $subject = 'One Time Pass';
+        $message = "Test 123";
         // To send HTML mail, the Content-type header must be set
-        $headers[] = 'MIME-Version: 1.0';
-        $headers[] = 'Content-type: text/html; charset=iso-8859-1';
-
-        // Additional headers        
-        $headers[] = "To: User <$this->AuthorizeUserEmail>";
-        $headers[] = 'From: Application <marketing@myrsstestdomain.com>';
-        //$headers[] = 'Cc: mycode.buzz@gmail.com';    
-        $this->fn_addEcho("headers: .".var_dump($headers));
-
-        // Mail it
+        //$headers[] = 'MIME-Version: 1.0';
+        //$headers[] = 'Content-type: text/html; charset=iso-8859-1';        
+        $headers[] = 'from: Application <marketing@myrsstestdomain.com>';
+        $headers[] = "to: User <$this->AuthorizeUserEmail>";                
         //$bln_value=mail($to, $subject, $message, implode("\r\n", $headers));
         //$this->fn_addEcho("sendOTPMail: ".$bln_value);
+        //*/
+
+
     }   
 
 
