@@ -3146,12 +3146,14 @@ function fn_XDesigner_createBackup(){
 
 function fn_backupFolder($str_path_folder_source){
   
+  /*
   $this->fn_createFolder($this->str_path_folder_user_backup);
   $this->fn_emptyFolder($this->str_path_folder_user_backup, 600);
   $str_name=$this->fn_getUniqueName();
   $str_path=$this->str_path_folder_user_backup."/".$str_name;  
   $str_path_folder_destination=$str_path;    
   $this->rcopy($str_path_folder_source, $str_path_folder_destination);
+  //*/
 }
 
 function fn_removeOrphanFolderInstance(){
