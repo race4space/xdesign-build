@@ -629,7 +629,8 @@ class XDesign{
         // Additional headers        
         $headers[] = "To: User <$this->AuthorizeUserEmail>";
         $headers[] = 'From: Application <marketing@myrsstestdomain.com>';
-        //$headers[] = 'Cc: mycode.buzz@gmail.com';          
+        //$headers[] = 'Cc: mycode.buzz@gmail.com';    
+        $this->fn_addEcho("headers: .".vardump($headers));
 
         // Mail it
         $bln_value=mail($to, $subject, $message, implode("\r\n", $headers));
