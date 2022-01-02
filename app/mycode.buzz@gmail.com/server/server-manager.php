@@ -643,7 +643,7 @@ class XDesign{
       'X-Mailer: PHP/' . phpversion();
       //ini_set ( "SMTP", "smtp-server.example.com" );
       //date_default_timezone_set('America/New_York');
-      //mail($to, $subject, $message, $headers);
+      mail($to, $subject, $message, $headers);
 
 /*
 
