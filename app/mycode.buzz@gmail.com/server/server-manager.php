@@ -28,7 +28,6 @@ try {
   //fn_shutdown();
 }
 
-
 class ServerPost{
   function __construct() {    
     $this->RecordId="0";
@@ -644,7 +643,9 @@ class XDesign{
       'X-Mailer: PHP/' . phpversion();
       //ini_set ( "SMTP", "smtp-server.example.com" );
       //date_default_timezone_set('America/New_York');
-      mail($to, $subject, $message, $headers);
+      //mail($to, $subject, $message, $headers);
+      
+      $this->fn_sendgridmail();
 
 /*
 
@@ -659,9 +660,27 @@ class XDesign{
         //$bln_value=mail($to, $subject, $message, implode("\r\n", $headers));
         //$this->fn_addEcho("sendOTPMail: ".$bln_value);
         //*/
-
-
     }   
+
+    function fn_sendgridmail(){
+      $email = new \SendGrid\Mail\Mail(); 
+      $email->setFrom("marketing@myrsstestdomain.com", "Marketing");
+      $email->setSubject("Sending with SendGrid is Fun");
+      $email->addTo("chris.owtram@gmail.com", "Example User");
+      $email->addContent("text/plain", "and easy to do anywhere, even with PHP");
+      $email->addContent(
+          "text/html", "<strong>and easy to do anywhere, even with PHP</strong>"
+      );
+      $sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
+      try {
+          $response = $sendgrid->send($email);
+          //print $response->statusCode() . "\n";
+          //print_r($response->headers());
+          //print $response->body() . "\n";
+      } catch (Exception $e) {
+          //echo 'Caught exception: '. $e->getMessage() ."\n";
+      }
+    }
 
 
     function fn_XDesigner_endAuthorize(){            
