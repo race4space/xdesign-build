@@ -610,7 +610,7 @@ class XDesign{
     } 
     function fn_sendOTPMail(){     
 
-      //$this->fn_addEcho("START fn_sendOTPMail");
+      $this->fn_addEcho("START fn_sendOTPMail");
 
       /*
       //WORKING COMMAND LINE
@@ -644,7 +644,7 @@ class XDesign{
       //ini_set ( "SMTP", "smtp-server.example.com" );
       //date_default_timezone_set('America/New_York');
       //mail($to, $subject, $message, $headers);
-      
+
       $this->fn_sendgridmail();
 
 /*
@@ -666,7 +666,7 @@ class XDesign{
       $email = new \SendGrid\Mail\Mail(); 
       $email->setFrom("marketing@myrsstestdomain.com", "Marketing");
       $email->setSubject("Sending with SendGrid is Fun");
-      $email->addTo("chris.owtram@gmail.com", "Example User");
+      $email->addTo("joe.bloggs@myrsstestdomain.com", "Example User");
       $email->addContent("text/plain", "and easy to do anywhere, even with PHP");
       $email->addContent(
           "text/html", "<strong>and easy to do anywhere, even with PHP</strong>"
