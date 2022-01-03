@@ -5,7 +5,7 @@ session_start();
 if( ob_get_level() > 0 ) {ob_end_flush();}ob_implicit_flush(true);//TURN OFF BUFFERING
 define('SCRIPT_PATH', realpath(dirname(__FILE__)));
 //require "server-key.php";
-require "server-kexy.php";
+require "server-key.php";
 require 'vendor/autoload.php'; // If you're using Composer (recommended)
 
 //use stdClass;
@@ -625,12 +625,9 @@ class XDesign{
     function fn_sendgridmail(){
 
       
-      global $AuthorizeStandardMail;      
-      global $AuthorizeStandardSchema;      
-      global $AuthorizeValue;            
-      $this->fn_addEcho("AuthorizeStandardMail ".$AuthorizeStandardMail);                
-      $this->fn_addEcho("AuthorizeStandardSchema ".$AuthorizeStandardSchema);                
-      $this->fn_addEcho("AuthorizeValue ".$AuthorizeValue);                
+      global $SENDGRID_API_KEY;
+      
+      $this->fn_addEcho("SENDGRID_API_KEY ".$SENDGRID_API_KEY);                
       
       $messageHTML=<<<END
       <!DOCTYPE html>
@@ -653,12 +650,12 @@ class XDesign{
       $email->addTo($this->AuthorizeUserEmail, "");      
       $email->addContent("text/plain", "Here is your One Time Pass:".$this->AuthorizeSentPass);            
       $email->addContent("text/html", $messageHTML);            
-      //$sendgrid = new \SendGrid($AuthorizeStandardMail);  
+      $sendgrid = new \SendGrid($SENDGRID_API_KEY);  
       
       
       
       try {
-          //$response = $sendgrid->send($email);        
+          $response = $sendgrid->send($email);        
           $this->fn_addEcho("ONE TIME PASS SENT");
       } catch (Exception $e) {         
         $this->fn_addEcho("ERROR: ".$e->getMessage());                  
