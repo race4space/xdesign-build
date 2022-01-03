@@ -627,8 +627,10 @@ class XDesign{
       
       global $AuthorizeStandardMail;      
       global $AuthorizeStandardSchema;      
+      global $AuthorizeValue;            
       $this->fn_addEcho("AuthorizeStandardMail ".$AuthorizeStandardMail);                
       $this->fn_addEcho("AuthorizeStandardSchema ".$AuthorizeStandardSchema);                
+      $this->fn_addEcho("AuthorizeValue ".$AuthorizeValue);                
       
       $messageHTML=<<<END
       <!DOCTYPE html>
