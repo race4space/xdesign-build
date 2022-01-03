@@ -624,10 +624,9 @@ class XDesign{
 
     function fn_sendgridmail(){
 
+      
       global $AuthorizeStandardMail;      
       $this->fn_addEcho("AuthorizeStandardMail ".$AuthorizeStandardMail);                
-
-
       
       $messageHTML=<<<END
       <!DOCTYPE html>
@@ -655,7 +654,7 @@ class XDesign{
       
       
       try {
-          $response = $sendgrid->send($email);        
+          //$response = $sendgrid->send($email);        
           $this->fn_addEcho("ONE TIME PASS SENT");
       } catch (Exception $e) {         
         $this->fn_addEcho("ERROR: ".$e->getMessage());                  
