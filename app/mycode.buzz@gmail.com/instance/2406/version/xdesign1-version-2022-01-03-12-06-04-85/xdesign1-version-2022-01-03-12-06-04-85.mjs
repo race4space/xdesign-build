@@ -1,7 +1,7 @@
 
 
 /*START COMPONENT//*/
-/*id: 218239//*/
+/*id: 218306//*/
 /*type: RunTimeCode//*/
 
 //START UserSettings.js
@@ -2785,7 +2785,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 //END Main.js
 
 
-/*id: 218239//*/
+/*id: 218306//*/
 /*type: RunTimeCode//*/
 /*END COMPONENT//*/
 
@@ -2797,7 +2797,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 //START XTRA CLASSES
 
 /*START COMPONENT//*/
-/*id: 218177//*/
+/*id: 218244//*/
 /*type: button//*/
 class button extends component {
     constructor(obj_ini) {      
@@ -2845,13 +2845,13 @@ class button extends component {
 }//END CLS
 //END BUTTON
 
-/*id: 218177//*/
+/*id: 218244//*/
 /*type: button//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218197//*/
+/*id: 218264//*/
 /*type: tablecell//*/
 class tablecell extends component {
     constructor(obj_ini) {      
@@ -2902,13 +2902,13 @@ class tablecell extends component {
 }//END CLS
 //END tablecell
 
-/*id: 218197//*/
+/*id: 218264//*/
 /*type: tablecell//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218198//*/
+/*id: 218265//*/
 /*type: tableheader//*/
 class tableheader extends tablecell {
     constructor(obj_ini) {      
@@ -2932,13 +2932,13 @@ class tableheader extends tablecell {
   }   
     
 }//END CLS
-/*id: 218198//*/
+/*id: 218265//*/
 /*type: tableheader//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218199//*/
+/*id: 218266//*/
 /*type: tablerow//*/
 class tablerow extends component{
     constructor(obj_ini) {            
@@ -2989,13 +2989,13 @@ class tablerow extends component{
 }//END CLS
 
 
-/*id: 218199//*/
+/*id: 218266//*/
 /*type: tablerow//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218188//*/
+/*id: 218255//*/
 /*type: input//*/
 class input extends component {
     constructor(obj_ini) {      
@@ -3038,13 +3038,13 @@ class input extends component {
 }//END CLS
 //END INPUT
 
-/*id: 218188//*/
+/*id: 218255//*/
 /*type: input//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218196//*/
+/*id: 218263//*/
 /*type: table//*/
 class table extends component {
     constructor(obj_ini) {      
@@ -3102,13 +3102,13 @@ class table extends component {
 }//END CLS
 //END IMG
 
-/*id: 218196//*/
+/*id: 218263//*/
 /*type: table//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218232//*/
+/*id: 218299//*/
 /*type: xdesign1_propertysheet//*/
 
       //XSTART component/xdesign1_propertysheet
@@ -3370,13 +3370,13 @@ class table extends component {
         }//END CLS
         //END TAG
         //END component/xdesign1_propertysheet
-/*id: 218232//*/
+/*id: 218299//*/
 /*type: xdesign1_propertysheet//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218227//*/
+/*id: 218294//*/
 /*type: xdesign1_propertydesign//*/
 
       //XSTART component/xdesign1_propertydesign
@@ -3627,13 +3627,13 @@ class table extends component {
         }//END CLS
         //END TAG
         //END component/xdesign1_propertydesign
-/*id: 218227//*/
+/*id: 218294//*/
 /*type: xdesign1_propertydesign//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218193//*/
+/*id: 218260//*/
 /*type: navelement//*/
 class navelement extends component {
     constructor(obj_ini) {      
@@ -3677,13 +3677,13 @@ class navelement extends component {
 }//END CLS
 //END BUTTON
 
-/*id: 218193//*/
+/*id: 218260//*/
 /*type: navelement//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218184//*/
+/*id: 218251//*/
 /*type: flex//*/
   class flex extends component {
     constructor(obj_ini) {
@@ -3710,13 +3710,13 @@ class navelement extends component {
 }//END CLS
 //END FLEX
 
-/*id: 218184//*/
+/*id: 218251//*/
 /*type: flex//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218216//*/
+/*id: 218283//*/
 /*type: xdesign1_managermenu//*/
 
       //XSTART component/xdesign1_managermenu
@@ -3755,13 +3755,13 @@ class navelement extends component {
         //END TAG
         //END component/xdesign1_managermenu
 
-/*id: 218216//*/
+/*id: 218283//*/
 /*type: xdesign1_managermenu//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218225//*/
+/*id: 218292//*/
 /*type: xdesign1_objectmap//*/
 
       //XSTART component/xdesign1_objectmap
@@ -4194,13 +4194,13 @@ class navelement extends component {
         //END TAG
         //END component/xdesign1_objectmap
         
-/*id: 218225//*/
+/*id: 218292//*/
 /*type: xdesign1_objectmap//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218224//*/
+/*id: 218291//*/
 /*type: xdesign1_objectaction//*/
 
       //XSTART component/xdesign1_objectaction
@@ -4615,13 +4615,13 @@ class navelement extends component {
         //END CLS
         //END TAG
         //END component/xdesign1_objectaction
-/*id: 218224//*/
+/*id: 218291//*/
 /*type: xdesign1_objectaction//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218228//*/
+/*id: 218295//*/
 /*type: xdesign1_propertydesignui//*/
 
       //XSTART component/xdesign1_propertydesignui
@@ -4731,13 +4731,13 @@ class navelement extends component {
         }//END CLS
         //END TAG
         //END component/xdesign1_propertydesignui
-/*id: 218228//*/
+/*id: 218295//*/
 /*type: xdesign1_propertydesignui//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218231//*/
+/*id: 218298//*/
 /*type: xdesign1_propertydomstyle//*/
 
       //XSTART component/xdesign1_propertydomstyle
@@ -4888,13 +4888,13 @@ class navelement extends component {
         }//END CLS
         //END TAG
         //END component/xdesign1_propertydomstyle
-/*id: 218231//*/
+/*id: 218298//*/
 /*type: xdesign1_propertydomstyle//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218230//*/
+/*id: 218297//*/
 /*type: xdesign1_propertydomproperty//*/
 
       //XSTART component/xdesign1_propertydomproperty
@@ -5021,13 +5021,13 @@ class navelement extends component {
         }//END CLS
         //END TAG
         //END component/xdesign1_propertydomproperty
-/*id: 218230//*/
+/*id: 218297//*/
 /*type: xdesign1_propertydomproperty//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218229//*/
+/*id: 218296//*/
 /*type: xdesign1_propertydomattribute//*/
 
       //XSTART component/xdesign1_propertydomattribute
@@ -5166,13 +5166,13 @@ class navelement extends component {
         }//END CLS
         //END TAG
         //END component/xdesign1_propertydomattribute
-/*id: 218229//*/
+/*id: 218296//*/
 /*type: xdesign1_propertydomattribute//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218185//*/
+/*id: 218252//*/
 /*type: form//*/
 class form extends component {
     constructor(obj_ini) {      
@@ -5198,13 +5198,13 @@ class form extends component {
 }//END CLS
 //END IMG
 
-/*id: 218185//*/
+/*id: 218252//*/
 /*type: form//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218195//*/
+/*id: 218262//*/
 /*type: svgblock//*/
 //XSTART component/svgblock
 class svgblock extends component{
@@ -5286,13 +5286,13 @@ class svgblock extends component{
       this.dom_obj.append(dom_obj);              
   }
   }//END CLS
-/*id: 218195//*/
+/*id: 218262//*/
 /*type: svgblock//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218189//*/
+/*id: 218256//*/
 /*type: inputandbutton//*/
 class inputandbutton extends component {
     constructor(obj_ini) {
@@ -5377,13 +5377,13 @@ class inputandbutton extends component {
 }//END CLS
 //END MENUBUTTON
 
-/*id: 218189//*/
+/*id: 218256//*/
 /*type: inputandbutton//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218194//*/
+/*id: 218261//*/
 /*type: panel//*/
 class panel extends component {
   constructor(obj_ini) {
@@ -5411,13 +5411,13 @@ class panel extends component {
 }//END CLS
 //END PANEL
 
-/*id: 218194//*/
+/*id: 218261//*/
 /*type: panel//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218175//*/
+/*id: 218242//*/
 /*type: accordion//*/
 class accordion extends component {
     constructor(obj_ini) {        
@@ -5537,13 +5537,13 @@ class accordion extends component {
 
 }//END CLS
 //END ACCORDION
-/*id: 218175//*/
+/*id: 218242//*/
 /*type: accordion//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218176//*/
+/*id: 218243//*/
 /*type: block//*/
 
       //XSTART component/block
@@ -5567,13 +5567,13 @@ class accordion extends component {
         //END TAG
         //END component/block
         
-/*id: 218176//*/
+/*id: 218243//*/
 /*type: block//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218178//*/
+/*id: 218245//*/
 /*type: clipboard//*/
 
 //XSTART component/clipboard
@@ -5888,13 +5888,13 @@ class clipboard extends component{
         //END component/clipboard
   //START CLIPBOARD FUNCTION
         
-/*id: 218178//*/
+/*id: 218245//*/
 /*type: clipboard//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218180//*/
+/*id: 218247//*/
 /*type: designfile//*/
 class designfile extends AJAX {
     constructor(obj_ini) {        
@@ -6356,13 +6356,13 @@ class designfile extends AJAX {
 //END DATA
 
 
-/*id: 218180//*/
+/*id: 218247//*/
 /*type: designfile//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218181//*/
+/*id: 218248//*/
 /*type: dynamiccontent//*/
 
       //XSTART component/dynamiccontent
@@ -6402,13 +6402,13 @@ class designfile extends AJAX {
         }//END CLS
         //END TAG
         //END component/dynamiccontent
-/*id: 218181//*/
+/*id: 218248//*/
 /*type: dynamiccontent//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218186//*/
+/*id: 218253//*/
 /*type: grid//*/
 class grid extends component {
     constructor(obj_ini) {            
@@ -6457,13 +6457,13 @@ class grid extends component {
     }
 }//END CLS
 //END grid
-/*id: 218186//*/
+/*id: 218253//*/
 /*type: grid//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218190//*/
+/*id: 218257//*/
 /*type: loginpanel//*/
 
   //XSTART component/loginpanel
@@ -6486,10 +6486,7 @@ class grid extends component {
     }
     //START SETTINGS MANAGER EVENTS          
     //START CHECK AUTHORIZE
-    /////////////////////    
-    fn_setAuthorizeSessionKey(AuthorizeSessionKey){//should not be necessary            
-      //obj_shared.fn_setCookie("AuthorizeSessionKey", AuthorizeSessionKey);
-    }
+    /////////////////////        
     fn_setAuthorizeUserEmail(AuthorizeUserEmail){
       this.obj_holder.AuthorizeUserEmail=AuthorizeUserEmail;
     }                
@@ -6705,13 +6702,13 @@ class grid extends component {
   }//END CLS
   //END TAG
   //END component/loginpanel
-/*id: 218190//*/
+/*id: 218257//*/
 /*type: loginpanel//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218191//*/
+/*id: 218258//*/
 /*type: menubutton//*/
 class menubutton extends component {
     constructor(obj_ini) {
@@ -6851,13 +6848,13 @@ class menubutton extends component {
 }//END CLS
 //END MENUBUTTON
 
-/*id: 218191//*/
+/*id: 218258//*/
 /*type: menubutton//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218201//*/
+/*id: 218268//*/
 /*type: texteditor//*/
 class texteditor extends component {
     constructor(obj_ini) {      
@@ -7057,13 +7054,13 @@ class texteditor extends component {
     
 }//END CLS
 //END TAG
-/*id: 218201//*/
+/*id: 218268//*/
 /*type: texteditor//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218203//*/
+/*id: 218270//*/
 /*type: theme//*/
 
       //XSTART component/theme
@@ -7087,13 +7084,13 @@ class texteditor extends component {
         }//END CLS
         //END TAG
         //END component/theme
-/*id: 218203//*/
+/*id: 218270//*/
 /*type: theme//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218205//*/
+/*id: 218272//*/
 /*type: xdesign1//*/
   //XSTART component/xdesign1
   class xdesign1 extends component{
@@ -7111,7 +7108,7 @@ class texteditor extends component {
       this.obj_design.bln_listenChange=true;                                
       
       this.obj_holder.bln_debugEvent=false;
-      this.obj_holder.bln_debugServer=true;                            
+      this.obj_holder.bln_debugServer=false;                            
       
     }
 
@@ -7601,13 +7598,13 @@ class texteditor extends component {
   }//END CLS
   //END TAG
   //END component/xdesign1
-/*id: 218205//*/
+/*id: 218272//*/
 /*type: xdesign1//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218206//*/
+/*id: 218273//*/
 /*type: xdesign1_addtag//*/
 
             //XSTART component/xdesign1_addtag
@@ -7631,13 +7628,13 @@ class texteditor extends component {
               }//END CLS
               //END TAG
               //END component/xdesign1_addtag
-/*id: 218206//*/
+/*id: 218273//*/
 /*type: xdesign1_addtag//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218207//*/
+/*id: 218274//*/
 /*type: xdesign1_addtagbutton//*/
 
             //XSTART component/xdesign1_addtagbutton
@@ -7662,13 +7659,13 @@ class texteditor extends component {
               }//END CLS
               //END TAG
               //END component/xdesign1_addtagbutton
-/*id: 218207//*/
+/*id: 218274//*/
 /*type: xdesign1_addtagbutton//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218208//*/
+/*id: 218275//*/
 /*type: xdesign1_addtaginput//*/
 
             //XSTART component/xdesign1_addtaginput
@@ -7688,13 +7685,13 @@ class texteditor extends component {
               }//END CLS
               //END TAG
               //END component/xdesign1_addtaginput
-/*id: 218208//*/
+/*id: 218275//*/
 /*type: xdesign1_addtaginput//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218210//*/
+/*id: 218277//*/
 /*type: xdesign1_deleteproject//*/
 
       //XSTART component/xdesign1_deleteproject
@@ -7717,13 +7714,13 @@ class texteditor extends component {
         }//END CLS
         //END TAG
         //END component/xdesign1_deleteproject
-/*id: 218210//*/
+/*id: 218277//*/
 /*type: xdesign1_deleteproject//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218211//*/
+/*id: 218278//*/
 /*type: xdesign1_import//*/
 
       //XSTART component/xdesign1_import
@@ -7747,13 +7744,13 @@ class texteditor extends component {
         }//END CLS
         //END TAG
         //END component/xdesign1_import
-/*id: 218211//*/
+/*id: 218278//*/
 /*type: xdesign1_import//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218212//*/
+/*id: 218279//*/
 /*type: xdesign1_login//*/
 
             //XSTART component/xdesign1_login
@@ -7798,13 +7795,13 @@ class texteditor extends component {
               }//END CLS
               //END TAG
               //END component/xdesign1_login
-/*id: 218212//*/
+/*id: 218279//*/
 /*type: xdesign1_login//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218213//*/
+/*id: 218280//*/
 /*type: xdesign1_loginform//*/
 
 //XSTART component/xdesign1_loginform
@@ -7834,13 +7831,13 @@ class texteditor extends component {
   }//END CLS              
   //END TAG
   //END component/xdesign1_loginform
-/*id: 218213//*/
+/*id: 218280//*/
 /*type: xdesign1_loginform//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218214//*/
+/*id: 218281//*/
 /*type: xdesign1_managercomponent//*/
 
       //XSTART component/xdesign1_managercomponent
@@ -8007,13 +8004,13 @@ class texteditor extends component {
         }//END CLS
         //END TAG
         //END component/xdesign1_managercomponent
-/*id: 218214//*/
+/*id: 218281//*/
 /*type: xdesign1_managercomponent//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218215//*/
+/*id: 218282//*/
 /*type: xdesign1_manageriframe//*/
 
       //XSTART component/xdesign1_manageriframe
@@ -8054,13 +8051,13 @@ class texteditor extends component {
         }//END CLS
         //END TAG
         //END component/xdesign1_manageriframe
-/*id: 218215//*/
+/*id: 218282//*/
 /*type: xdesign1_manageriframe//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218217//*/
+/*id: 218284//*/
 /*type: xdesign1_managermessenger//*/
 
       //XSTART component/xdesign1_managermessenger
@@ -8245,13 +8242,13 @@ class texteditor extends component {
         }//END CLS
         //END TAG
         //END component/xdesign1_managermessenger
-/*id: 218217//*/
+/*id: 218284//*/
 /*type: xdesign1_managermessenger//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218218//*/
+/*id: 218285//*/
 /*type: xdesign1_managerpalette//*/
 
 //XSTART component/xdesign1_managerpalette
@@ -8699,13 +8696,13 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
 }//END CLS
 //END TAG
 //END component/xdesign1_managerpalette
-/*id: 218218//*/
+/*id: 218285//*/
 /*type: xdesign1_managerpalette//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218219//*/
+/*id: 218286//*/
 /*type: xdesign1_managerproject//*/
 
       //XSTART component/xdesign1_managerproject
@@ -8984,13 +8981,13 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
         }//END CLS
         //END TAG
         //END component/xdesign1_managerproject
-/*id: 218219//*/
+/*id: 218286//*/
 /*type: xdesign1_managerproject//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218220//*/
+/*id: 218287//*/
 /*type: xdesign1_managersettings//*/
 
       //XSTART component/xdesign1_managersettings
@@ -9132,13 +9129,13 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
         }//END CLS
         //END TAG
         //END component/xdesign1_managersettings
-/*id: 218220//*/
+/*id: 218287//*/
 /*type: xdesign1_managersettings//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218221//*/
+/*id: 218288//*/
 /*type: xdesign1_managertag//*/
 
   //XSTART component/xdesign1_managertag
@@ -9430,13 +9427,13 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
   }//END CLS
   //END TAG
   //END component/xdesign1_managertag
-/*id: 218221//*/
+/*id: 218288//*/
 /*type: xdesign1_managertag//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218222//*/
+/*id: 218289//*/
 /*type: xdesign1_move//*/
 
             //XSTART component/xdesign1_move
@@ -9459,13 +9456,13 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
               }//END CLS
               //END TAG
               //END component/xdesign1_move
-/*id: 218222//*/
+/*id: 218289//*/
 /*type: xdesign1_move//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218223//*/
+/*id: 218290//*/
 /*type: xdesign1_newproject//*/
 
       //XSTART component/xdesign1_newproject
@@ -9490,13 +9487,13 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
         }//END CLS
         //END TAG
         //END component/xdesign1_newproject
-/*id: 218223//*/
+/*id: 218290//*/
 /*type: xdesign1_newproject//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218226//*/
+/*id: 218293//*/
 /*type: xdesign1_pinproject//*/
 
       //XSTART component/xdesign1_pinproject
@@ -9519,13 +9516,13 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
         }//END CLS
         //END TAG
         //END component/xdesign1_pinproject
-/*id: 218226//*/
+/*id: 218293//*/
 /*type: xdesign1_pinproject//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218233//*/
+/*id: 218300//*/
 /*type: xdesign1_publishproject//*/
 
       //XSTART component/xdesign1_publishproject
@@ -9549,13 +9546,13 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
         }//END CLS
         //END TAG
         //END component/xdesign1_publishproject
-/*id: 218233//*/
+/*id: 218300//*/
 /*type: xdesign1_publishproject//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218234//*/
+/*id: 218301//*/
 /*type: xdesign1_release//*/
 
             //XSTART component/xdesign1_release
@@ -9578,13 +9575,13 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
               }//END CLS
               //END TAG
               //END component/xdesign1_release
-/*id: 218234//*/
+/*id: 218301//*/
 /*type: xdesign1_release//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218235//*/
+/*id: 218302//*/
 /*type: xdesign1_xcompile//*/
 
       //XSTART component/xdesign1_xcompile
@@ -9607,13 +9604,13 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
         }//END CLS
         //END TAG
         //END component/xdesign1_xcompile
-/*id: 218235//*/
+/*id: 218302//*/
 /*type: xdesign1_xcompile//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218236//*/
+/*id: 218303//*/
 /*type: xdesign1_xcreatebackup//*/
 
       //XSTART component/xdesign1_xcreatebackup
@@ -9636,13 +9633,13 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
         }//END CLS
         //END TAG
         //END component/xdesign1_xcreatebackup
-/*id: 218236//*/
+/*id: 218303//*/
 /*type: xdesign1_xcreatebackup//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 218237//*/
+/*id: 218304//*/
 /*type: xdesign1_xmaintain//*/
 
             //XSTART component/xdesign1_xmaintain
@@ -9665,7 +9662,7 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
               }//END CLS
               //END TAG
               //END component/xdesign1_xmaintain
-/*id: 218237//*/
+/*id: 218304//*/
 /*type: xdesign1_xmaintain//*/
 /*END COMPONENT//*/
 
@@ -9682,7 +9679,7 @@ const obj_ComponentMap = new Map([['button', button],['tablecell', tablecell],['
 
 
 /*START COMPONENT//*/
-/*id: 218241//*/
+/*id: 218308//*/
 /*type: TemplateCode//*/
 
 //START Project.js
@@ -9841,7 +9838,7 @@ obj_boot.obj_design.int_idRecord=2406;
 //END Project.js
 
 
-/*id: 218241//*/
+/*id: 218308//*/
 /*type: TemplateCode//*/
 /*END COMPONENT//*/
 
