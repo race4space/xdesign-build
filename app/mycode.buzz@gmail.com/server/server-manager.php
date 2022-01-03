@@ -624,7 +624,7 @@ class XDesign{
 
     function fn_sendgridmail(){
 
-      global $SENDGRID_API_KEY;      
+      global $MY_SENDGRID_API_KEY;      
 
 
       
