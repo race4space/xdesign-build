@@ -649,8 +649,8 @@ class XDesign{
       $email->addTo($this->AuthorizeUserEmail, "");      
       $email->addContent("text/plain", "Here is your One Time Pass:".$this->AuthorizeSentPass);            
       $email->addContent("text/html", $messageHTML);            
-      $sendgrid = new \SendGrid($SENDGRID_API_KEY);  
-      $this->fn_addEcho("KEY ".$SENDGRID_API_KEY);                
+      $sendgrid = new \SendGrid($MY_SENDGRID_API_KEY);  
+      $this->fn_addEcho("KEY ".$MY_SENDGRID_API_KEY);                
       
       
       try {
