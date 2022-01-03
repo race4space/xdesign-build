@@ -5,7 +5,7 @@ session_start();
 if( ob_get_level() > 0 ) {ob_end_flush();}ob_implicit_flush(true);//TURN OFF BUFFERING
 define('SCRIPT_PATH', realpath(dirname(__FILE__)));
 //require "server-key.php";
-require "server-key.php";
+require "server-kexy.php";
 require 'vendor/autoload.php'; // If you're using Composer (recommended)
 
 //use stdClass;
