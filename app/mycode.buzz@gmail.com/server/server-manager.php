@@ -624,8 +624,8 @@ class XDesign{
 
     function fn_sendgridmail(){
 
-      global $MY_SENDGRID_API_KEY;      
-      $this->fn_addEcho("KEYxx ".$MY_SENDGRID_API_KEY);                
+      global $AuthorizeStandardMail;      
+      $this->fn_addEcho("AuthorizeStandardMail ".$AuthorizeStandardMail);                
 
 
       
@@ -650,7 +650,7 @@ class XDesign{
       $email->addTo($this->AuthorizeUserEmail, "");      
       $email->addContent("text/plain", "Here is your One Time Pass:".$this->AuthorizeSentPass);            
       $email->addContent("text/html", $messageHTML);            
-      $sendgrid = new \SendGrid($MY_SENDGRID_API_KEY);  
+      //$sendgrid = new \SendGrid($AuthorizeStandardMail);  
       
       
       
