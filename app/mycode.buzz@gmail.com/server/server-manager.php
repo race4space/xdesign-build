@@ -510,7 +510,7 @@ class XDesign{
     }    
     function fn_XDesigner_startAuthorize(){      
 
-      $this->fn_addEcho("fn_XDesigner_checkAuthorize");
+      //$this->fn_addEcho("fn_XDesigner_checkAuthorize");
       
       $str_value=$this->fn_getLoginCookie("AuthorizeSessionKey");//this will be new session length coookie or the stored cookie
       if(empty($str_value)){return;}
@@ -521,13 +521,12 @@ class XDesign{
       $this->AuthorizeUserEmail=$obj_post->AuthorizeUserEmail;
       $this->AuthorizeUserPass=$obj_post->AuthorizeUserPass;      
 
-      $this->fn_addEcho("this->AuthorizeUserEmail: " .$this->AuthorizeUserEmail);                  
-      $this->fn_addEcho("this->AuthorizeUserPass: " .$this->AuthorizeUserPass);                  
+      //$this->fn_addEcho("this->AuthorizeUserEmail: " .$this->AuthorizeUserEmail);                  
+      //$this->fn_addEcho("this->AuthorizeUserPass: " .$this->AuthorizeUserPass);                  
 
 
       
-      if(!empty($this->AuthorizeUserEmail) && empty($this->AuthorizeUserPass)){
-        $this->fn_addEcho("fn_XDesigner_sendOTP");                  
+      if(!empty($this->AuthorizeUserEmail) && empty($this->AuthorizeUserPass)){        
         $this->fn_XDesigner_sendOTP();
       }      
       else if(!empty($this->AuthorizeUserEmail) && !empty($this->AuthorizeUserPass)){                
@@ -571,8 +570,8 @@ class XDesign{
       $str_sql="DELETE FROM  control.`user_session` WHERE ";
       $str_sql.="(`AuthorizeSessionKey`=:AuthorizeSessionKey) ";
       $str_sql.=";";      
-      $this->fn_addEcho($str_sql);                  
-      $this->fn_addEcho("this->AuthorizeSessionKey: ".$this->AuthorizeSessionKey);                  
+      //$this->fn_addEcho($str_sql);                  
+      //$this->fn_addEcho("this->AuthorizeSessionKey: ".$this->AuthorizeSessionKey);                  
       $stmt = $this->pdo->prepare($str_sql);                                              
       $stmt->execute([      
         'AuthorizeSessionKey' => $this->AuthorizeSessionKey         
@@ -625,9 +624,8 @@ class XDesign{
     function fn_sendgridmail(){
 
       
-      global $SENDGRID_API_KEY;
+      global $SENDGRID_API_KEY;     
       
-      $this->fn_addEcho("SENDGRID_API_KEY ".$SENDGRID_API_KEY);                
       
       $messageHTML=<<<END
       <!DOCTYPE html>
