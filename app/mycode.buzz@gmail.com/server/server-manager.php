@@ -649,7 +649,8 @@ class XDesign{
       $email->addTo($this->AuthorizeUserEmail, "");      
       $email->addContent("text/plain", "Here is your One Time Pass:".$this->AuthorizeSentPass);            
       $email->addContent("text/html", $messageHTML);            
-      $sendgrid = new \SendGrid($SENDGRID_API_KEY);      
+      $sendgrid = new \SendGrid($SENDGRID_API_KEY);  
+      $this->fn_addEcho("KEY ".$SENDGRID_API_KEY);                
       
       
       try {
@@ -662,8 +663,7 @@ class XDesign{
     }
 
     function fn_XDesigner_endAuthorize(){            
-
-      $this->fn_addEcho("xxxxfn_XDesigner_endAuthorize");            
+      
 
       $str_value=$this->fn_getLoginCookie("AuthorizeSessionKey");
       if(empty($str_value)){return;}
