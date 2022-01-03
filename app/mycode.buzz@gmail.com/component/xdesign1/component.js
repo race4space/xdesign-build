@@ -14,7 +14,7 @@
       this.obj_design.bln_listenChange=true;                                
       
       this.obj_holder.bln_debugEvent=false;
-      this.obj_holder.bln_debugServer=false;                            
+      this.obj_holder.bln_debugServer=true;                            
       
     }
 

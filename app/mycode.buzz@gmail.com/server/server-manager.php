@@ -7,6 +7,7 @@ define('SCRIPT_PATH', realpath(dirname(__FILE__)));
 //require "server-key.php";
 require "server-key.php";
 require 'vendor/autoload.php'; // If you're using Composer (recommended)
+ 
 
 //use stdClass;
 function fn_shutdown(){
@@ -266,10 +267,7 @@ class XDesign{
         break;  
         case "getInstance":
           $this->fn_openProject();    
-        break;            
-        case "XDesigner_release"://revised pdo
-          $this->fn_XDesigner_release();
-        break;                      
+        break;                    
         case "XDesigner_move"://revised pdo
           $this->fn_XDesigner_move();
         break;              
@@ -2373,17 +2371,26 @@ function fn_deleteFolderTree($dir) {
  } 
 
 function fn_releaseComponent($int_idRecord, $str_nameRelease){  
+
+  
+  $this->fn_addEcho("fn_releaseComponent");
   
   $this->str_path_folder_version=$this->fn_getfolderpathInstanceVersion($int_idRecord); 
   $this->str_path_folder_version_source=$this->fn_getFirstFolder($this->str_path_folder_version);        
-  $this->str_name_folder_version_source=basename($this->str_path_folder_version_source);  
+  $this->str_name_folder_version_source=basename($this->str_path_folder_version_source);    
 
   $this->fn_createFolder($this->str_path_folder_release);
   $this->str_path_folder_release_application=$this->str_path_folder_release."/".$str_nameRelease;
   $this->fn_createFolder($this->str_path_folder_release_application);  
 
   $this->str_path_folder_release_target_number=$this->str_path_folder_release_application."/".$this->str_name_folder_version_source;  
-  $this->str_path_folder_release_target_hot=$this->str_path_folder_release_application."/".$this->str_name_folder_release_hot;            
+  $this->str_path_folder_release_target_hot=$this->str_path_folder_release_application."/".$this->str_name_folder_release_hot;        
+
+  
+  $this->fn_addEcho("this->str_path_folder_release: ".$this->str_path_folder_release);
+  $this->fn_addEcho("this->str_path_folder_release_target_number: ".$this->str_path_folder_release_target_number);
+  
+  
 
   $this->str_path_folder_release_target=$this->str_path_folder_release_target_hot;    
   $this->fn_deleteFolderTree($this->str_path_folder_release_target);    
