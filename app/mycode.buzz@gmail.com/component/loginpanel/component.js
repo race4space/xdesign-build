@@ -19,10 +19,7 @@
     }
     //START SETTINGS MANAGER EVENTS          
     //START CHECK AUTHORIZE
-    /////////////////////    
-    fn_setAuthorizeSessionKey(AuthorizeSessionKey){//should not be necessary            
-      //obj_shared.fn_setCookie("AuthorizeSessionKey", AuthorizeSessionKey);
-    }
+    /////////////////////        
     fn_setAuthorizeUserEmail(AuthorizeUserEmail){
       this.obj_holder.AuthorizeUserEmail=AuthorizeUserEmail;
     }                

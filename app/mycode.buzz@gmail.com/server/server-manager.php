@@ -221,11 +221,15 @@ class XDesign{
       }  
 
       
+      
       $this->fn_set();           
+      
       
       if($this->bln_debug){
         $this->fn_debug();      
       }
+
+      
       
       switch($obj_post->Action){                
         case "openComponentCode"://revised pdo
@@ -275,7 +279,7 @@ class XDesign{
         case "XDesigner_compile":              
           $this->fn_XDesigner_compile();          
         break;                                
-        case "XDesigner_checkAuthorize":          
+        case "XDesigner_checkAuthorize":                    
           $this->fn_XDesigner_checkAuthorize();          
         break;         
         case "XDesigner_startAuthorize":          
@@ -332,9 +336,13 @@ class XDesign{
       $this->str_path_folder_user_component=$this->str_path_folder_user."/".$this->str_name_folder_component;              
       $this->str_path_folder_user_instance=$this->str_path_folder_user."/".$this->str_name_folder_instance;                               
       
-      $this->str_path_folder_user_asset=$this->str_path_folder_user."/".$this->str_name_folder_asset;              
-      $this->str_path_folder_user_server=$this->str_path_folder_user."/".$this->str_name_folder_server;             
-
+      
+      $this->str_path_folder_user_server=$this->str_path_folder_user."/".$this->str_name_folder_server;                    
+      $this->str_path_folder_user_asset=$this->str_path_folder_user."/".$this->str_name_folder_asset;                          
+      $this->SystemUserEmail="marketing@myrsstestdomain.com";
+      $this->SystemUserFriendlyName="Marketing";
+      
+      
       
     }    
     function fn_debugPath(){
@@ -353,7 +361,8 @@ class XDesign{
 
     function fn_set(){          
       
-      $this->date_script=$this->fn_getSQLDate();            
+      
+      $this->date_script=$this->fn_getSQLDate();                        
       $this->fn_setPath();  
       
       
@@ -463,7 +472,8 @@ class XDesign{
     /////////////////////////////////
     /////////////START LOGIN    
     function fn_XDesigner_checkAuthorize(){      
-
+      
+      
       $str_value=$this->fn_getLoginCookie("AuthorizeSessionKey");//this will bea new session length coookie or the stored cookie
       if(empty($str_value)){return;}
       $this->AuthorizeSessionKey=$str_value;
@@ -485,7 +495,7 @@ class XDesign{
       ]);      
       $row=$stmt->fetch();         
       if($row){                                                           
-        $this->fn_setLoginCookie("AuthorizeSessionKey", $this->AuthorizeSessionKey);//set with longer expiry time                                     
+        $this->fn_setLoginCookie("AuthorizeSessionKey", $this->AuthorizeSessionKey);//renew expiry time - push out expiry date each time=never login , unless the cookie expires                                     
         $this->AuthorizeUserEmail=$row["AuthorizeUserEmail"];          
         $this->AuthorizeUserStatus=true;
       }
@@ -499,8 +509,10 @@ class XDesign{
       
     }    
     function fn_XDesigner_startAuthorize(){      
+
+      $this->fn_addEcho("fn_XDesigner_checkAuthorize");
       
-      $str_value=$this->fn_getLoginCookie("AuthorizeSessionKey");//this will bea new session length coookie or the stored cookie
+      $str_value=$this->fn_getLoginCookie("AuthorizeSessionKey");//this will be new session length coookie or the stored cookie
       if(empty($str_value)){return;}
       $this->AuthorizeSessionKey=$str_value;
       
@@ -509,11 +521,18 @@ class XDesign{
       $this->AuthorizeUserEmail=$obj_post->AuthorizeUserEmail;
       $this->AuthorizeUserPass=$obj_post->AuthorizeUserPass;      
 
+      $this->fn_addEcho("this->AuthorizeUserEmail: " .$this->AuthorizeUserEmail);                  
+      $this->fn_addEcho("this->AuthorizeUserPass: " .$this->AuthorizeUserPass);                  
+
+
+      
       if(!empty($this->AuthorizeUserEmail) && empty($this->AuthorizeUserPass)){
+        $this->fn_addEcho("fn_XDesigner_sendOTP");                  
         $this->fn_XDesigner_sendOTP();
       }      
       else if(!empty($this->AuthorizeUserEmail) && !empty($this->AuthorizeUserPass)){                
-        
+      
+        $this->fn_addEcho("UPDATE ");                  
         $str_sql="UPDATE control.`user_session` SET `AuthorizeUserPass`=:AuthorizeUserPass, `ModifiedDate`=:ModifiedDate WHERE ";
         $str_sql.="(`AuthorizeSessionKey`=:AuthorizeSessionKey AND `AuthorizeUserEmail`=:AuthorizeUserEmail) ";
         $str_sql.=";";        
@@ -529,8 +548,8 @@ class XDesign{
       $this->fn_XDesigner_checkAuthorize();
     } 
 
-    function fn_XDesigner_sendOTP(){                                  
-      
+    function fn_XDesigner_sendOTP(){          
+
       $str_value=$this->fn_getLoginCookie("AuthorizeSessionKey");
       if(empty($str_value)){return;}
       $this->AuthorizeSessionKey=$str_value;
@@ -539,155 +558,118 @@ class XDesign{
       
       
       $this->AuthorizeSentPass=rand(100000,109999);      
-      $this->AuthorizeUserEmail=$obj_post->AuthorizeUserEmail; 
+      $this->AuthorizeUserEmail=$obj_post->AuthorizeUserEmail;      
       
       
-      $str_sql="SELECT * FROM  control.`user_session` WHERE ";
-      $str_sql.="(`AuthorizeSessionKey`=:AuthorizeSessionKey) ";      
+      
+      $domain_name = substr(strrchr($this->AuthorizeUserEmail, "@"), 1);
+      $rr = dns_get_record($domain_name, DNS_MX);            
+      if(!$rr){
+        return false;
+      }
+
+      $str_sql="DELETE FROM  control.`user_session` WHERE ";
+      $str_sql.="(`AuthorizeSessionKey`=:AuthorizeSessionKey) ";
       $str_sql.=";";      
-      //$this->fn_addEcho($str_sql);                  
+      $this->fn_addEcho($str_sql);                  
+      $this->fn_addEcho("this->AuthorizeSessionKey: ".$this->AuthorizeSessionKey);                  
       $stmt = $this->pdo->prepare($str_sql);                                              
       $stmt->execute([      
-        'AuthorizeSessionKey' => $this->AuthorizeSessionKey,         
+        'AuthorizeSessionKey' => $this->AuthorizeSessionKey         
       ]);      
-      $row=$stmt->fetch();         
-      
-      if($row){                                                                   
-        $str_sql="UPDATE control.`user_session` SET `AuthorizeSentPass`=:AuthorizeSentPass, `ModifiedDate`=:ModifiedDate WHERE ";
-        $str_sql.="(`AuthorizeSessionKey`=:AuthorizeSessionKey) ";
-        $str_sql.=";";        
-        //$this->fn_addEcho($str_sql);                       
-        $stmt = $this->pdo->prepare($str_sql);                                                  
-        $stmt->execute([
-          'AuthorizeSessionKey' => $this->AuthorizeSessionKey,
-          'AuthorizeSentPass' => $this->AuthorizeSentPass,          
-          'ModifiedDate' => $this->date_script
-        ]);                         
-        
-      }
-      else{                
-        $domain_name = substr(strrchr($this->AuthorizeUserEmail, "@"), 1);
-        $rr = dns_get_record($domain_name, DNS_MX);            
-        if(!$rr){
-          return false;
-        }
 
-        $str_sql="DELETE FROM  control.`user_session` WHERE ";
-        $str_sql.="(`AuthorizeUserEmail`=:AuthorizeUserEmail) ";
-        $str_sql.=";";      
-        //$this->fn_addEcho($str_sql);                  
-        $stmt = $this->pdo->prepare($str_sql);                                              
-        $stmt->execute([      
-          'AuthorizeUserEmail' => $this->AuthorizeUserEmail         
-        ]);      
-
-        $this->AuthorizeSessionKey=session_id();        
-        $str_sql="INSERT INTO `control`.`user_session` ";
-        $str_sql.="(`AuthorizeSessionKey`, `AuthorizeUserEmail`, `AuthorizeSentPass`, `CreatedDate`,`ModifiedDate`) ";
-        $str_sql.="VALUES ";
-        $str_sql.="(:AuthorizeSessionKey, :AuthorizeUserEmail, :AuthorizeSentPass, :CreatedDate, :ModifiedDate) ";
-        $str_sql.=";";      
-        //$this->fn_addEcho($str_sql);            
-        $stmt = $this->pdo->prepare($str_sql);  
-        $stmt->execute([
-          'AuthorizeSessionKey' => $this->AuthorizeSessionKey, 
-          'AuthorizeUserEmail' => $this->AuthorizeUserEmail, 
-          'AuthorizeSentPass' => $this->AuthorizeSentPass,
-          'CreatedDate' => $this->date_script,
-          'ModifiedDate' => $this->date_script
-        ]);      
-      }
-
-      if ($this->bln_localHost){      
-        //return;        
-      }
-      
-      $mailmsg="Here is your OTP Code: ".$this->AuthorizeSentPass;
-      $mailsubject="OTP Code";
-      $headers[] = "From: "."Jack Jones"." <server@mycode.buzz>";            
-        $this->fn_sendOTPMail($this->AuthorizeUserEmail, $mailsubject, $mailmsg, $headers);
-      
-    } 
-    function fn_sendOTPMail(){     
-
-      $this->fn_addEcho("START fn_sendOTPMail");
-
-      /*
-      //WORKING COMMAND LINE
-      echo "email body" | mail -s "email subject" nameto@domain.com
-      //*/
+      $this->AuthorizeSessionKey=session_id();        
+      $str_sql="INSERT INTO `control`.`user_session` ";
+      $str_sql.="(`AuthorizeSessionKey`, `AuthorizeUserEmail`, `AuthorizeSentPass`, `AuthorizeIPAddress`, `CreatedDate`,`ModifiedDate`) ";
+      $str_sql.="VALUES ";
+      $str_sql.="(:AuthorizeSessionKey, :AuthorizeUserEmail, :AuthorizeSentPass, :AuthorizeIPAddress, :CreatedDate, :ModifiedDate) ";
+      $str_sql.=";";      
+      //$this->fn_addEcho($str_sql);            
+      $stmt = $this->pdo->prepare($str_sql);  
+      $stmt->execute([
+        'AuthorizeSessionKey' => $this->AuthorizeSessionKey, 
+        'AuthorizeUserEmail' => $this->AuthorizeUserEmail, 
+        'AuthorizeSentPass' => $this->AuthorizeSentPass,        
+        'AuthorizeIPAddress' => $_SERVER['REMOTE_ADDR'],        
+        'CreatedDate' => $this->date_script,
+        'ModifiedDate' => $this->date_script
+      ]);      
       
 
-      /*
-      //WORKING TELNET
-      MAIL from: neverseen@domain.com
-      RCPT to: chris.owtram@gmail.com
-      DATA  
-      from: marketing@myrsstestdomain.com
-      to: displayto@domain.com
-      Subject: abc
-      .
-      //*/                
-
-      /*
-      $message = <<<END
-        <html><head><title>One Time Passcode</title></head><body><p>Here is your One Time Pass:</p><p>$this->AuthorizeSentPass</p></body></html>
-        END;
-      //*/        
-
-      $to      = 'chris.owtram@gmail.com';
-      $subject = 'the subject';
-      $message = 'hello';
-      $headers = 'From: marketing@myrsstestdomain.com' . "\r\n" .
-      'Reply-To: marketing@myrsstestdomain.com' . "\r\n" .
-      'X-Mailer: PHP/' . phpversion();
-      //ini_set ( "SMTP", "smtp-server.example.com" );
-      //date_default_timezone_set('America/New_York');
-      //mail($to, $subject, $message, $headers);
-
-      $this->fn_sendgridmail();
-
-/*
-
-        $to = $this->AuthorizeUserEmail; // note the comma
-        $subject = 'One Time Pass';
-        $message = "Test 123";
-        // To send HTML mail, the Content-type header must be set
-        //$headers[] = 'MIME-Version: 1.0';
-        //$headers[] = 'Content-type: text/html; charset=iso-8859-1';        
-        $headers[] = 'from: Application <marketing@myrsstestdomain.com>';
-        $headers[] = "to: User <$this->AuthorizeUserEmail>";                
-        //$bln_value=mail($to, $subject, $message, implode("\r\n", $headers));
-        //$this->fn_addEcho("sendOTPMail: ".$bln_value);
-        //*/
+      
+      
+      
+      $this->str_methodMailer="SENDGRID";
+      switch($this->str_methodMailer){
+        case "SENDMAIL":
+          $this->fn_sendmail();          
+        break;
+        case "SENDGRID":          
+          $this->fn_sendgridmail();
+          break;
+      }      
+      
+      
     }   
 
-    function fn_sendgridmail(){
-      $email = new \SendGrid\Mail\Mail(); 
-      $email->setFrom("marketing@myrsstestdomain.com", "Marketing");
-      $email->setSubject("Sending with SendGrid is Fun");
-      $email->addTo("joe.bloggs@myrsstestdomain.com", "Example User");
-      $email->addContent("text/plain", "and easy to do anywhere, even with PHP");
-      $email->addContent(
-          "text/html", "<strong>and easy to do anywhere, even with PHP</strong>"
-      );
-      $sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
-      try {
-          $response = $sendgrid->send($email);
-          //print $response->statusCode() . "\n";
-          //print_r($response->headers());
-          //print $response->body() . "\n";
-      } catch (Exception $e) {
-          //echo 'Caught exception: '. $e->getMessage() ."\n";
-      }
+    function fn_sendmail(){
+
+      
+      $to= $this->AuthorizeUserEmail;
+      $subject = 'One Time Pass: '.$this->AuthorizeSentPass;
+      $message = '';
+      $headers = 'From: '.$this->SystemUserEmail.' \r\n'.      
+      mail($to, $subject, $message, implode("\r\n", $headers));            
     }
 
+    function fn_sendgridmail(){
+
+      global $SENDGRID_API_KEY;      
+
+
+      
+      $messageHTML=<<<END
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+      <title>One Time Pass</title>
+      </head>    
+      <body style="font-family:helvetica">          
+      <p><h2>Here Is Your One Time Pass: </h2></p>
+      <p><h1>$this->AuthorizeSentPass<h1></p>  
+      </body>
+      </html>
+      END;  
+
+
+      
+      $email = new \SendGrid\Mail\Mail();       
+      $email->setFrom($this->SystemUserEmail, $this->SystemUserFriendlyName);            
+      $email->setSubject('One Time Pass: '.$this->AuthorizeSentPass);            
+      $email->addTo($this->AuthorizeUserEmail, "");      
+      $email->addContent("text/plain", "Here is your One Time Pass:".$this->AuthorizeSentPass);            
+      $email->addContent("text/html", $messageHTML);            
+      $sendgrid = new \SendGrid($SENDGRID_API_KEY);      
+      
+      
+      try {
+          $response = $sendgrid->send($email);        
+          $this->fn_addEcho("ONE TIME PASS SENT");
+      } catch (Exception $e) {         
+        $this->fn_addEcho("ERROR: ".$e->getMessage());                  
+      }      
+    
+    }
 
     function fn_XDesigner_endAuthorize(){            
+
+      $this->fn_addEcho("xxxxfn_XDesigner_endAuthorize");            
 
       $str_value=$this->fn_getLoginCookie("AuthorizeSessionKey");
       if(empty($str_value)){return;}
       $this->AuthorizeSessionKey=$str_value;
+
+      //dont set cookie to expire - it will break re-login on same session
 
       $obj_post=$this->obj_post;       
       
@@ -709,9 +691,14 @@ class XDesign{
 
     function fn_setLoginCookie($cookie_name, $cookie_value, $bln_expire=false){      
 
+      
+      $this->fn_addEcho("fn_setLoginCookie");      
+
       unset($_COOKIE[$cookie_name]);
 
-      $str_time=time() + (86400 * 30);
+      $this->int_CookieStoreDays=7;
+
+      $str_time=time() + (86400 * $this->int_CookieStoreDays);
       if($bln_expire){$str_time=0;}      
       
       $arr_cookie_options = array (
@@ -726,6 +713,7 @@ class XDesign{
       setcookie($cookie_name, $cookie_value, $arr_cookie_options);      
     }
     function fn_getLoginCookie($cookie_name){
+      
       $str_value="";
       if(!isset($_COOKIE[$cookie_name])) {        
       } 
