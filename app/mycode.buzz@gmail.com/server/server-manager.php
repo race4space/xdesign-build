@@ -2385,19 +2385,20 @@ function fn_releaseComponent($int_idRecord, $str_nameRelease){
 
   $this->str_path_folder_release_target_number=$this->str_path_folder_release_application."/".$this->str_name_folder_version_source;  
   $this->str_path_folder_release_target_hot=$this->str_path_folder_release_application."/".$this->str_name_folder_release_hot;        
-
   
   $this->fn_addEcho("this->str_path_folder_release: ".$this->str_path_folder_release);
   $this->fn_addEcho("this->str_path_folder_release_target_number: ".$this->str_path_folder_release_target_number);
   
-  
 
   $this->str_path_folder_release_target=$this->str_path_folder_release_target_hot;    
-  $this->fn_deleteFolderTree($this->str_path_folder_release_target);    
-  //$this->fn_XDesigner_create_path_release($int_idRecord, $str_nameRelease);
-
+  $this->fn_deleteFolderTree($this->str_path_folder_release_target);      
+  $this->fn_addEcho("this->str_path_folder_release_target: ".$this->str_path_folder_release_target);
+  
   $this->str_path_folder_release_target=$this->str_path_folder_release_target_number;    
   $this->fn_deleteFolderTree($this->str_path_folder_release_target);    
+
+  $this->fn_addEcho("this->str_path_folder_release_target: ".$this->str_path_folder_release_target);
+
   $this->fn_XDesigner_create_path_release($int_idRecord, $str_nameRelease);
 }
 
