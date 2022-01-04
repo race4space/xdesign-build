@@ -2302,52 +2302,52 @@ function fn_XDesigner_move(){
 
   $int_idRecord=$this->int_idRecordXDesign;  
 
-  $this->str_name_folder_compile="compile";
-  
   $str_nameRecordXDesign=$this->str_nameRecordXDesign;  
-  $this->fn_XDesigner_maintainVersionDestination($this->str_path_document_root);    
+  $this->fn_XDesigner_maintainVersionDestination($this->str_path_document_root);      
   
   $str_path_source_instance=$this->fn_getfolderpathInstance($int_idRecord);              
   $str_path_source_version=$str_path_source_instance."/".$this->str_name_folder_version;                                  
   $str_path_source_client=$str_path_source_instance."/".$this->str_name_folder_client;
-  $str_path_source_rucksack=$str_path_source_instance."/".$this->str_name_folder_rucksack;
+  $str_path_source_rucksack=$str_path_source_instance."/".$this->str_name_folder_rucksack;  
 
   $str_path_source_warehouse=$str_path_source_instance."/".$this->str_name_folder_warehouse;    
-  $str_path_source_asset=$str_path_source_warehouse."/".$this->str_name_folder_asset;  
-  $str_path_source_compile=$str_path_source_warehouse."/".$this->str_name_folder_compile;
+  $str_path_source_asset=$str_path_source_warehouse."/".$this->str_name_folder_asset;    
   $str_path_source_component=$str_path_source_warehouse."/".$this->str_name_folder_component;
-  $str_path_source_server=$str_path_source_warehouse."/".$this->str_name_folder_server;        
+  $str_path_source_server=$str_path_source_warehouse."/".$this->str_name_folder_server;          
   
   
   //$str_path_destination_client=$this->str_path_document_root."/".$this->str_name_folder_client;    
   $str_path_destination_client=$this->str_path_document_root;
   $this->fn_createFolder($str_path_destination_client);  
+  $this->fn_copyFolderContent($str_path_source_client, $str_path_destination_client);    
 
   //$str_path_destination_rucksack=$this->str_path_document_root."/".$this->str_name_folder_rucksack;    
   $str_path_destination_rucksack=$this->str_path_document_root;
-  $this->fn_createFolder($str_path_destination_rucksack);  
+  $this->fn_createFolder($str_path_destination_rucksack);    
+  $this->fn_copyFolderContent($str_path_source_rucksack, $str_path_destination_rucksack);    
   
   //$str_path_destination_warehouse=$this->str_path_document_root."/".$this->str_name_folder_warehouse;    
   $str_path_destination_warehouse=$this->str_path_folder_warehouse;
-  $this->fn_createFolder($str_path_destination_warehouse);  
-
-  $str_path_destination_asset=$str_path_destination_warehouse."/".$this->str_name_folder_asset;    
-  $str_path_destination_compile=$str_path_destination_warehouse."/".$this->str_name_folder_compile;  
-  $str_path_destination_component=$str_path_destination_warehouse."/".$this->str_name_folder_component;  
-  $str_path_destination_server=$str_path_destination_warehouse."/".$this->str_name_folder_server;      
+  $this->fn_createFolder($str_path_destination_warehouse);    
   
-  $this->fn_copyFolderContent($str_path_source_client, $str_path_destination_client);    
-  $this->fn_copyFolderContent($str_path_source_rucksack, $str_path_destination_rucksack);    
-  
-  $this->fn_deleteFolder($str_path_destination_asset);    
-  $this->fn_copyFolder($this->str_name_folder_asset, $str_path_source_warehouse, $str_path_destination_warehouse);  
+  $this->str_name_folder_compile="compile";  
+  $str_path_destination_compile=$this->str_path_document_root."/".$this->str_name_folder_compile;  
   
   $this->fn_deleteFolder($str_path_destination_compile);
-  $this->fn_copyFolder($this->str_name_folder_compile, $str_path_source_warehouse, $str_path_destination_warehouse);  
+  $this->fn_createFolder($str_path_destination_compile);    
+  
+  $this->fn_copyFolder($this->str_name_folder_compile, $str_path_source_instance, $this->str_path_document_root);     
+  
+  
+  $str_path_destination_asset=$str_path_destination_warehouse."/".$this->str_name_folder_asset;      
+  $this->fn_deleteFolder($str_path_destination_asset);    
+  $this->fn_copyFolder($this->str_name_folder_asset, $str_path_source_warehouse, $str_path_destination_warehouse);  
 
+  $str_path_destination_component=$str_path_destination_warehouse."/".$this->str_name_folder_component;  
   $this->fn_deleteFolder($str_path_destination_component);
   $this->fn_copyFolder($this->str_name_folder_component, $str_path_source_warehouse, $str_path_destination_warehouse);  
 
+  $str_path_destination_server=$str_path_destination_warehouse."/".$this->str_name_folder_server;      
   $this->fn_deleteFolder($str_path_destination_server);
   $this->fn_copyFolder($this->str_name_folder_server, $str_path_source_warehouse, $str_path_destination_warehouse);  
 }
@@ -2451,44 +2451,6 @@ function fn_getFileExtension($path) {
 
   return $extension;
 } 
-
-
-function fn_copyFolderLevelOld($srcDir, $destDir){//run via action      
-  if (file_exists($destDir)) {
-    if (is_dir($destDir)) {
-      if (is_writable($destDir)) {
-        if ($handle = opendir($srcDir)) {
-          while (false !== ($file = readdir($handle))) {
-            if (is_file($srcDir . '/' . $file)) {
-              copy($srcDir . '/' . $file, $destDir . '/' . $file);
-            }
-          }
-          closedir($handle);
-        } else {
-          $this->fn_addEcho("srcDir could not be opened: ".$srcDir);             
-        }
-      } else {
-        $this->fn_addEcho("destDir is not writable!: ".$destDir);           
-      }
-    } else {
-      $this->fn_addEcho("destDir is not directory!: ".$destDir);         
-    }
-  } else {
-    $this->fn_addEcho("destDir does not exist!: ".$destDir);       
-  }
-  }
-
-  /*
-  **
- * Copy a file, or recursively copy a folder and its contents
- *
- * @author      Aidan Lister <aidan@php.net>
- * @version     1.0.1
- * @link        http://aidanlister.com/2004/04/recursively-copying-directories-in-php/
- * @param       string   $source    Source path
- * @param       string   $dest      Destination path
- * @return      bool     Returns TRUE on success, FALSE on failure
- */
 
 function fn_copyFolderContent($source, $dest, $bln_recur=true)
 {
@@ -2611,9 +2573,8 @@ function fn_XDesigner_compile(){
 
   $this->str_folder_name_compile="compile";  
 
-  $str_path_folder_instance=$this->fn_getfolderpathInstance($int_idRecord);                    
-  $str_path_folder_warehouse=$str_path_folder_instance."/".$this->str_name_folder_warehouse; 
-  $this->str_folder_path_compile=$str_path_folder_warehouse."/".$this->str_folder_name_compile;  
+  $str_path_folder_instance=$this->fn_getfolderpathInstance($int_idRecord);                      
+  $this->str_folder_path_compile=$str_path_folder_instance."/".$this->str_folder_name_compile;  
   
   
   $this->filename_runtime="filename_runtime.js";        
