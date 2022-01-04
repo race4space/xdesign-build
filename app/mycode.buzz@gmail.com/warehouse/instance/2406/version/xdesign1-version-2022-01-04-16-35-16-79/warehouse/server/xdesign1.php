@@ -2325,24 +2325,38 @@ function fn_XDesigner_move(){
   $str_path_source_component=$str_path_source_warehouse."/".$this->str_name_folder_component;
   $str_path_source_server=$str_path_source_warehouse."/".$this->str_name_folder_server;        
   
-  $str_path_destination_warehouse=$this->str_path_document_root."/".$this->str_name_folder_warehouse;  
+  
+  //$str_path_destination_client=$this->str_path_document_root."/".$this->str_name_folder_client;    
+  $str_path_destination_client=$this->str_path_document_root;
+  $this->fn_createFolder($str_path_destination_client);  
+
+  //$str_path_destination_rucksack=$this->str_path_document_root."/".$this->str_name_folder_rucksack;    
+  $str_path_destination_rucksack=$this->str_path_document_root;
+  $this->fn_createFolder($str_path_destination_rucksack);  
+  
+  //$str_path_destination_warehouse=$this->str_path_document_root."/".$this->str_name_folder_warehouse;    
+  $str_path_destination_warehouse=$this->str_path_folder_warehouse;
   $this->fn_createFolder($str_path_destination_warehouse);  
 
-  $str_path_destination_asset=$str_path_destination_warehouse."/".$this->str_name_folder_asset;  
-  $str_path_destination_compile=$str_path_destination_warehouse."/".$this->str_name_folder_compile;
-  $str_path_destination_component=$str_path_destination_warehouse."/".$this->str_name_folder_component;
-  $str_path_destination_server=$str_path_destination_warehouse."/".$this->str_name_folder_server;        
+  $str_path_destination_asset=$str_path_destination_warehouse."/".$this->str_name_folder_asset;    
+  $str_path_destination_compile=$str_path_destination_warehouse."/".$this->str_name_folder_compile;  
+  $str_path_destination_component=$str_path_destination_warehouse."/".$this->str_name_folder_component;  
+  $str_path_destination_server=$str_path_destination_warehouse."/".$this->str_name_folder_server;      
   
-  $this->fn_copyFolderContent($str_path_source_client, $this->str_path_document_root);  
-  $this->fn_copyFolderContent($str_path_source_rucksack, $this->str_path_document_root);    
-  $this->fn_deleteFolder($str_path_destination_asset);
-  $this->fn_copyFolder($str_name_folder_asset, $str_path_source_warehouse, $str_path_destination_warehouse);  
+  $this->fn_copyFolderContent($str_path_source_client, $str_path_destination_client);    
+  $this->fn_copyFolderContent($str_path_source_rucksack, $str_path_destination_rucksack);    
+  
+  $this->fn_deleteFolder($str_path_destination_asset);    
+  $this->fn_copyFolder($this->str_name_folder_asset, $str_path_source_warehouse, $str_path_destination_warehouse);  
+  
   $this->fn_deleteFolder($str_path_destination_compile);
-  $this->fn_copyFolder($str_path_source_compile, $str_path_source_warehouse, $str_path_destination_warehouse);  
+  $this->fn_copyFolder($this->str_name_folder_compile, $str_path_source_warehouse, $str_path_destination_warehouse);  
+
   $this->fn_deleteFolder($str_path_destination_component);
-  $this->fn_copyFolder($str_path_source_component, $str_path_source_warehouse, $str_path_destination_warehouse);  
+  $this->fn_copyFolder($this->str_name_folder_component, $str_path_source_warehouse, $str_path_destination_warehouse);  
+
   $this->fn_deleteFolder($str_path_destination_server);
-  $this->fn_copyFolder($str_path_source_server, $str_path_source_warehouse, $str_path_destination_warehouse);  
+  $this->fn_copyFolder($this->str_name_folder_server, $str_path_source_warehouse, $str_path_destination_warehouse);  
 }
 
 function fn_XDesigner_maintainVersionDestination($str_path_folder, $str_pattern=""){
