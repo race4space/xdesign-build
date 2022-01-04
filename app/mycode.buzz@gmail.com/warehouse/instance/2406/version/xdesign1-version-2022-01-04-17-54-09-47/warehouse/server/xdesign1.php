@@ -2310,9 +2310,8 @@ function fn_XDesigner_move(){
 
   $this->str_name_folder_compile="compile";
   
-  $str_nameRecordXDesign=$this->str_nameRecordXDesign;
-  $str_pattern=$str_nameRecordXDesign."-".$this->xdesign_version_identifier."-";                  
-  $this->fn_XDesigner_maintainVersionDestination($this->str_path_document_root, $str_pattern);    
+  $str_nameRecordXDesign=$this->str_nameRecordXDesign;  
+  $this->fn_XDesigner_maintainVersionDestination($this->str_path_document_root);    
   
   $str_path_source_instance=$this->fn_getfolderpathInstance($int_idRecord);              
   $str_path_source_version=$str_path_source_instance."/".$this->str_name_folder_version;                                  
@@ -2359,31 +2358,25 @@ function fn_XDesigner_move(){
   $this->fn_copyFolder($this->str_name_folder_server, $str_path_source_warehouse, $str_path_destination_warehouse);  
 }
 
-function fn_XDesigner_maintainVersionDestination($str_path_folder, $str_pattern=""){
+function fn_XDesigner_maintainVersionDestination($str_path_folder){
 
   if(empty($str_pattern)){    //dont create folder etc if empty code
     $str_pattern=$this->xdesign_module_basename;    
-  }
+  }  
   
-  $str_path_file=$str_path_folder."/"."index.html";        
-  $this->fn_deleteFile($str_path_file);
-
   foreach (new DirectoryIterator($str_path_folder) as $fileInfo) {
     if ($fileInfo->isDot()) {
       continue;
     }     
-      
-    $str_file_extension=$fileInfo->getExtension();          
+
     
-    if($str_file_extension==="mjs"){
-      //$this->fn_addEcho("str_file_extension: ".$str_file_extension);           
-      $str_name_file=$fileInfo->getFilename();            
-      $str_path_file=$fileInfo->getPathname();              
-      $bln_inStr=$this->fn_inStr($str_name_file, $str_pattern);          
-      if($bln_inStr){        
-        $this->fn_deleteFile($str_path_file);        
-      }    
-    }
+    $str_name_file=$fileInfo->getFilename();            
+    $str_path_file=$fileInfo->getPathname();              
+    $bln_inStr=$this->fn_inStr($str_name_file, "gitignore");          
+    if(!$bln_inStr){        
+      $this->fn_deleteFile($str_path_file);        
+    }    
+    
   }
 }
 
