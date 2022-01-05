@@ -355,8 +355,7 @@ class XDesign{
       $this->bln_localHost=false;
       if (isset($_SERVER["REMOTE_ADDR"])) {if($_SERVER["REMOTE_ADDR"]==="127.0.0.1"){$this->bln_localHost=true;}}            
       $this->str_UniqueName=$this->fn_getUniqueName();                        
-
-      $this->AuthorizeStandardEmail="mycode.buzz@gmail.com";
+      
       $this->SystemUserEmail="marketing@myrsstestdomain.com";
       $this->SystemUserFriendlyName="Marketing";
 
