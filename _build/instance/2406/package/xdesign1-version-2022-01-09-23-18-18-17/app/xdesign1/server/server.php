@@ -1514,7 +1514,7 @@ heredoc;
       
       //---Delete instance Link
       //Remove ExisitngEntries
-      $this->fn_removeLinkTableEntries("instancelink", $int_idRecord);      
+      //$this->fn_removeLinkTableEntries("instancelink", $int_idRecord);      
       //Remove ExisitngEntries            
       
       
