@@ -13,20 +13,20 @@ const idXdesignTarget="xdesign-target";
 class Path {  
   constructor() {  
     this.str_path_document_root="";//client side therefore blank       
-    this.str_name_folder_warehouse="app";             
+    this.str_name_folder_app="app";             
     this.str_name_folder_asset="asset";        
     this.str_name_folder_component="component";
     this.str_name_folder_server="server";          
-    this.str_path_folder_warehouse=this.str_path_document_root+"/"+this.str_name_folder_warehouse;                                  
+    this.str_path_folder_app=this.str_path_document_root+"/"+this.str_name_folder_app;                                  
   } 
   fn_getURLAssetFile(str_name_app, str_name_file){    
-    return this.str_path_folder_warehouse+"/"+str_name_app+"/"+this.str_name_folder_asset+"/"+str_name_file;        
+    return this.str_path_folder_app+"/"+str_name_app+"/"+this.str_name_folder_asset+"/"+str_name_file;        
   }
   fn_getURLComponentFile(str_name_app, str_name_file){    
-    return this.str_path_folder_warehouse+"/"+str_name_app+"/"+this.str_name_folder_component+"/"+str_name_file;    
+    return this.str_path_folder_app+"/"+str_name_app+"/"+this.str_name_folder_component+"/"+str_name_file;    
   }    
   fn_getURLServerFile(str_name_app, str_name_file){
-    return this.str_path_folder_warehouse+"/"+str_name_app+"/"+this.str_name_folder_server+"/"+str_name_file;    
+    return this.str_path_folder_app+"/"+str_name_app+"/"+this.str_name_folder_server+"/"+str_name_file;    
   }
 }
 //END Path.js
@@ -1998,7 +1998,7 @@ class component extends BaseObject {
         let obj_ini=new Holder;            
         let obj_AJAX=new AJAX(obj_ini);
         let obj_post=new Object;                 
-        obj_post.URL=obj_path.fn_getURLServerFile(obj_project.obj_design.str_name, "xdesign.php");
+        obj_post.URL=obj_path.fn_getURLServerFile(obj_project.obj_design.str_name, "server.php");
         obj_post.NotifierId=this.obj_design.str_idXDesign;                        
         obj_post.Action="getInstance";                
         obj_post.ActionCallBack="fn_loadJSONInstanceFromServerCallBack";                
@@ -5888,7 +5888,7 @@ class designfile extends AJAX {
         //START INITIALIZE DESIGN            
         this.fn_setType("designfile");      
         this.fn_setTag("designfile", true);                                                           
-        this.obj_design.str_url_server=obj_path.fn_getURLServerFile(obj_project.obj_design.str_name, "xdesign.php");
+        this.obj_design.str_url_server=obj_path.fn_getURLServerFile(obj_project.obj_design.str_name, "server.php");
         //END INITIALIZE DESIGN      
         //START INITIALIZE STYLE                    
         //END INITIALIZE STYLE                
@@ -9885,7 +9885,7 @@ var obj_InstanceJSONMap = new Map([
 [3088, {"obj_design":{"str_type":"tablecell","str_name":"xdesign1_themetablecell","int_idRecord":"3088","str_idXDesign":"myId_53441743","str_idProject":"myId_93777233","str_tag":"td","str_nameTheme":"themetablecell","bln_registerAtProject":true,"bln_themeType":true,"str_text":"Label"},"obj_domProperty":{"innerText":"Label"},"obj_domStyle":{"padding":"0px","color":"gray"}}],
 [3089, {"obj_design":{"arr_item":[{"obj_design":{"int_idRecord":"3088","str_type":"tablecell"}},{"obj_design":{"int_idRecord":"3230","str_type":"tablecell"}}],"str_type":"tablerow","str_name":"My tablerow","int_idRecord":"3089","str_idXDesign":"myId_11375561","str_idProject":"myId_93777233","str_tag":"tr"}}],
 [3090, {"obj_design":{"str_type":"texteditor","str_name":"xdesign1_themetexteditor","int_idRecord":"3090","str_idXDesign":"myId_72220016","str_idProject":"myId_93777233","str_tag":"texteditor","bln_registerAtProject":true,"str_nameEditorTheme":"snow","str_nameTheme":"themetexteditor","bln_themeType":true},"obj_domStyle":{"color":"white","width":"100%","height":"100%"}}],
-[3177, {"obj_design":{"int_idRecord":3177,"str_idXDesign":"myId_38655048","str_name":"xdesign1_login","str_type":"xdesign1_login","str_tag":"xdesign1_btnlogin","bln_isLocalHome":true,"str_idProject":"myId_11188187","dataSVG":"/warehouse/xdesign/asset/power-off.svg","typeSVG":"image/svg+xml","filterSVG":"invert(69%) sepia(62%) saturate(5763%) hue-rotate(191deg) brightness(105%) contrast(101%)","str_classExtend":"svgblock","pointerEventSVG":"none","bln_registerAtProject":true,"str_variableName":"xdesign1_login","str_createdDate":"2021-11-28 11:5:55","str_modifiedDate":"2021-11-28 11:5:55","bln_createRelease":"false","blnIsTag":true},"obj_domStyle":{"padding":"0px","align-self":"center","display":"block","width":"25px","height":"25px","margin-left":"auto","margin-right":"30px"}}],
+[3177, {"obj_design":{"int_idRecord":3177,"str_idXDesign":"myId_38655048","str_name":"xdesign1_login","str_type":"xdesign1_login","str_tag":"xdesign1_btnlogin","bln_isLocalHome":true,"str_idProject":"myId_11188187","dataSVG":"/app/xdesign/asset/power-off.svg","typeSVG":"image/svg+xml","filterSVG":"invert(69%) sepia(62%) saturate(5763%) hue-rotate(191deg) brightness(105%) contrast(101%)","str_classExtend":"svgblock","pointerEventSVG":"none","bln_registerAtProject":true,"str_variableName":"xdesign1_login","str_createdDate":"2021-11-28 11:5:55","str_modifiedDate":"2021-11-28 11:5:55","bln_createRelease":"false","blnIsTag":true},"obj_domStyle":{"padding":"0px","align-self":"center","display":"block","width":"25px","height":"25px","margin-left":"auto","margin-right":"30px"}}],
 [3192, {"obj_design":{"str_type":"loginpanel","str_name":"loginPanel","int_idRecord":3192,"str_idXDesign":"myId_87716375","str_idProject":"myId_11188187","str_tag":"loginpanel","str_classExtend":"panel","bln_isLocalHome":true,"arr_item":[{"obj_design":{"int_idRecord":3236,"str_type":"xdesign1_loginform"}}],"bln_registerAtProject":true,"str_variableName":"loginpanel","str_createdDate":"2021-11-28 11:5:55","str_modifiedDate":"2021-11-28 11:5:55","bln_createRelease":"false","bln_palettePin":true},"obj_domStyle":{"overflow":"auto","zindex":"10","left":"0px","top":"0px","height":"100%","width":"100%","padding":"10px","flex-direction":"column","align-items":"center","background-color":"rgb(43, 44, 52)","font-family":"helvetica","visibility":"hidden","display":"none"},"int_count":0}],
 [3197, {"obj_design":{"arr_item":[{"obj_design":{"int_idRecord":"3246","str_type":"input"}}],"str_type":"tablecell","str_name":"My tablecell","int_idRecord":"3197","str_idXDesign":"myId_36888371","str_idProject":"myId_11188187","str_tag":"td","str_text":"xdesignblank","bln_typeable":true,"str_variableName":"mytablecell","str_createdDate":"2021-11-29 8:50:28","str_modifiedDate":"2021-11-29 8:50:28","bln_createRelease":"false"},"obj_domStyle":{"padding":"0px","color":"gray"}}],
 [3198, {"obj_design":{"arr_item":[{"obj_design":{"int_idRecord":"3197","str_type":"tablecell"}}],"str_type":"tablerow","str_name":"My tablerow","int_idRecord":"3198","str_idXDesign":"myId_98606601","str_idProject":"myId_11188187","str_tag":"tr","str_variableName":"mytablerow","str_createdDate":"2021-11-29 8:50:28","str_modifiedDate":"2021-11-29 8:50:28","bln_createRelease":"false"}}],

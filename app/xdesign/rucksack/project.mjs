@@ -1998,7 +1998,7 @@ class component extends BaseObject {
         let obj_ini=new Holder;            
         let obj_AJAX=new AJAX(obj_ini);
         let obj_post=new Object;                 
-        obj_post.URL=obj_path.fn_getURLServerFile(obj_project.obj_design.str_name, "xdesign.php");
+        obj_post.URL=obj_path.fn_getURLServerFile(obj_project.obj_design.str_name, "server.php");
         obj_post.NotifierId=this.obj_design.str_idXDesign;                        
         obj_post.Action="getInstance";                
         obj_post.ActionCallBack="fn_loadJSONInstanceFromServerCallBack";                
@@ -5888,7 +5888,7 @@ class designfile extends AJAX {
         //START INITIALIZE DESIGN            
         this.fn_setType("designfile");      
         this.fn_setTag("designfile", true);                                                           
-        this.obj_design.str_url_server=obj_path.fn_getURLServerFile(obj_project.obj_design.str_name, "xdesign.php");
+        this.obj_design.str_url_server=obj_path.fn_getURLServerFile(obj_project.obj_design.str_name, "server.php");
         //END INITIALIZE DESIGN      
         //START INITIALIZE STYLE                    
         //END INITIALIZE STYLE                
