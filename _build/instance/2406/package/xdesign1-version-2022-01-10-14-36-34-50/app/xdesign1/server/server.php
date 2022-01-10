@@ -1324,50 +1324,50 @@ class xdesign1{
       if($row){$int_id_record=$row["Id"];}
       return $int_id_record;  
     }         
-    function fn_createPackageFolder($str_name_app, $int_idRecord, $bln_delete=false){
-      $obj_path=new stdClass();            
+    function fn_createPackageFolder($int_idRecord, $str_name_app){      
       
+      $obj_pathStart=$this->fn_createFolderAppName($this->str_path_folder_start, $str_name_app);                  
+      
+      $obj_path=new stdClass();                  
       //str_folderPathInstanceRecord
       $str_path=$this->fn_getFolderPathInstanceRecord($int_idRecord);              
       $this->fn_createFolder($str_path);       
       $obj_path->str_folderPathInstanceRecord=$str_path;
 
-      //str_folderPathInstancePacakge
-      $str_path=$obj_path->str_folderPathInstanceRecord."/".$this->str_name_folder_package;      
-      if($bln_delete){$this->fn_deleteFolder($str_path);}                  
+      //str_folderPathPacakge
+      $str_path=$obj_path->str_folderPathInstanceRecord."/".$this->str_name_folder_package;            
       $this->fn_createFolder($str_path); 
-      $obj_path->str_folderPathInstancePacakge=$str_path;
+      $obj_path->str_folderPathPacakge=$str_path;
 
-      //str_folderPathPackageVersion
-      $str_path=$obj_path->str_folderPathInstancePacakge."/".$this->str_name_folder_version;    
-      if($bln_delete){$this->fn_deleteFolder($str_path);}                  
+      //str_folderPathVersion
+      $str_path=$obj_path->str_folderPathPacakge."/".$this->str_name_folder_version;          
       $this->fn_createFolder($str_path); 
-      $obj_path->str_folderPathPackageVersion=$str_path;            
+      $obj_path->str_folderPathVersion=$str_path; /////////////////////////////           
       
-      //str_folderPathAppVersion
-      $str_path=$obj_path->str_folderPathPackageVersion."/".$this->str_name_folder_app;            
-      $this->fn_createFolder($str_path);       
-      $obj_path->str_folderPathAppVersion=$str_path;      
-      //str_folderPathAppVersion
-      
-      //str_folderPathAppVersion
-      $str_path=$obj_path->str_folderPathAppVersion."/".$str_name_app;          
-      $this->fn_createFolder($str_path); 
-      $obj_path->str_folderPathAppVersion=$str_path;            
-      //str_folderPathAppVersion
+      $obj_pathPackage=$obj_path;
+
+      $obj_pathVersion=$this->fn_createFolderAppName($obj_pathPackage->str_folderPathVersion, $str_name_app);                             
 
       //str_folderPathRucksackVersion
-      $str_path=$obj_path->str_folderPathAppVersion."/".$this->str_name_folder_rucksack;                                      
+      $str_path=$obj_pathVersion->str_folderPathAppName."/".$this->str_name_folder_rucksack;                                      
       $this->fn_createFolder($str_path); 
-      $obj_path->str_folderPathRucksackVersion=$str_path;            
+      $obj_pathVersion->str_folderPathRucksack=$str_path; 
+
+      //str_folderPathComponentVerison
+      $str_path=$obj_pathVersion->str_folderPathAppName."/".$this->str_name_folder_component;                                      
+      $this->fn_createFolder($str_path); 
+      $obj_pathVersion->str_folderPathComponent=$str_path; 
       
-      //COPY APP FOLDER FROM WAREHOUSE ROOT TO VERSION ROOT      
-      $str_source=$this->str_path_folder_app."/".$str_name_app;                
-      $this->fn_createFolder($str_source); 
-      $str_destination=$obj_path->str_folderPathAppVersion;            
+      //COPY APP FOLDER FROM APP ROOT TO VERSION ROOT      
+      $str_source=$obj_pathStart->str_folderPathAppName;      
+      $str_destination=$obj_pathVersion->str_folderPathAppName;                  
       $this->fn_copyFolder($str_source, $str_destination);            
-      //COPY APP FOLDER FROM WAREHOUSE ROOT TO VERSION ROOT      
-      
+      //COPY APP FOLDER FROM APP ROOT TO VERSION ROOT            
+
+      $obj_path=new stdClass();                  
+      $obj_path->obj_pathStart=$obj_pathStart;
+      $obj_path->obj_pathPackage=$obj_pathPackage;      
+      $obj_path->obj_pathVersion=$obj_pathVersion;
       return $obj_path;
     }   
 
@@ -1383,16 +1383,16 @@ class xdesign1{
       $bln_release=$this->fn_get_intBool($obj_post->CreateRelease);            
       
       $str_componentName="New Project";//e.g. id record =0
-      $str_componentNameShort="newproject";
-      
+      $str_componentNameShort="newproject";      
       
       if(empty($int_idRecord)){$int_idRecord=0;}      
       if(empty($bln_version)){$bln_version=false;}      
       $str_nameTargetClass="component";//Default New Project Type, RecordId=0                  
       
-      $str_sql="SELECT * FROM `instance` WHERE Id=$int_idRecord;";
+      $str_sql="SELECT * FROM `instance` WHERE Id=?;";
+      //$this->fn_addEcho("str_sql: ".$str_sql);
       $stmt = $this->pdo->prepare($str_sql);
-      $stmt->execute();      
+      $stmt->execute([$int_idRecord]);      
       $row=$stmt->fetch();            
       if($row){        
         $str_componentName=$row["Name"];
@@ -1404,14 +1404,13 @@ class xdesign1{
       if(empty($str_componentNameShort)){
         $str_componentNameShort=$str_componentName;        
       }
-      $str_componentNameShort=str_replace(' ', '', strtolower($str_componentNameShort));
-      
+      $str_componentNameShort=str_replace(' ', '', strtolower($str_componentNameShort));      
       
       //0 START Create Project Folder    
       $this->fn_removePackageFolders();
-      $obj_path=$this->fn_createPackageFolder($str_componentNameShort, $int_idRecord, true);                     
-      $this->obj_post->URLProjectVersion=$this->path2url($obj_path->str_folderPathPackageVersion);            
-
+      $obj_pathOriginator=$this->fn_createPackageFolder($int_idRecord, $str_componentNameShort);                           
+      $this->obj_post->URLProjectVersion=$this->path2url($obj_pathOriginator->obj_pathPackage->str_folderPathVersion);            
+      
       //$this->fn_importComponentFile($this->obj_record->Type);
       //Temprairly disabling this here.
       //1. Its not sure why the database cannot be assume to be upto date
@@ -1488,86 +1487,102 @@ heredoc;
       $str_code_project.=$str_code.PHP_EOL.PHP_EOL;            
       
       $str_code=$this->fn_getComponentMap();                          
-      $str_code_project.=$str_code.PHP_EOL.PHP_EOL;      
-      
+      $str_code_project.=$str_code.PHP_EOL.PHP_EOL;            
       
       //get own code template code from database 
       $str_code=$this->fn_getComponentCodeFromDBType($this->dbtype_template);//needs to go at the bottom of the file            
-      $str_code_project.=$str_code.PHP_EOL.PHP_EOL;
-      
+      $str_code_project.=$str_code.PHP_EOL.PHP_EOL;      
       
       //-----Write Project Instance to JSONMap
       //write jsonmap from database to file - map must be included, version or not.
       $str_code=$this->fn_updateProjectFileWithjsonObject($int_idRecord, $bln_version);      
       $str_code_project.=$str_code.PHP_EOL.PHP_EOL;             
       
-      //START Write Code to File      
+      //START Write Code to File   
       
       //Write Code to File      
-      $this->str_path_file_index=$obj_path->str_folderPathRucksackVersion."/".$this->str_name_file_index;            
+      $this->str_path_file_index=$obj_pathOriginator->obj_pathVersion->str_folderPathRucksack."/".$this->str_name_file_index;            
       file_put_contents($this->str_path_file_index, $str_documentIndex);               
       
-      $str_path_file_xdesign=$obj_path->str_folderPathRucksackVersion."/".$this->str_name_file_project;            
+      $str_path_file_xdesign=$obj_pathOriginator->obj_pathVersion->str_folderPathRucksack."/".$this->str_name_file_project;            
       file_put_contents($str_path_file_xdesign, $str_code_project);                                    
       $this->fn_updateTemplateFile($str_path_file_xdesign, $int_idRecord, $str_nameTargetClass);//Update Project Code File with RecordId and ClassName                 
-      //END Write Code to File
-      
-      //---Delete instance Link
-      //Remove ExisitngEntries
-      //$this->fn_removeLinkTableEntries("instancelink", $int_idRecord);      
-      //Remove ExisitngEntries            
-      
+      //END Write Code to File           
       
       //COPY RUCKSACK CONTENTS INTO VERSION ROOT
-      $this->fn_copyFolder($obj_path->str_folderPathRucksackVersion, $obj_path->str_folderPathPackageVersion);                        
-      //COPY RUCKSACK CONTENTS INTO VERSION ROOT      
-      
-      if($bln_release){
+      $this->fn_copyFolder($obj_pathOriginator->obj_pathVersion->str_folderPathRucksack, $obj_pathOriginator->obj_pathPackage->str_folderPathVersion);                              
+      //COPY RUCKSACK CONTENTS INTO VERSION ROOT
 
+      if($bln_version){
+        //Create added palette item folders
+        //Loop thru Instance Link Table
+        //locate any corresponding existing folders in App folder              
+        $str_sql = "SELECT `instance`.`Name` AS `Name`, `NameShort` AS `NameShort` FROM `instancelink` JOIN `instance` ON `instancelink`.`LinkDependentId`=`instance`.`id` WHERE `InstanceId` =?;";
+        //$this->fn_addEcho("str_sql: ".$str_sql);
+        $stmt = $this->pdo->prepare($str_sql);
+        $stmt->execute([$int_idRecord]);      
+        while($row=$stmt->fetch()){                                   
+          $str_componentName=$row["Name"];
+          $str_componentNameShort=$row["NameShort"];        
+          if(empty($str_componentNameShort)){
+            $str_componentNameShort=$str_componentName;        
+          }
+          $str_componentNameShort=str_replace(' ', '', strtolower($str_componentNameShort));                
+          //$this->fn_addEcho("str_componentNameShort: ".$str_componentNameShort);
+          $obj_path_instancelink=$this->fn_createPackageFolder($int_idRecord, $str_componentNameShort);                               
+          //DELETE UNDEEDED RUCKSACK AND COMPONENT
+          $this->fn_deleteFolder($obj_path_instancelink->obj_pathVersion->str_folderPathRucksack);        
+          $this->fn_deleteFolder($obj_path_instancelink->obj_pathVersion->str_folderPathComponent);        
+          //DELETE UNDEEDED RUCKSACK AND COMPONENT      
+          //DELETE FOLDER IF EXMPTY
+          $bln_empty=$this->fn_isEmptyFolder($obj_path_instancelink->obj_pathVersion->str_folderPathAppName);          
+          if($bln_empty){$this->fn_deleteFolder($obj_path_instancelink->obj_pathVersion->str_folderPathAppName);}
+          //DELETE FOLDER IF EXMPTY
+        }
+      }               
+      
+      //Remove ExisitngEntries In Instance Link
+      $this->fn_removeLinkTableEntries("instancelink", $int_idRecord);      
+      //Remove ExisitngEntries In Instance Link
+      
+      //create independent reelase 
+      if($bln_release){        
         //Parent of current subdomain.        
         $str_path_folder_release_parent=dirname($this->str_path_document_root)."/".$obj_post->RecordShortName;
         $this->fn_createFolder($str_path_folder_release_parent);  
-
         $str_path_folder_release_version=$str_path_folder_release_parent."/".$this->str_name_folder_version;    
         $this->fn_deleteFolder($str_path_folder_release_version);                    
-        $this->fn_createFolder($str_path_folder_release_version);          
-        $this->fn_copyFolder($obj_path->str_folderPathPackageVersion, $str_path_folder_release_version); 
-
-        $obj_path=$this->fn_createFolderRucksack($str_path_folder_release_version, $str_componentNameShort);        
-        $str_path=$obj_path->str_folderPathRucksack;
-        $this->fn_deleteFolder($str_path);
-
-        $obj_path=$this->fn_createFolderComponent($str_path_folder_release_version, $str_componentNameShort);
-        $str_path=$obj_path->str_folderPathComponent;
-        $this->fn_deleteFolder($str_path);
+        $this->fn_createFolder($str_path_folder_release_version);                  
+        $this->fn_copyFolder($obj_pathOriginator->obj_pathPackage->str_folderPathVersion, $str_path_folder_release_version); 
       }
 
-      //3 END Create Project Code File
+      //3 END Create Project Code File      
     }        
 
-    function fn_createFolderAppName($str_path_folder_version, $str_name_app){      
+    function fn_createFolderApp($str_path_folder_parent){      
 
-      $obj_path=new stdClass();            
-      //str_folderPathAppVersion
-      $str_path=$str_path_folder_version."/".$this->str_name_folder_app;            
+      $obj_path=new stdClass();                  
+      $str_path=$str_path_folder_parent."/".$this->str_name_folder_app;            
       $this->fn_createFolder($str_path);       
-      $obj_path->str_folderPathApp=$str_path;      
-      //str_folderPathAppVersion
+      $obj_path->str_folderPathApp=$str_path;            
+      return $obj_path;
+    }
+
+    function fn_createFolderAppName($str_path_folder_parent, $str_name_app){      
       
-      //str_folderPathAppVersion
+      $obj_path=$this->fn_createFolderApp($str_path_folder_parent);      
+      
       $str_path=$obj_path->str_folderPathApp."/".$str_name_app;          
       $this->fn_createFolder($str_path); 
-      $obj_path->str_folderPathAppName=$str_path;            
-      //str_folderPathAppVersion      
+      $obj_path->str_folderPathAppName=$str_path;                  
       return $obj_path;
     }
     
     function fn_createFolderComponent($str_path_folder_version, $str_name_app){      
 
-      $obj_pathAppName=$this->fn_createFolderAppName($str_path_folder_version, $str_name_app);      
-
-      $obj_path=new stdClass();      
-      $str_path=$obj_pathAppName->str_folderPathAppName."/".$this->str_name_folder_component;                                      
+      $obj_path=$this->fn_createFolderAppName($str_path_folder_version, $str_name_app);      
+      
+      $str_path=$obj_path->str_folderPathAppName."/".$this->str_name_folder_component;                                      
       $this->fn_createFolder($str_path);
       $obj_path->str_folderPathComponent=$str_path;            
       return $obj_path;
@@ -1575,10 +1590,9 @@ heredoc;
     
     function fn_createFolderRucksack($str_path_folder_version, $str_name_app){      
 
-      $obj_pathAppName=$this->fn_createFolderAppName($str_path_folder_version, $str_name_app);      
-
-      $obj_path=new stdClass();      
-      $str_path=$obj_pathAppName->str_folderPathAppName."/".$this->str_name_folder_rucksack;                                      
+      $obj_path=$this->fn_createFolderAppName($str_path_folder_version, $str_name_app);
+      
+      $str_path=$obj_path->str_folderPathAppName."/".$this->str_name_folder_rucksack;                                      
       $this->fn_createFolder($str_path);
       $obj_path->str_folderPathRucksack=$str_path;            
       return $obj_path;
@@ -2277,16 +2291,15 @@ function fn_XDesigner_move(){
   
   $str_path=$str_folderPathInstanceRecord."/".$this->str_name_folder_package;      
   $this->fn_createFolder($str_path); 
-  $str_folderPathInstancePacakge=$str_path;  
+  $str_folderPathPackage=$str_path;  
 
-  $str_folderPathPackageVersion=$this->fn_getFirstFolder($str_folderPathInstancePacakge);   
-  $obj_path=$this->fn_createFolderRucksack($str_folderPathPackageVersion, $this->str_name_app_xdesign);     
+  $str_folderPathVersion=$this->fn_getFirstFolder($str_folderPathPackage);   
 
-  $str_source=$obj_path->str_folderPathRucksack;
+  $str_source=$str_folderPathVersion;
   $str_destination=$this->str_path_document_root;  
   //$this->fn_addEcho("str_source: ".$str_source);   
   //$this->fn_addEcho("str_destination: ".$str_destination);   
-  $this->fn_copyFolder($str_source,  $str_destination);             
+  $this->fn_copyFiles($str_source,  $str_destination);             
 }
 
 function fn_XDesigner_maintainVersionDestination($str_path_folder){
@@ -2319,6 +2332,17 @@ function fn_removeFolderMatch($str_path_folder){
     
   } 
 }    
+
+function fn_isEmptyFolder($dir) {
+
+  if(!file_exists($dir)){return false;}
+  if(!is_dir($dir)){return false;}
+
+  $files = array_diff(scandir($dir), array('.','..'));
+  if(count($files)===0){return true;}
+  return false;
+  
+ } 
 
 
 function fn_deleteFolder($dir) {
@@ -2882,6 +2906,43 @@ function fn_deleteHidden($str_path){
 }
 function fn_unlinkFile($filename){      
   if(file_exists($filename)){unlink($filename);}
+}
+
+function fn_copyFiles($src_dir, $dst_dir)
+{
+
+  //$this->fn_addEcho("fn_copyFiles: ".$src_dir);
+  //$this->fn_addEcho("fn_copyFiles: ".$dst_dir);
+
+  if (is_dir($src_dir)) {    
+    $files = scandir($src_dir);
+    foreach ($files as $file){
+      if ($file == '.' || $file == '..') {continue;}
+      $src_file=$src_dir."/".$file;      
+      if (is_file($src_file)) {    
+        $dst_file=$dst_dir."/".$file;             
+        //$this->fn_addEcho("src_file: ".$src_file);
+        //$this->fn_addEcho("dst_file: ".$dst_file);
+        copy($src_file, $dst_file);
+      }
+      
+      
+    }
+  }  
+  /*
+  $files = glob($src."/*.*");
+  foreach($files as $file){
+    $file_to_go = str_replace($src,$dst,$file);    
+    if ($file == '.' || $file == '..') {continue;}
+    
+    if (is_file($file)) {     
+      $this->fn_addEcho("file: ".$file);
+      $this->fn_addEcho("file_to_go: ".$file_to_go);
+      //copy($file, $file_to_go);
+    }
+  }
+  //*/
+  
 }
 
 function fn_copyFolder($source, $dest, $bln_recur=true)
