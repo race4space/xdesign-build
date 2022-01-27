@@ -325,7 +325,7 @@ class component extends BaseObject {
     }    
     /////////////////////END REGISTRATION EVENT
     ///////////////////// START REGISTRATOR EVENTS 
-    fn_registerObject(obj_item){ //object is registering a child          
+    fn_registerObject(obj_item){ //object is registering a child                  
         this.fn_register(obj_item);                
         this.fn_onRegisterItem(obj_item);
     }
@@ -372,7 +372,8 @@ class component extends BaseObject {
     fn_onRegisterWithContainer(obj_container){//post register
         //
     }
-    fn_onRegisterWithProject(obj_project){//post register
+    fn_onRegisterWithProject(obj_regisratorProject){//post register        
+        this.obj_holder.obj_regisratorProject=obj_regisratorProject;                
         //
     }    
     ///////////////////// END CHILD POST REGISTER EVENTS

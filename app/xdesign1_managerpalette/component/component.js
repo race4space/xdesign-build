@@ -55,8 +55,7 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
     obj_dynamicContentHolder.fn_prepare();                  
 
     let bln_disabled=false;
-    if(!obj_project.LocationMatchInstance){bln_disabled=true;}//CHECK SERVER LOCKED                        
-      
+    if(!obj_project.LocationMatchInstance){bln_disabled=true;}//CHECK SERVER LOCKED                              
     
     let obj_row, int_idRecord, str_nameRecord, str_typeRecord;
     for(var i=0;i<arr_row.length;i++){
@@ -362,7 +361,7 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
     bln_value=false;        
     switch(str_type_container){                      
       case "eazygrid":                          
-        str_listIn="eazygriditem,loginpanel";
+        str_listIn="eazygriditem,xloginpanel";
         if(obj_shared.fn_inStr(","+str_typeToInsert+",", ","+str_listIn+",")){                
           bln_value=true;
         }                      
@@ -400,7 +399,7 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
       break;                
       default:
         //set true to insert all else, other than the below list
-        str_listIn="tablerow,tablecell,tableheader,tablehead,tablefoot,eazygriditem,loginpanel";
+        str_listIn="tablerow,tablecell,tableheader,tablehead,tablefoot,eazygriditem,xloginpanel";
         if(!obj_shared.fn_inStr(","+str_typeToInsert+",", ","+str_listIn+",")){                
           //console.log(str_type_container + ": " + str_typeToInsert);
           bln_value=true;
@@ -408,7 +407,7 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
     }    
     
     switch(str_typeToInsert){                      
-      case "loginpanel":           
+      case "xloginpanel":           
         //bln_value=false;
         str_listIn="grid";
         if(!obj_shared.fn_inStr(","+obj_container.obj_domStyle.display+",", ","+str_listIn+",")){                        
@@ -423,6 +422,7 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
 
   fn_removeId(obj_item){      
     
+
     console.log("manager palette fn_removeId");
 
     let bln_locked=obj_item.obj_design.bln_lockComponent;              
@@ -432,7 +432,8 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
       return;
     } 
 
-    obj_item.obj_design.int_idRecord=0;      
+    obj_item.obj_design.int_idRecord=0;          
+    obj_item.fn_setIDXDesign();
     obj_item.obj_design.int_modeExecute=obj_holder.int_modeEdit;              
 
     var arr_item=obj_item.obj_design.arr_item;

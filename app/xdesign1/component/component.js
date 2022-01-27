@@ -14,8 +14,7 @@
       this.obj_design.bln_listenChange=true;                                
       
       this.obj_holder.bln_debugEvent=false;
-      this.obj_holder.bln_debugServer=false;                            
-      
+      this.obj_holder.bln_debugServer=false;
     }
 
     fn_getDebugEvent(){
@@ -30,16 +29,15 @@
         obj_clipboard=obj_item;
         break;            
       }
-    }
-
+    }    
     
     fn_onLoad(){ //design project on load
         //see fn_projectTarget_onLoad for design target  on load  
         super.fn_onLoad();  
         //console.log("xdesign1 on load");    
-        this.fn_onStateChange();                
+        this.fn_onStateChange();        
         
-        this.fn_XDesigner_checkLogIn();        
+        this.fn_checkAuthorize();        
     }  
 
     fn_setLocationMatchInstance(obj_post){            
@@ -78,8 +76,6 @@
       this.fn_onStateChange();                     
 
       this.fn_close();
-
-      
     }
 
     fn_close(){
@@ -129,8 +125,6 @@
       this.obj_holder.obj_xdesign1_managertag.fn_onPaletteItemSelected();              
       this.obj_holder.obj_xdesign1_managermessenger.fn_onPaletteItemSelected();
       this.obj_holder.obj_xdesign1_managercomponent.fn_onPaletteItemSelected();
-
-      
     }  
     fn_onPaletteItemDeSelected(){
       let obj_item=obj_project.obj_palettSelected;   
@@ -140,7 +134,7 @@
       //*/
     }    
     fn_removeId(obj_item){
-      console.log("project palette fn_removeId");
+      //console.log("project palette fn_removeId");
       this.obj_holder.obj_xdesign1_managerpalette.fn_removeId(obj_item);
     }      
     fn_getGlass(){
@@ -380,112 +374,7 @@
     fn_propertyDesignChangeValue(){
       return this.obj_holder.obj_xdesign1_managertag.fn_propertyDesignChangeValue();                        
     }
-    //END PROPERTY SHEET EVENT HANDLING
-
-    ///////////////////////////
-    ///////////////////////////
-    //START PROJECT LOGIN FUNCTIONS
-    //START LOGIN
-    
-    fn_XDesigner_checkLogIn(){      
-      let obj_item=this.fn_getComponent("loginPanel");
-      if(obj_item){obj_item.fn_checkAuthorize();}      
-    }    
-    fn_XDesigner_startLogIn(){      
-      let obj_item=this.fn_getComponent("loginPanel");
-      if(obj_item){obj_item.fn_startAuthorize();}      
-    }    
-    fn_XDesigner_onHideLogIn(){
-      let obj_item=this.fn_getComponent("xdesign1_manageriframe");                                    
-      if(obj_item){obj_item.fn_setDisplay(true);}
-
-      obj_item=this.fn_getComponent("xdesign1_controlPanel");                                    
-      if(obj_item){obj_item.fn_setDisplay(true);}
-    }       
-    fn_XDesigner_onLogIn(){      
-      let obj_item;
-
-      this.fn_consoleLog("Welcome");
-      
-      this.fn_onStateChange();                     
-
-      let obj_auth=this.fn_XDesigner_getLogIn();            
-
-      obj_item=this.fn_getComponent("xdesign1_managersettings");                                          
-      if(obj_item){        
-        obj_item.fn_open();
-        obj_item.fn_close(false);
-        obj_item.fn_XDesigner_onLogIn(obj_auth);
-      }
-      obj_item=this.fn_getComponent("xdesign1_managerproject");                                    
-      if(obj_item){
-        obj_item.fn_open();
-        obj_item.fn_XDesigner_onLogIn(obj_auth);
-      }      
-    }    
-    
-    //END LOGIN
-    //START LOGOUT
-    fn_XDesigner_startLogOut(){  
-      
-      let obj_item=this.fn_getComponent("loginPanel");
-      if(obj_item){obj_item.fn_endAuthorize();}      
-    }  
-    fn_XDesigner_onShowLogIn(){
-      let obj_item=this.fn_getComponent("xdesign1_manageriframe");
-      
-      if(obj_item){                
-        obj_item.fn_setDisplay(false);
-      }      
-
-      obj_item=this.fn_getComponent("xdesign1_controlPanel");                                    
-      if(obj_item){obj_item.fn_setDisplay(false);}
-
-    }    
-    fn_XDesigner_onLogOut(){
-
-      let obj_item;      
-      
-      let obj_auth=this.fn_XDesigner_getLogIn();            
-
-      obj_item=this.fn_getComponent("xdesign1_managerproject");                                    
-      if(obj_item){        
-        obj_item.fn_XDesigner_onLogOut(obj_auth);
-      }      
-
-      this.fn_consoleLog("You are now logged out");
-    }    
-    //END LOGOUT
-    //START CHECK LOGIN STATUS    
-    fn_XDesigner_getLogIn(){
-      let obj_item=this.fn_getComponent("loginPanel");
-      if(obj_item){return obj_item.fn_getAuthorizeObject();}
-      return false;      
-    }   
-    //END CHECK LOGIN STATUS
-    //START LOGIN SERVER    
-    XDesigner_checkAuthorize(obj_post){                  
-      let obj_item=this.fn_getComponent("loginPanel");
-      if(obj_item){obj_item.fn_onCheckAuthorize(obj_post);}      
-    }        
-    XDesigner_startAuthorize(obj_post){                  
-      let obj_item=this.fn_getComponent("loginPanel");
-      if(obj_item){obj_item.fn_onStartAuthorize(obj_post);}      
-    }        
-    XDesigner_endAuthorize(obj_post){
-      let obj_item=this.fn_getComponent("loginPanel");
-      if(obj_item){obj_item.fn_onEndAuthorize(obj_post);}            
-    } 
-    XDesigner_sendOTP(obj_post){
-      let obj_item=this.fn_getComponent("loginPanel");
-      if(obj_item){obj_item.fn_onSendOTP(obj_post);}            
-    } 
-    
-    //END LOGIN SERVER
-    //END PROJECT LOGIN FUNCTIONS
-    ///////////////////////////
-    ///////////////////////////
-
+    //END PROPERTY SHEET EVENT HANDLING    
     //START COMPONENT EVENT HANDLING
     fn_onChange(){            
       this.fn_event_call(obj_project.obj_holder.str_prefix + "myDesignerPropertySheetOnChange");//see if the event occurred on a dom that has registered this event                     
@@ -499,6 +388,73 @@
     }
     //END COMPONENT EVENT HANDLING   
     
-  }//END CLS
-  //END TAG
+
+    /////////////////////        
+    //START Parent XDesginInterface LoginPanel Template 
+    fn_navigateURLLogin(){
+      let int_pos=window.location.href.indexOf("lokal");//localhost                   
+      let str_urlNavigate;
+      str_urlNavigate="https://desk.mycode.buzz";
+      if(int_pos!==-1){str_urlNavigate="http://desk.lokal-mycode.buzz";}                  
+      window.location.href=str_urlNavigate;
+      //window.open(str_urlNavigate);                  
+    }
+    fn_onUnAuthorizeUserStatus(obj_post){
+      //console.log("AAA XDESIGN fn_onUnAuthorizeUserStatus: " + obj_post.AuthorizeUserStatus);      
+      let obj_item;  
+      obj_item=this;      
+      if(obj_item){        
+        obj_item.fn_setDisplay(false);
+      }             
+      obj_item=this;    
+      if(obj_item){        
+        obj_item.fn_navigateURLLogin(false);
+      }                
+    }
+    fn_onAuthorizeUserStatus(obj_post){
+      //console.log("BBB XDESIGN fn_onAuthorizeUserStatus: " + obj_post.AuthorizeUserStatus);
+      let obj_item;        
+      obj_item=this.fn_getComponent("loginPanel"); 
+      if(obj_item){                
+        obj_item.fn_setDisplay(false);
+      }              
+        
+      obj_item=this;
+      if(obj_item){        
+        obj_item.fn_setDisplay(true);
+      }                 
+    }
+    /////////////////////     
+    fn_endAuthorize(){//project external button will/call this funciton 
+      let obj_item=this.fn_getComponent("loginPanel");
+      if(obj_item){obj_item.fn_endAuthorize();}      
+    }      
+    fn_checkAuthorize(){//project onload call this function to update login status
+      let obj_item=this.fn_getComponent("loginPanel");
+      if(obj_item){obj_item.fn_checkAuthorize();}      
+    }    
+    fn_onLogIn(){//project can welcome onlogin
+      let obj_item;
+      
+      this.fn_consoleLog("Welcome");
+      
+      this.fn_onStateChange();                     
+
+      obj_item=this.fn_getComponent("xdesign1_managersettings");                                          
+      if(obj_item){        
+        obj_item.fn_open();
+        obj_item.fn_close(false);
+        obj_item.fn_XDesigner_onLogIn();
+      }
+      obj_item=this.fn_getComponent("xdesign1_managerproject");                                    
+      if(obj_item){
+        obj_item.fn_open();
+        obj_item.fn_XDesigner_onLogIn();
+      }      
+    }        
+    fn_onLogout(){//project can goodbye onlogout
+    }            
+    //END Parent XDesginInterface LoginPanel Template 
+    /////////////////////        
+  }//END CLS  
   //END component/xdesign1

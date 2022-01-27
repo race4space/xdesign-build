@@ -13,9 +13,9 @@ class svgblock extends component{
       this.fn_setIsContainer(false);      
       //if(this.obj_design.filterSVG===undefined){this.obj_design.filterSVG="invert(50%)";}
       if(this.obj_design.filterSVG===undefined){this.obj_design.filterSVG="notset";}
-      if(this.obj_design.pointerEventSVG===undefined){this.obj_design.pointerEventSVG="none";}
+      if(this.obj_design.pointerEventSVG===undefined){this.obj_design.pointerEventSVG="none";}      
       
-      if(this.obj_design.dataSVG===undefined){this.obj_design.dataSVG=obj_path.fn_getURLAssetFile(obj_project.obj_design.str_name, "default.svg");};          
+      //if(this.obj_design.dataSVG===undefined){this.obj_design.dataSVG=obj_path.fn_getURLAssetFile(this.obj_design.str_type, "default.svg");};          
       if(this.obj_design.typeSVG===undefined){this.obj_design.typeSVG="image/svg+xml"};          
       //START INITIALIZE DESIGN
 

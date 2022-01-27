@@ -212,13 +212,22 @@
                 return obj_ini;
               }      
 
-              let str_listIn="bln_isContainer,bln_maintainId,bln_registerAtContainer,bln_showToolbar,bln_themeType,bln_toggleProjectPin,bln_typeable,str_nameRegistrator,bln_registerAtProject,bln_palettePin,bln_projectPin,dataSVG,filterSVG,gridTemplate,str_classList,str_classExtend,str_createdDate,str_locationID,str_modifiedDate,str_name,str_nameTheme,str_subType,str_text,str_tag,str_value,";
-              let str_listInProjectOnly="bln_createRelease,bln_lockComponent,str_nameRelease,str_type,";
+              let str_listIn="bln_isContainer,bln_maintainId,bln_registerAtContainer,bln_showToolbar,bln_themeType,bln_toggleProjectPin,bln_typeable,str_nameRegistrator,bln_registerAtProject,bln_palettePin,bln_projectPin,dataSVG,filterSVG,gridTemplate,str_classList,str_classExtend,str_createdDate,str_locationID,str_idProject,str_modifiedDate,str_name,str_nameTheme,str_subType,str_text,str_tag,str_urlServer,str_value,";              
+              let str_listInProjectOnly="bln_createRelease,bln_lockComponent,str_nameRelease,str_type,str_urlServer";
               str_listIn+=str_listInProjectOnly;
+
+              //obj_design.bln_useOwnButton
 
               let bln_display;
 
               bln_disabled=true;
+
+              let str_method="fn_validateDesignInput";
+              if(obj_selected && obj_selected[str_method]){
+                bln_disabled=obj_selected[str_method](obj_ini);
+              }                        
+
+
               if(obj_shared.fn_inStr(","+str_name+",", ","+str_listIn+",")){                
                 bln_disabled=false;
               }            
@@ -235,11 +244,16 @@
                   }            
               }
 
+              
+
               if(!obj_project.LocationMatchInstance){              
                 bln_disabled=true;
               }
 
               obj_ini.obj_domProperty.disabled=bln_disabled;                    
+              //obj_ini.obj_domProperty.readonly=bln_disabled;                    
+
+              
               
               
               return obj_ini;

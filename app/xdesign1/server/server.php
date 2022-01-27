@@ -1,62 +1,33 @@
 <?php
-session_name("AuthorizeSessionKey");
-session_start();
-//namespace phpxdesign;
-if( ob_get_level() > 0 ) {ob_end_flush();}ob_implicit_flush(true);//TURN OFF BUFFERING
-define('SCRIPT_PATH', realpath(dirname(__FILE__)));
-//require "server-key.php";
-require "server-key.php";
-require 'vendor/autoload.php'; // If you're using Composer (recommended)
- 
+require_once $_SERVER["DOCUMENT_ROOT"]."/app/shared/server/header.php";
 
-//use stdClass;
-function fn_shutdown(){
-  global $obj_xdesign;
-  //$obj_xdesign->fn_addEcho("EXIT FUNCTION");
-  $obj_xdesign->fn_echoPost();      
-}
-register_shutdown_function('fn_shutdown');
+require_once(APPROOT."/loginpanel/server/server.php");
+
+
+
+
 
 $obj_xdesign=new xdesign1();
-//$obj_xdesign->fn_execute();
 try {
   $obj_xdesign->fn_execute();
 } catch (Error $e) { // Error is the base class for all internal PHP error exceptions.  
   $str_message="SCRIPT ERROR: ".$e->getMessage();
   $obj_xdesign->fn_setError($str_message);
-  
-  //var_dump($ex);
-  //fn_shutdown();
 }
 
-class ServerPost{
+
+
+class xdesign1{  
   function __construct() {    
-    $this->RecordId="0";
-    $this->RecordName="New Project";        
-    $this->RecordType="NoType";            
-    //$this->ObjectData=new stdClass();     
-    $this->ObjectData="{}";     
-    $this->RowData="[{}]";     
-    $this->Echo="";
-    $this->HasError=false;
-  }
-}
-
-class xdesign1{
-  function __construct() {
     
-      $this->bln_debug=false;            
-      
+      $this->date_script=$this->fn_getSQLDate();                        
+      $this->bln_debug=false;                  
       $this->bln_debugAuthorize=true;            
-    }
-    /////////////////////////////////
-    /////////////////////////////////
-    /////////////////////////////////
-    /////////////////////////////////
-    /////////////////////////////////
-    /////////////////////////////////
-    /////////////////////////////////
-    /////////////////////////////////   
+
+      $this->bln_clearError=false;
+      $this->fn_setPost();          
+      $this->fn_intializeServerPost();                
+    }    
     function fn_formatPost($row){
       $obj_post=$this->obj_post;
       if($row){
@@ -68,13 +39,21 @@ class xdesign1{
       }
     }
 
-    function fn_echoPost() {
-      if(empty($this->obj_post)){
-        $this->obj_post=new ServerPost();        
-      }
-      echo json_encode($this->obj_post);
-    }
+    function fn_setPost(){
 
+      global $obj_shared;
+      $this->obj_post=$obj_shared->obj_post;    
+
+      
+    }      
+
+    function fn_intializeServerPost(){
+      $obj_post=$this->obj_post;      
+      if(empty($obj_post->RecordId)){$obj_post->RecordId="0";}       
+      if(empty($obj_post->DesignId)){$obj_post->DesignId="DesignIdNotSet";}                                             
+      if(empty($obj_post->RecordName)){$obj_post->RecordName="New Project";}                             
+      if(empty($obj_post->RecordType)){$obj_post->RecordType="NoType";}                                                                
+    }
     function fn_setError($str_message){
       $this->obj_post->HasError=true;      
       $this->obj_post->ErrorMessage=$str_message;            
@@ -87,49 +66,49 @@ class xdesign1{
       if(gettype($obj)==="object"){return true;}
       return false;
     } 
+
+    function fn_addEcho($str_val){
+      
+      $obj_post=$this->obj_post;      
+      if(!isset($obj_post->Echo)) {              
+        $obj_post->Echo="";
+      }
+      $obj_post->Echo.=$str_val.PHP_EOL.PHP_EOL;
+    }
+
     
-    function fn_execute() {
 
+    function fn_setConnectionUser(){
 
-      
-      global $AuthorizeStandardUser, $AuthorizeStandardPass, $AuthorizeStandardSchema;
-      $this->AuthorizeStandardUser=$AuthorizeStandardUser;      
-      $this->AuthorizeStandardPass=$AuthorizeStandardPass;      
-      $this->AuthorizeStandardSchema=$AuthorizeStandardSchema;      
+      $this->AuthorizeStandardSchema="xdesign";                  
+      $this->pdo_user=$this->obj_loginpanel->fn_setConnectionUser($this->AuthorizeStandardSchema);      
+    }
 
+    function fn_getAuthorizeUserStatus(){
+      
+      global $obj_loginpanel;      
+      $this->obj_loginpanel=$obj_loginpanel;
+      
+      $this->obj_post->AuthorizeUserStatus=$this->obj_loginpanel->AuthorizeUserStatus;                  
+      return $this->obj_loginpanel->AuthorizeUserStatus;
+    }
+    
+    function fn_execute() {        
       
       
-      $this->obj_post=new ServerPost();      
-      
-      $obj_connect=new stdClass();      
-      $obj_connect->Schema=$AuthorizeStandardSchema;
-      $obj_connect->User=$AuthorizeStandardUser;
-      $obj_connect->Pass=$AuthorizeStandardPass;
-      $this->pdo=$this->fn_dataConnect($obj_connect);                  
-      
-      if($obj_connect->HasError){           
-        $this->fn_setError($obj_connect->str_message);      
+      //*
+      if(!$this->fn_getAuthorizeUserStatus()){                             
         return;
       }
+      $this->fn_setConnectionUser();                 
+      //*/
 
       
-      $this->fn_setGroupConcatLimit();      
-      
-      
-      $str_json= file_get_contents("php://input");
-      $this->obj_post = json_decode($str_json);      
 
-      if(!$this->fn_isObject($this->obj_post)){$this->obj_post=new stdClass();}
-
-      $obj_post=$this->obj_post;           
-      
-      if(empty($obj_post->AuthorizeUserEmail)){$obj_post->AuthorizeUserEmail="";}
-      if(empty($obj_post->AuthorizeUserPass)){$obj_post->AuthorizeUserPass="";}
-      if(empty($obj_post->AuthorizeUserStatus)){$obj_post->AuthorizeUserStatus=false;}
       
       
-      if(empty($obj_post->CreateRelease)){$obj_post->CreateRelease=false;}
-      if(empty($obj_post->ReleaseName)){$obj_post->ReleaseName="notset";}      
+      
+      $obj_post=$this->obj_post;            
       
       if(empty($obj_post->LocationID)){
         $obj_post->LocationID="";
@@ -141,9 +120,6 @@ class xdesign1{
         $obj_post->ModifiedDate="1101-01-01";
       }
 
-      if(empty($obj_post->Echo)){
-        $obj_post->Echo="";
-      }
       if(empty($obj_post->IsRoot)){
         $obj_post->IsRoot=false;
       }
@@ -176,19 +152,14 @@ class xdesign1{
       }
       if(empty($obj_post->NotifierId)){
         $obj_post->NotifierId="NotifierIdNotSet";
-      }           
-      if(empty($obj_post->DesignId)){
-        $obj_post->DesignId="DesignIdNotSet";
-      }      
+      }            
       if(empty($obj_post->RecordType)){
         $obj_post->RecordType="RecordTypeNotSet";
       } 
       if(empty($obj_post->RecordExtend)){
         $obj_post->RecordExtend="notset";
       }            
-      if(empty($obj_post->ObjectData)){
-          $obj_post->ObjectData="{}";
-      }         
+      
       if(empty($obj_post->ToggleProjectPin)){
         $obj_post->ToggleProjectPin=false;
       }      
@@ -204,10 +175,7 @@ class xdesign1{
       }      
       if(empty($obj_post->DynamicPin)){        
         $obj_post->DynamicPin=false;
-      }      
-      if(empty($obj_post->RowData)){
-        $obj_post->RowData="[{}]";
-      }
+      }          
       if(empty($obj_post->ComponentCode)){        
         $obj_post->ComponentCode=false;
       }            
@@ -216,23 +184,21 @@ class xdesign1{
       }
       if(empty($obj_post->ErrorMessage)){
         $obj_post->ErrorMessage="";
-      }  
+      }              
       
+      $this->fn_set(); 
+
       
-      
-      $this->fn_set();                      
-      
-      
-      switch($obj_post->Action){                
-        case "openComponentCode"://revised pdo
+
+      switch($obj_post->Action){                       
+        case "openComponentCode":
           $this->fn_openComponentCode();
-        break;        
-        break;        
-        case "getListPalettePinnedComponent"://revised pdo              
+        break;                
+        case "getListPalettePinnedComponent":
           $this->fn_getListPalettePinnedComponent();
         break;
-        case "getListProject"://revised pdo          
-          $this->fn_getListProject();
+        case "getListProject":                  
+          $this->fn_getListProject();          
         break;
         case "toggleProjectPin":
           $this->fn_toggleProjectPin();          
@@ -242,8 +208,7 @@ class xdesign1{
         break;        
         case "versionProject":
           $this->fn_versionComponent();
-        break;                
-        break;                      
+        break;                        
         case "saveAs":
           $this->fn_saveAsComponent();
         break;        
@@ -253,13 +218,13 @@ class xdesign1{
         case "newProject":                              
           $this->fn_newProject();          
         break;
-        case "openProject":                    
+        case "openProject":                              
           $this->fn_openProject();          
         break;  
         case "getInstance":
-          $this->fn_openProject();    
+          //$this->fn_openProject();    
         break;                    
-        case "XDesigner_move"://revised pdo
+        case "XDesigner_move":
           $this->fn_XDesigner_move();
         break;              
         case "XDesigner_maintain":              
@@ -267,16 +232,7 @@ class xdesign1{
         break;                
         case "XDesigner_compile":              
           $this->fn_XDesigner_compile();          
-        break;                                
-        case "XDesigner_checkAuthorize":                    
-          $this->fn_XDesigner_checkAuthorize();          
-        break;         
-        case "XDesigner_startAuthorize":          
-          $this->fn_XDesigner_startAuthorize();          
-        break;         
-        case "XDesigner_endAuthorize":          
-          $this->fn_XDesigner_endAuthorize();          
-        break;         
+        break;                                                
         case "importAll":
           $this->fn_importAll();          
         break;        
@@ -296,6 +252,7 @@ class xdesign1{
           $obj_post->HasError=true;
           $obj_post->ErrorMessage="xdesign1 ACTION Not Handled: [".$obj_post->Action."]";       
       }
+
     }
     /////////////////////////////
     /////////////////////////////
@@ -303,16 +260,13 @@ class xdesign1{
     /////////////////////////////
     /////////////////////////////
     /////////////////////////////  
-    function fn_set(){                
+    
+    function fn_set(){                     
       
-      $this->date_script=$this->fn_getSQLDate();                        
 
       $this->bln_localHost=false;
       if (isset($_SERVER["REMOTE_ADDR"])) {if($_SERVER["REMOTE_ADDR"]==="127.0.0.1"){$this->bln_localHost=true;}}            
-      $this->str_UniqueName=$this->fn_getUniqueName();                        
-      
-      $this->SystemUserEmail="marketing@myrsstestdomain.com";
-      $this->SystemUserFriendlyName="Marketing";
+      $this->str_UniqueName=$this->fn_getUniqueName();                              
       
       $this->fn_setPath();        
       
@@ -354,9 +308,11 @@ class xdesign1{
       
       $this->str_name_folder_package="package";
       $this->str_name_folder_version=$this->obj_post->RecordShortName."-version-".$this->str_UniqueName;
+      $this->str_name_folder_hotinstall="hotrelease";
       
       $this->str_name_file_index="index.html";            
       $this->str_name_file_project=$this->str_name_folder_version.".mjs";
+      $this->str_name_file_hotinstall=$this->str_name_folder_hotinstall.".mjs";
       
       $this->str_path_folder_site_backup="sitebackup-error";
       if($this->bln_localHost){
@@ -409,283 +365,7 @@ class xdesign1{
     function fn_getFolderPathPackageViaID($int_idRecord){
 
       return $this->fn_getFolderPathInstanceRecord($int_idRecord)."/".$this->str_name_folder_package;      
-    }            
-    
-    function fn_debugAuthorize(){
-
-      $obj_post=$this->obj_post;      
-      
-      $s="";
-      $s.="AUTHORIZE".PHP_EOL;
-      $s.="-----------------".PHP_EOL;            
-      $s.="AuthorizeStandardUser: ".$this->AuthorizeStandardUser.PHP_EOL;            
-      $s.="AuthorizeStandardPass: ".$this->AuthorizeStandardPass.PHP_EOL;            
-      $s.="-----------------".PHP_EOL;            
-      $s.="AuthorizeSessionKey: ".$this->AuthorizeSessionKey.PHP_EOL;            
-      $s.="AuthorizeUserEmail: ".$this->AuthorizeUserEmail.PHP_EOL;            
-      $s.="AuthorizeUserPass: ".$this->AuthorizeUserPass.PHP_EOL;                  
-      $this->fn_addEcho($s);     
-    }
-
-
-    
-    /////////////////////////////////
-    /////////////START LOGIN    
-    function fn_XDesigner_checkAuthorize(){            
-      
-      $str_value=$this->fn_getLoginCookie("AuthorizeSessionKey");//this will bea new session length coookie or the stored cookie
-      $this->fn_addEcho("fn_XDesigner_checkAuthorize: " . $str_value);
-      if(empty($str_value)){return;}
-      $this->AuthorizeSessionKey=$str_value;
-
-      $obj_post=$this->obj_post;       
-      $obj_post->AuthorizeUserStatus=false;
-
-      $this->AuthorizeUserStatus=$obj_post->AuthorizeUserStatus;      
-      $this->AuthorizeUserEmail="";      
-
-      $str_sql="SELECT * FROM  control.`user_session` WHERE ";
-      $str_sql.="(`AuthorizeSessionKey`=:AuthorizeSessionKey) ";
-      $str_sql.="AND `AuthorizeUserPass`=`AuthorizeSentPass` ";
-      $str_sql.=";";      
-      //$this->fn_addEcho($str_sql);                  
-      $stmt = $this->pdo->prepare($str_sql);                                              
-      $stmt->execute([      
-        'AuthorizeSessionKey' => $this->AuthorizeSessionKey,         
-      ]);      
-      $row=$stmt->fetch();         
-      if($row){                                                           
-        $this->fn_setLoginCookie("AuthorizeSessionKey", $this->AuthorizeSessionKey);//renew expiry time - push out expiry date each time=never login , unless the cookie expires                                     
-        $this->AuthorizeUserEmail=$row["AuthorizeUserEmail"];          
-        $this->AuthorizeUserStatus=true;
-      }
-
-      if ($this->bln_localHost){
-        //$this->AuthorizeUserStatus=true;
-      }
-      
-      $obj_post->AuthorizeUserStatus=$this->AuthorizeUserStatus;
-      $obj_post->AuthorizeUserEmail=$this->AuthorizeUserEmail;
-      
-    }    
-    function fn_XDesigner_startAuthorize(){      
-
-      //$this->fn_addEcho("fn_XDesigner_startAuthorize");      
-      $str_value=$this->fn_getLoginCookie("AuthorizeSessionKey");//this will be new session length coookie or the stored cookie
-      
-      if(empty($str_value)){return;}
-      $this->AuthorizeSessionKey=$str_value;
-      
-      $obj_post=$this->obj_post;             
-      
-      $this->AuthorizeUserEmail=$obj_post->AuthorizeUserEmail;
-      $this->AuthorizeUserPass=$obj_post->AuthorizeUserPass;      
-
-      //$this->fn_addEcho("this->AuthorizeUserEmail: " .$this->AuthorizeUserEmail);                  
-      //$this->fn_addEcho("this->AuthorizeUserPass: " .$this->AuthorizeUserPass);                  
-
-
-      
-      if(!empty($this->AuthorizeUserEmail) && empty($this->AuthorizeUserPass)){        
-        $this->fn_XDesigner_sendOTP();
-      }      
-      else if(!empty($this->AuthorizeUserEmail) && !empty($this->AuthorizeUserPass)){                
-      
-        $this->fn_addEcho("UPDATE ");                  
-        $str_sql="UPDATE control.`user_session` SET `AuthorizeUserPass`=:AuthorizeUserPass, `ModifiedDate`=:ModifiedDate WHERE ";
-        $str_sql.="(`AuthorizeSessionKey`=:AuthorizeSessionKey AND `AuthorizeUserEmail`=:AuthorizeUserEmail) ";
-        $str_sql.=";";        
-        //$this->fn_addEcho($str_sql);               
-        $stmt = $this->pdo->prepare($str_sql);                                  
-        $stmt->execute([
-          'AuthorizeUserPass' => $this->AuthorizeUserPass,
-          'AuthorizeSessionKey' => $this->AuthorizeSessionKey,
-          'AuthorizeUserEmail' => $this->AuthorizeUserEmail,
-          'ModifiedDate' => $this->date_script
-        ]);                          
-      }      
-      $this->fn_XDesigner_checkAuthorize();
-    } 
-
-    function fn_XDesigner_sendOTP(){          
-
-      $str_value=$this->fn_getLoginCookie("AuthorizeSessionKey");
-      if(empty($str_value)){return;}
-      $this->AuthorizeSessionKey=$str_value;
-
-      $obj_post=$this->obj_post;       
-      
-      
-      $this->AuthorizeSentPass=rand(100000,109999);      
-      $this->AuthorizeUserEmail=$obj_post->AuthorizeUserEmail;      
-      
-      
-      
-      $domain_name = substr(strrchr($this->AuthorizeUserEmail, "@"), 1);
-      $rr = dns_get_record($domain_name, DNS_MX);            
-      if(!$rr){
-        return false;
-      }
-
-      $str_sql="DELETE FROM  control.`user_session` WHERE ";
-      $str_sql.="(`AuthorizeSessionKey`=:AuthorizeSessionKey) ";
-      $str_sql.=";";      
-      //$this->fn_addEcho($str_sql);                  
-      //$this->fn_addEcho("this->AuthorizeSessionKey: ".$this->AuthorizeSessionKey);                  
-      $stmt = $this->pdo->prepare($str_sql);                                              
-      $stmt->execute([      
-        'AuthorizeSessionKey' => $this->AuthorizeSessionKey         
-      ]);      
-
-      $this->AuthorizeSessionKey=session_id();        
-      $str_sql="INSERT INTO `control`.`user_session` ";
-      $str_sql.="(`AuthorizeSessionKey`, `AuthorizeUserEmail`, `AuthorizeSentPass`, `AuthorizeIPAddress`, `CreatedDate`,`ModifiedDate`) ";
-      $str_sql.="VALUES ";
-      $str_sql.="(:AuthorizeSessionKey, :AuthorizeUserEmail, :AuthorizeSentPass, :AuthorizeIPAddress, :CreatedDate, :ModifiedDate) ";
-      $str_sql.=";";      
-      //$this->fn_addEcho($str_sql);            
-      $stmt = $this->pdo->prepare($str_sql);  
-      $stmt->execute([
-        'AuthorizeSessionKey' => $this->AuthorizeSessionKey, 
-        'AuthorizeUserEmail' => $this->AuthorizeUserEmail, 
-        'AuthorizeSentPass' => $this->AuthorizeSentPass,        
-        'AuthorizeIPAddress' => $_SERVER['REMOTE_ADDR'],        
-        'CreatedDate' => $this->date_script,
-        'ModifiedDate' => $this->date_script
-      ]);      
-      
-
-      
-      
-      
-      $this->str_methodMailer="SENDGRID";
-      switch($this->str_methodMailer){
-        case "SENDMAIL":
-          $this->fn_sendmail();          
-        break;
-        case "SENDGRID":          
-          $this->fn_sendgridmail();
-          break;
-      }      
-      
-      
-    }   
-
-    function fn_sendmail(){
-
-      
-      $to= $this->AuthorizeUserEmail;
-      $subject = 'One Time Pass: '.$this->AuthorizeSentPass;
-      $message = '';
-      $headers = 'From: '.$this->SystemUserEmail.' \r\n'.      
-      mail($to, $subject, $message, implode("\r\n", $headers));            
-    }
-
-    function fn_sendgridmail(){
-
-      
-      global $SENDGRID_API_KEY;     
-      
-      
-      $messageHTML=<<<END
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-      <title>One Time Pass</title>
-      </head>    
-      <body style="font-family:helvetica">          
-      <p><h2>Here Is Your One Time Pass: </h2></p>
-      <p><h1>$this->AuthorizeSentPass<h1></p>  
-      </body>
-      </html>
-      END;  
-
-
-      
-      $email = new \SendGrid\Mail\Mail();       
-      $email->setFrom($this->SystemUserEmail, $this->SystemUserFriendlyName);            
-      $email->setSubject('One Time Pass: '.$this->AuthorizeSentPass);            
-      $email->addTo($this->AuthorizeUserEmail, "");      
-      $email->addContent("text/plain", "Here is your One Time Pass:".$this->AuthorizeSentPass);            
-      $email->addContent("text/html", $messageHTML);            
-      $sendgrid = new \SendGrid($SENDGRID_API_KEY);  
-      
-      
-      
-      try {
-          $response = $sendgrid->send($email);        
-          $this->fn_addEcho("ONE TIME PASS SENT");
-      } catch (Exception $e) {         
-        $this->fn_addEcho("ERROR: ".$e->getMessage());                  
-      }      
-    
-    }
-
-    function fn_XDesigner_endAuthorize(){            
-      
-
-      $str_value=$this->fn_getLoginCookie("AuthorizeSessionKey");
-      if(empty($str_value)){return;}
-      $this->AuthorizeSessionKey=$str_value;
-
-      //dont set cookie to expire - it will break re-login on same session
-
-      $obj_post=$this->obj_post;       
-      
-      $str_sql="DELETE FROM  control.`user_session` WHERE `AuthorizeSessionKey`=?;";
-      //$this->fn_addEcho($str_sql);
-      $stmt = $this->pdo->prepare($str_sql);                            
-      $stmt->execute([$this->AuthorizeSessionKey]);              
-      
-      $this->AuthorizeSessionKey="";            
-      $this->AuthorizeUserEmail="";
-      $this->AuthorizeUserPass="";
-      $this->AuthorizeUserStatus=false;      
-      
-      $obj_post->AuthorizeUserEmail=$this->AuthorizeUserEmail;
-      $obj_post->AuthorizeUserPass=$this->AuthorizeUserPass;
-      $obj_post->AuthorizeUserStatus=$this->AuthorizeUserStatus;
-    }
-
-
-    function fn_setLoginCookie($cookie_name, $cookie_value, $bln_expire=false){      
-
-      
-      $this->fn_addEcho("fn_setLoginCookie");      
-
-      unset($_COOKIE[$cookie_name]);
-
-      $this->int_CookieStoreDays=7;
-
-      $str_time=time() + (86400 * $this->int_CookieStoreDays);
-      if($bln_expire){$str_time=0;}      
-      
-      $arr_cookie_options = array (
-        'expires' => $str_time,
-        'path' => '/',
-        //'domain' => 'domain.example.com/', 
-        'secure' => false,     // or false
-        'httponly' => false,    // or false
-        'samesite' => 'Lax' // None || Lax  || Strict
-        );
-
-      setcookie($cookie_name, $cookie_value, $arr_cookie_options);      
-    }
-    function fn_getLoginCookie($cookie_name){
-      
-      $str_value="";
-      if(!isset($_COOKIE[$cookie_name])) {        
-      } 
-      else {
-        $str_value=$_COOKIE[$cookie_name];        
-      }
-      return $str_value;
-    }
-    /////////////END LOGIN
-    /////////////////////////////////
-    
-
-
+    }                    
 
     function fn_getUniqueName(){
       return date("Y-m-d-H-i-s-").rand(0,100);
@@ -791,7 +471,7 @@ class xdesign1{
       $obj_post=$this->obj_post;
 
       $str_sql="SELECT * FROM `instance` WHERE `id`=?;";            
-      $stmt = $this->pdo->prepare($str_sql);
+      $stmt = $this->pdo_user->prepare($str_sql);
       $stmt->execute([$int_idRecord]);      
       $row=$stmt->fetch();
       if($row){
@@ -870,7 +550,7 @@ class xdesign1{
 
       
       $str_sql="UPDATE `instance` SET `Name`=?, `NameShort`=?,`Type`=?, `ToggleProjectPin`=?, `HiddenProjectPin`=?, `ProjectPin`=?, `PalettePin`=?, `DependentId`=?, `Serialize`=?, `LocationID`=?, `CreatedDate`=?, `ModifiedDate`=? WHERE `id`=? ;";                             
-      $stmt = $this->pdo->prepare($str_sql);            
+      $stmt = $this->pdo_user->prepare($str_sql);            
       $stmt->execute([$str_nameRecord, $str_nameShortRecord, $str_typeRecord, $int_ToggleProjectPin, $int_HiddenProjectPin, $int_projectPin, $int_palettePin, $str_dependentId, $str_objectData, $str_LocationID, $str_CreatedDate, $str_ModifiedDate, $int_idRecord]);            
     }
 
@@ -911,12 +591,12 @@ class xdesign1{
       
       if($int_id_record===0){        
         $str_sql="INSERT INTO `component` (`id`, `Type`, `Extend`, `ClassList`,`Code`,`LocationID`, `CreatedDate`, `ModifiedDate`) SELECT ?,?,?,?,?,?,?,?;";
-        $stmt = $this->pdo->prepare($str_sql);
+        $stmt = $this->pdo_user->prepare($str_sql);
         $stmt->execute([$int_idFixed, $str_dbtype, $str_recordExtend, $str_classList, $str_componentCode,$str_LocationID, $str_CreatedDate, $str_ModifiedDate]);
       }
       else{        
         $str_sql="UPDATE `component` SET `Type`=?, `Extend`=?, `ClassList`=?, `Code`=?, `LocationID`=?, `CreatedDate`=?, `ModifiedDate`=? WHERE `id`=?;";                        
-        $stmt = $this->pdo->prepare($str_sql);        
+        $stmt = $this->pdo_user->prepare($str_sql);        
         //$this->fn_addEcho("str_sql: ".$str_sql);                            
         $stmt->execute([$str_dbtype, $str_recordExtend, $str_classList, $str_componentCode, $str_LocationID, $str_CreatedDate, $str_ModifiedDate, $int_id_record]);
         
@@ -931,7 +611,7 @@ class xdesign1{
 
       $obj_post=$this->obj_post;
       $str_sql=$obj_post->Query;
-      $stmt = $this->pdo->prepare($str_sql);
+      $stmt = $this->pdo_user->prepare($str_sql);
       $stmt->execute();
       $row=$stmt->fetchAll();
       if($row){
@@ -950,7 +630,7 @@ class xdesign1{
 
       /*      
       $str_sql="UPDATE `instance` SET `ProjectPin`=0, `PalettePin`=0 WHERE `id`=$obj_post->RecordId ;";
-      $stmt = $this->pdo->prepare($str_sql);
+      $stmt = $this->pdo_user->prepare($str_sql);
       $stmt->execute();      
       //*/
 
@@ -960,12 +640,12 @@ class xdesign1{
 
       
       $str_sql="DELETE FROM `instance` WHERE `id`=$int_idRecord ;";      
-      $stmt = $this->pdo->prepare($str_sql);
+      $stmt = $this->pdo_user->prepare($str_sql);
       $stmt->execute();
       
       /*      
       $str_sql="DELETE FROM `instancelink` WHERE `InstanceId`=$obj_post->RecordId ;";
-      $stmt = $this->pdo->prepare($str_sql);
+      $stmt = $this->pdo_user->prepare($str_sql);
       $stmt->execute();
       //*/            
 
@@ -990,12 +670,14 @@ class xdesign1{
 
       $int_idRecord=$this->obj_post->RecordId;      
 
+      
+
       $s="SELECT * FROM `instance` WHERE `id`=? ";
       $s.="AND LOWER(`LocationID`)=? ";       
-      $s.=";";       
-
+      $s.=";";      
       $str_sql=$s;
-      $stmt = $this->pdo->prepare($str_sql);            
+      //$this->fn_addEcho($str_sql);     
+      $stmt = $this->pdo_user->prepare($str_sql);            
       $stmt->execute([$int_idRecord, strtolower($this->AuthorizeStandardSchema)]);      
       $row=$stmt->fetch();
       if($row){
@@ -1043,12 +725,10 @@ class xdesign1{
     
     
     
-    function fn_addEcho($str_val){
-      $this->obj_post->Echo.=$str_val.PHP_EOL.PHP_EOL;
-    }
+    
 
     function fn_get_last_insert_id(){
-      return $this->pdo->lastInsertId();
+      return $this->pdo_user->lastInsertId();
     }
     
     
@@ -1081,7 +761,7 @@ class xdesign1{
       if($int_idRecord>0){        
         $str_sql="SELECT `LocationID` as 'LocationID' FROM  `$str_name_table` WHERE `id`=?;";                          
         if($bln_debug){$this->fn_addEcho($str_sql);}
-        $stmt = $this->pdo->prepare($str_sql);                            
+        $stmt = $this->pdo_user->prepare($str_sql);                            
         $stmt->execute([$int_idRecord]);        
         $row=$stmt->fetch();        
         if($row){                                     
@@ -1099,7 +779,7 @@ class xdesign1{
         $str_locationID=$this->AuthorizeStandardSchema;        
         $str_sql="UPDATE `$str_name_table` SET `LocationID`=? WHERE `id`=?;";                          
         if($bln_debug){$this->fn_addEcho($str_sql);}
-        $stmt = $this->pdo->prepare($str_sql);                            
+        $stmt = $this->pdo_user->prepare($str_sql);                            
         $stmt->execute([$str_locationID, $int_idRecord]);                        
       }      
       if($bln_debug){$this->fn_addEcho("RETURN LOCATIONID: ".$str_locationID);}
@@ -1115,6 +795,11 @@ class xdesign1{
         $obj_post->ComponentCode=$row["Code"];            
         $this->fn_setLocationMatchComponentCode();
       }
+    }
+    function fn_formatPostAuthorize(){
+      $obj_post=$this->obj_post;      
+      $obj_post->AuthorizeUserEmail=$this->AuthorizeUserEmail;
+      $obj_post->AuthorizeUserStatus=$this->AuthorizeUserStatus;      
     }
 
     function fn_setLocationMatchComponentCode(){      
@@ -1173,7 +858,7 @@ class xdesign1{
       $obj_post=$this->obj_post;
       $str_sql="SELECT `id`, Lower(`Name`) AS `Name`, `Type` FROM  `instance` WHERE `PalettePin` AND !HiddenPalettePin ORDER BY `Name`;";                  
       //$this->fn_addEcho($str_sql);
-      $stmt = $this->pdo->prepare($str_sql);                    
+      $stmt = $this->pdo_user->prepare($str_sql);                    
       $stmt->execute();
 
       $row=$stmt->fetchAll();
@@ -1187,15 +872,17 @@ class xdesign1{
     
     function fn_getListProject(){       
       
+      
       $int_togglePin=$this->fn_getToggleProjectPin();                              
       $obj_post=$this->obj_post;
       $s="SELECT `id`, `Name` AS `Name`, `Type` FROM  `instance` WHERE True AND !`HiddenProjectPin` ";      
       if($int_togglePin){$s.="AND `ProjectPin` ";}
       $s.="AND LOWER(`LocationID`)=? ";       
       $s.=" ORDER BY `Name`; ";
-      $str_sql=$s;      
+      $str_sql=$s;            
+
       
-      $stmt = $this->pdo->prepare($str_sql);                    
+      $stmt = $this->pdo_user->prepare($str_sql);                    
       $stmt->execute([strtolower($this->AuthorizeStandardSchema)]);
 
       
@@ -1213,7 +900,7 @@ class xdesign1{
       
       $str_sql="SELECT `ToggleProjectPin` FROM  `instance` WHERE Name='$this->dbname_projectMenuButton';";                  
       //$this->fn_addEcho($str_sql);
-      $stmt = $this->pdo->prepare($str_sql);
+      $stmt = $this->pdo_user->prepare($str_sql);
       $stmt->execute();      
       $row=$stmt->fetch();    
       if($row){       
@@ -1230,7 +917,7 @@ class xdesign1{
       
       $str_sql="UPDATE `instance` SET  `ToggleProjectPin`='$int_togglePin' WHERE Name='$this->dbname_projectMenuButton';";            
       //$this->fn_addEcho("str_sql :".$str_sql);      
-      $stmt = $this->pdo->prepare($str_sql);
+      $stmt = $this->pdo_user->prepare($str_sql);
       $stmt->execute();            
     }
     function fn_toggleValue($bln_toggle){
@@ -1253,7 +940,7 @@ class xdesign1{
       
       $str_sql=$obj_post->Query;
       //$this->fn_addEcho($str_sql);
-      $stmt = $this->pdo->prepare($str_sql);
+      $stmt = $this->pdo_user->prepare($str_sql);
       $stmt->execute();            
       $row=$stmt->fetch();
       if($row){
@@ -1263,18 +950,18 @@ class xdesign1{
     }
     
 
-    function fn_openComponentCode(){
+    function fn_openComponentCode(){      
 
       $obj_post=$this->obj_post;
       $str_typeRecord=$obj_post->RecordType;      
 
       if(empty($obj_post->RecordId)){
         //return;
-      }      
+      }            
 
       $str_sql="SELECT * FROM `component` WHERE `Type`=?;";
       //$this->fn_addEcho($str_sql);
-      $stmt = $this->pdo->prepare($str_sql);              
+      $stmt = $this->pdo_user->prepare($str_sql);              
       $stmt->execute([$str_typeRecord]);
       $row=$stmt->fetch();
       
@@ -1299,7 +986,7 @@ class xdesign1{
       
       $str_sql="INSERT INTO `instance` (`id`,`Name`,`Type`,`Serialize`) VALUES (?, ?,?,?);";      
       //$this->fn_addEcho($str_sql);
-      $stmt = $this->pdo->prepare($str_sql);      
+      $stmt = $this->pdo_user->prepare($str_sql);      
       $stmt->execute([$int_idRecord, $str_nameRecord, $str_typeRecord, $str_objectData]);
     }
     
@@ -1315,7 +1002,7 @@ class xdesign1{
         array_push($myArr, $int_idFixed);
       }
       $str_sql.=";";      
-      $stmt = $this->pdo->prepare($str_sql);      
+      $stmt = $this->pdo_user->prepare($str_sql);      
       $stmt->execute($myArr);
       
       //$stmt->execute([$str_dbtype]);
@@ -1324,9 +1011,16 @@ class xdesign1{
       if($row){$int_id_record=$row["Id"];}
       return $int_id_record;  
     }         
+    function fn_deletePackageFolder($int_idRecord, $str_name_app){      
+
+      $obj_path=fn_createPackageFolder($int_idRecord, $str_name_app);
+      $this->fn_deleteFolder($obj_path->str_folderPathPacakge);                    
+    }
     function fn_createPackageFolder($int_idRecord, $str_name_app){      
       
-      $obj_pathStart=$this->fn_createFolderAppName($this->str_path_folder_start, $str_name_app);                  
+      $obj_pathStart=$this->fn_createFolderAppName($this->str_path_folder_start, $str_name_app); 
+      
+      //sleep(10);
       
       $obj_path=new stdClass();                  
       //str_folderPathInstanceRecord
@@ -1335,7 +1029,7 @@ class xdesign1{
       $obj_path->str_folderPathInstanceRecord=$str_path;
 
       //str_folderPathPacakge
-      $str_path=$obj_path->str_folderPathInstanceRecord."/".$this->str_name_folder_package;            
+      $str_path=$obj_path->str_folderPathInstanceRecord."/".$this->str_name_folder_package;                        
       $this->fn_createFolder($str_path); 
       $obj_path->str_folderPathPacakge=$str_path;
 
@@ -1346,28 +1040,28 @@ class xdesign1{
       
       $obj_pathPackage=$obj_path;
 
-      $obj_pathVersion=$this->fn_createFolderAppName($obj_pathPackage->str_folderPathVersion, $str_name_app);                             
+      $obj_pathAppName=$this->fn_createFolderAppName($obj_pathPackage->str_folderPathVersion, $str_name_app);                             
 
       //str_folderPathRucksackVersion
-      $str_path=$obj_pathVersion->str_folderPathAppName."/".$this->str_name_folder_rucksack;                                      
+      $str_path=$obj_pathAppName->str_folderPathAppName."/".$this->str_name_folder_rucksack;                                      
       $this->fn_createFolder($str_path); 
-      $obj_pathVersion->str_folderPathRucksack=$str_path; 
+      $obj_pathAppName->str_folderPathRucksack=$str_path; 
 
       //str_folderPathComponentVerison
-      $str_path=$obj_pathVersion->str_folderPathAppName."/".$this->str_name_folder_component;                                      
+      $str_path=$obj_pathAppName->str_folderPathAppName."/".$this->str_name_folder_component;                                      
       $this->fn_createFolder($str_path); 
-      $obj_pathVersion->str_folderPathComponent=$str_path; 
+      $obj_pathAppName->str_folderPathComponent=$str_path; 
       
       //COPY APP FOLDER FROM APP ROOT TO VERSION ROOT      
       $str_source=$obj_pathStart->str_folderPathAppName;      
-      $str_destination=$obj_pathVersion->str_folderPathAppName;                  
+      $str_destination=$obj_pathAppName->str_folderPathAppName;                  
       $this->fn_copyFolder($str_source, $str_destination);            
       //COPY APP FOLDER FROM APP ROOT TO VERSION ROOT            
 
       $obj_path=new stdClass();                  
       $obj_path->obj_pathStart=$obj_pathStart;
       $obj_path->obj_pathPackage=$obj_pathPackage;      
-      $obj_path->obj_pathVersion=$obj_pathVersion;
+      $obj_path->obj_pathAppName=$obj_pathAppName;
       return $obj_path;
     }   
 
@@ -1380,6 +1074,9 @@ class xdesign1{
       $this->obj_record->Type="notset";
       $int_idRecord=$obj_ini->RecordId;            
       $bln_version=$obj_ini->bln_version;                              
+
+      
+      if(empty($obj_post->CreateRelease)){$obj_post->CreateRelease=false;}
       $bln_release=$this->fn_get_intBool($obj_post->CreateRelease);            
       
       $str_componentName="New Project";//e.g. id record =0
@@ -1391,7 +1088,8 @@ class xdesign1{
       
       $str_sql="SELECT * FROM `instance` WHERE Id=?;";
       //$this->fn_addEcho("str_sql: ".$str_sql);
-      $stmt = $this->pdo->prepare($str_sql);
+      
+      $stmt = $this->pdo_user->prepare($str_sql);
       $stmt->execute([$int_idRecord]);      
       $row=$stmt->fetch();            
       if($row){        
@@ -1401,15 +1099,19 @@ class xdesign1{
         $this->obj_record->Type=$row["Type"];
       }//Overide with Custom Project Type, if the component has been Saved, RecordId=x
 
+      
+
       if(empty($str_componentNameShort)){
         $str_componentNameShort=$str_componentName;        
       }
       $str_componentNameShort=str_replace(' ', '', strtolower($str_componentNameShort));      
       
-      //0 START Create Project Folder    
-      $this->fn_removePackageFolders();
+      //0 START Create Project Folder          
+      $this->fn_removePackageFolders();//be aware this can cause issues if it takes a long time to do
+      $obj_pathOriginatorShared=$this->fn_createPackageFolder($int_idRecord, "shared");                           
       $obj_pathOriginator=$this->fn_createPackageFolder($int_idRecord, $str_componentNameShort);                           
       $this->obj_post->URLProjectVersion=$this->path2url($obj_pathOriginator->obj_pathPackage->str_folderPathVersion);            
+      
       
       //$this->fn_importComponentFile($this->obj_record->Type);
       //Temprairly disabling this here.
@@ -1468,23 +1170,27 @@ heredoc;
         $str_code_project.=$str_code.PHP_EOL.PHP_EOL;
       }      
 
+      
+      
       $this->arr_ComponentMap=[];//This array is altered/addedto in fn_getComponentCodeFromListId            
       
       //---Insert List of Required Components into Link table
-      $this->fn_createLinkTableEntries("instancelink", $int_idRecord);//this is the complex dependent id function                                    
-      //There is now a list of dependent entries in the link table
-
+      $this->fn_addDependentComponentToLinkTable("instancelink", $int_idRecord);//this is the complex dependent id function                                    
+      //There is now a list of dependent entries in the link table      
+      
       //---Add Palette Pinned component (if not version) , 
       //so as they are avaialble for choosing during further project editing  
       
       if(!$bln_version){
         $this->fn_addPalettePinComponentToLinkTable($int_idRecord);//add palette pinned components temporarily to packageproject
-      }
-
+      }            
+      
       //---Write code base 
       //get dependent code from database 
-      $str_code=$this->fn_compileComponentCodeLinks($int_idRecord); //this is the complex component code function                                     
+      $str_code=$this->fn_compileComponentCodeFromLinkTable($int_idRecord); //this is the complex component code function                                     
       $str_code_project.=$str_code.PHP_EOL.PHP_EOL;            
+
+      //$this->fn_addEcho("str_code_project: " . $str_code_project);
       
       $str_code=$this->fn_getComponentMap();                          
       $str_code_project.=$str_code.PHP_EOL.PHP_EOL;            
@@ -1496,30 +1202,33 @@ heredoc;
       //-----Write Project Instance to JSONMap
       //write jsonmap from database to file - map must be included, version or not.
       $str_code=$this->fn_updateProjectFileWithjsonObject($int_idRecord, $bln_version);      
-      $str_code_project.=$str_code.PHP_EOL.PHP_EOL;             
-      
-      //START Write Code to File   
+      $str_code_project.=$str_code.PHP_EOL.PHP_EOL;      
+      //START Write Code to File         
       
       //Write Code to File      
-      $this->str_path_file_index=$obj_pathOriginator->obj_pathVersion->str_folderPathRucksack."/".$this->str_name_file_index;            
+      $this->str_path_file_index=$obj_pathOriginator->obj_pathAppName->str_folderPathRucksack."/".$this->str_name_file_index;            
       file_put_contents($this->str_path_file_index, $str_documentIndex);               
       
-      $str_path_file_xdesign=$obj_pathOriginator->obj_pathVersion->str_folderPathRucksack."/".$this->str_name_file_project;            
+      $str_path_file_xdesign=$obj_pathOriginator->obj_pathAppName->str_folderPathRucksack."/".$this->str_name_file_project;            
       file_put_contents($str_path_file_xdesign, $str_code_project);                                    
       $this->fn_updateTemplateFile($str_path_file_xdesign, $int_idRecord, $str_nameTargetClass);//Update Project Code File with RecordId and ClassName                 
-      //END Write Code to File           
+      //END Write Code to File                 
       
-      //COPY RUCKSACK CONTENTS INTO VERSION ROOT
-      $this->fn_copyFolder($obj_pathOriginator->obj_pathVersion->str_folderPathRucksack, $obj_pathOriginator->obj_pathPackage->str_folderPathVersion);                              
-      //COPY RUCKSACK CONTENTS INTO VERSION ROOT
+      //COPY RUCKSACK CONTENTS INTO VERSION ROOT            
+      $this->fn_copyFolder($obj_pathOriginator->obj_pathAppName->str_folderPathRucksack, $obj_pathOriginator->obj_pathPackage->str_folderPathVersion);                              
 
+      $this->fn_copyFolder($obj_pathOriginatorShared->obj_pathAppName->str_folderPathRucksack, $obj_pathOriginatorShared->obj_pathPackage->str_folderPathVersion);                              
+      $this->fn_deleteFolder($obj_pathOriginatorShared->obj_pathAppName->str_folderPathRucksack);        
+      $this->fn_deleteFolder($obj_pathOriginatorShared->obj_pathAppName->str_folderPathComponent);        
+      //COPY RUCKSACK CONTENTS INTO VERSION ROOT
+      
+      //*
       if($bln_version){
         //Create added palette item folders
         //Loop thru Instance Link Table
         //locate any corresponding existing folders in App folder              
         $str_sql = "SELECT `instance`.`Name` AS `Name`, `NameShort` AS `NameShort` FROM `instancelink` JOIN `instance` ON `instancelink`.`LinkDependentId`=`instance`.`id` WHERE `InstanceId` =?;";
-        //$this->fn_addEcho("str_sql: ".$str_sql);
-        $stmt = $this->pdo->prepare($str_sql);
+        $stmt = $this->pdo_user->prepare($str_sql);
         $stmt->execute([$int_idRecord]);      
         while($row=$stmt->fetch()){                                   
           $str_componentName=$row["Name"];
@@ -1527,26 +1236,27 @@ heredoc;
           if(empty($str_componentNameShort)){
             $str_componentNameShort=$str_componentName;        
           }
-          $str_componentNameShort=str_replace(' ', '', strtolower($str_componentNameShort));                
-          //$this->fn_addEcho("str_componentNameShort: ".$str_componentNameShort);
+          $str_componentNameShort=str_replace(' ', '', strtolower($str_componentNameShort));                          
           $obj_path_instancelink=$this->fn_createPackageFolder($int_idRecord, $str_componentNameShort);                               
           //DELETE UNDEEDED RUCKSACK AND COMPONENT
-          $this->fn_deleteFolder($obj_path_instancelink->obj_pathVersion->str_folderPathRucksack);        
-          $this->fn_deleteFolder($obj_path_instancelink->obj_pathVersion->str_folderPathComponent);        
+          $this->fn_deleteFolder($obj_path_instancelink->obj_pathAppName->str_folderPathRucksack);        
+          $this->fn_deleteFolder($obj_path_instancelink->obj_pathAppName->str_folderPathComponent);        
           //DELETE UNDEEDED RUCKSACK AND COMPONENT      
           //DELETE FOLDER IF EXMPTY
-          $bln_empty=$this->fn_isEmptyFolder($obj_path_instancelink->obj_pathVersion->str_folderPathAppName);          
-          if($bln_empty){$this->fn_deleteFolder($obj_path_instancelink->obj_pathVersion->str_folderPathAppName);}
+          $bln_empty=$this->fn_isEmptyFolder($obj_path_instancelink->obj_pathAppName->str_folderPathAppName);          
+          if($bln_empty){$this->fn_deleteFolder($obj_path_instancelink->obj_pathAppName->str_folderPathAppName);}
           //DELETE FOLDER IF EXMPTY
         }
-      }               
+      } 
+      //*/              
       
       //Remove ExisitngEntries In Instance Link
       $this->fn_removeLinkTableEntries("instancelink", $int_idRecord);      
       //Remove ExisitngEntries In Instance Link
       
       //create independent reelase 
-      if($bln_release){        
+      if($bln_release){     
+        //*   
         //Parent of current subdomain.        
         $str_path_folder_release_parent=dirname($this->str_path_document_root)."/".$obj_post->RecordShortName;
         $this->fn_createFolder($str_path_folder_release_parent);  
@@ -1554,6 +1264,37 @@ heredoc;
         $this->fn_deleteFolder($str_path_folder_release_version);                    
         $this->fn_createFolder($str_path_folder_release_version);                  
         $this->fn_copyFolder($obj_pathOriginator->obj_pathPackage->str_folderPathVersion, $str_path_folder_release_version); 
+        //*/
+
+        //*   
+        //Parent of current subdomain.        
+        $str_path_folder_release_parent=dirname($this->str_path_document_root)."/".$obj_post->RecordShortName;
+        $this->fn_createFolder($str_path_folder_release_parent);  
+        $str_path_folder_release_hotinstal=$str_path_folder_release_parent."/".$this->str_name_folder_hotinstall;            
+        $this->fn_deleteFolder($str_path_folder_release_hotinstal);                    
+        $this->fn_createFolder($str_path_folder_release_hotinstal);                  
+        $this->fn_copyFolder($obj_pathOriginator->obj_pathPackage->str_folderPathVersion, $str_path_folder_release_hotinstal); 
+        //*/       
+        
+        
+        $str_sql = "SELECT * FROM `control`.`desktop` WHERE `Subdomain`=:Subdomain;";                      
+        //$this->fn_addEcho($str_sql);                        
+        $stmt = $this->obj_loginpanel->pdo_standard->prepare($str_sql);
+        $stmt->execute([
+          'Subdomain' => $obj_post->RecordShortName
+        ]);                                    
+        $row=$stmt->fetch();            
+        if($row){                          
+        }
+        else{
+          $str_sql = "INSERT INTO `control`.`desktop` (`Subdomain`)  VALUES (:Subdomain);";                      
+          //$this->fn_addEcho($str_sql);                        
+          $stmt = $this->obj_loginpanel->pdo_standard->prepare($str_sql);
+          $stmt->execute([
+            'Subdomain' => $obj_post->RecordShortName
+          ]);                                    
+        }
+        
       }
 
       //3 END Create Project Code File      
@@ -1602,9 +1343,10 @@ heredoc;
       //XXXDEBUG
 
       //Remove ExisitngEntries
-      $str_sql = "DELETE FROM `$str_nameTable` WHERE `InstanceId` =".$int_idRecord.";";            
+      //$str_sql = "DELETE FROM `$str_nameTable` WHERE `InstanceId` =".$int_idRecord.";";            
+      $str_sql = "DELETE FROM `$str_nameTable`;";            
       //$this->fn_addEcho("str_sql: ".$str_sql);
-      $stmt = $this->pdo->prepare($str_sql);
+      $stmt = $this->pdo_user->prepare($str_sql);
       $stmt->execute();      
       //Remove ExisitngEntries      
     }
@@ -1613,7 +1355,7 @@ heredoc;
 
       //Remove OrphanEntries
       $str_sql = "DELETE FROM `instancelink` WHERE `InstanceId` NOT IN(SELECT `id` FROM `instance`);";            
-      $stmt = $this->pdo->prepare($str_sql);
+      $stmt = $this->pdo_user->prepare($str_sql);
       $stmt->execute();      
       //Remove OrphanEntries
     }
@@ -1621,46 +1363,52 @@ heredoc;
     
     function fn_getlistLinkTableEntries($str_nameTable){                   
       $str_sql = "SELECT GROUP_CONCAT(LinkDependentId) as 'list' FROM maintainlink;";
-      $stmt = $this->pdo->prepare($str_sql);
+      $stmt = $this->pdo_user->prepare($str_sql);
       $stmt->execute();      
       $row=$stmt->fetch();            
       if($row){                
         $str_list=$row["list"];              
       }
       return $str_list;
-    }
+    }    
 
-    function fn_createLinkTableEntries($str_nameTable, $int_idRecord){                   
+    function fn_addPalettePinComponentToLinkTable($int_idRecordInstance,){//added during packageproject           
+      //version uses save routnie to construct sufficient list    
+      //after this operaiton the list will be technically incorrect - including all pinned, including  required pinned componnents.
+      //however the list will be correct again when the operaiton is next saved , or versioned      
       
-      //REMOVE EXISTING ENTRIES
-      $this->fn_removeLinkTableEntries($str_nameTable, $int_idRecord);      
-      //REMOVE EXISTING ENTRIES            
+      //get all pinned components , and also any dependnt ids
+      $this->fn_setGroupConcatLimit();      
+      $str_sql="SELECT GROUP_CONCAT(CONCAT_WS(IF(`DependentId`='','',','), `id`, `DependentId`)) AS `list` FROM `instance` WHERE `PalettePin`;";                        
+      $this->fn_addEcho("str_sql: ".$str_sql);
+      $stmt = $this->pdo_user->prepare($str_sql);      
       
-      //INSERT REQUIRED ENTRIES 
-      $this->fn_addListToLinkTable($str_nameTable, $int_idRecord, $int_idRecord); //add self    
-      $this->fn_compileLinkList($str_nameTable, "", $int_idRecord, $int_idRecord);// recursive function will find all entries in child dependnt lists     
-      //INSERT REQUIRED ENTRIES      
-
-      //REMOVE ORPHAN ENTRIES
-      //$this->fn_removeOrphanInstanceLinkTableEntries();//not sure why this would be necessary
-      //REMOVE ORPHAN ENTRIES
-    }
+      $stmt->execute();      
+      $row=$stmt->fetch();      
+      if($row){
+        $str_list=$row["list"]; 
+        $arr_id=explode(",",$str_list);//grab list of child instance ids      
+        $arr_length = count($arr_id);
+        for($i=0;$i<$arr_length;$i++){
+          $int_idRecord=$arr_id[$i];          
+          $this->fn_addEcho($int_idRecordInstance.": ".$int_idRecord);          
+          $this->fn_addListToLinkTable("instancelink", $int_idRecordInstance, $int_idRecord); //add record    
+          $this->fn_compileLinkList("instancelink", "", $int_idRecordInstance, $int_idRecord);// recursive function will find all entries in child dependnt lists     
+        }                                           
+      }
+    }       
+    
 
     function fn_compileLinkList($str_nameTable, $str_listDependentRecord, $int_idRecordInstance, $int_idDependentRecord){               
       
       $str_sql = "SELECT `DependentId` as `list` FROM `instance`  WHERE `id` ='$int_idDependentRecord' AND !INSTR('$str_listDependentRecord', `DependentId`);";
-      //$this->fn_addEcho("str_sql: ".$str_sql);
-      $stmt = $this->pdo->prepare($str_sql);
+      $this->fn_addEcho("str_sql: ".$str_sql);
+      $stmt = $this->pdo_user->prepare($str_sql);
       $stmt->execute();            
       $row=$stmt->fetch();                  
       if($row){        
-        $str_Newlist=$row["list"];
-        if(empty($str_listDependentRecord)){
-          //$str_Newlist=$int_idRecordInstance.",".$str_Newlist; //ADD INSTANCE RECORD To Dependency List         
-        }
-        else{
-          $str_listDependentRecord.=",";
-        }        
+        $str_Newlist=$row["list"];        
+        $str_listDependentRecord.=",";        
         $str_listDependentRecord.=$str_Newlist;//Create default dependency list                          
         //$this->fn_addEcho("[$int_idDependentRecord] FOUND NEW LIST: [".$str_Newlist."]");                                    
         $this->fn_addListToLinkTable($str_nameTable, $int_idRecordInstance, $str_Newlist);                                   
@@ -1669,12 +1417,16 @@ heredoc;
         for($i=0;$i<$arr_length;$i++){$this->fn_compileLinkList($str_nameTable, $str_listDependentRecord, $int_idRecordInstance, $arr_id[$i]);}        
       }  
     } 
-    function fn_setGroupConcatLimit($int_limit=1000000){      
+    
+
+    function fn_addDependentComponentToLinkTable($str_nameTable, $int_idRecord){                         
       
-      $str_sql="SET SESSION group_concat_max_len = $int_limit;";
-      $stmt = $this->pdo->prepare($str_sql);      
-      $stmt->execute();
-    }     
+      //INSERT REQUIRED ENTRIES 
+      $this->fn_addListToLinkTable($str_nameTable, $int_idRecord, $int_idRecord); //add self    
+      $this->fn_compileLinkList($str_nameTable, "", $int_idRecord, $int_idRecord);// recursive function will find all entries in child dependnt lists     
+      //INSERT REQUIRED ENTRIES      
+    }
+
     
 
     function fn_addListToLinkTable($str_nameTable, $int_idRecord, $str_listDependentId){
@@ -1682,7 +1434,7 @@ heredoc;
       //create  entries relating to current instance
       $str_sql = "INSERT INTO `$str_nameTable` (InstanceId, LinkDependentId)  VALUES (?,?);";      
       //$this->fn_addEcho("str_sql: ".$str_sql);
-      $stmt = $this->pdo->prepare($str_sql);                  
+      $stmt = $this->pdo_user->prepare($str_sql);                  
       //create  entries relating to current instance 
       
       if(empty($str_listDependentId)){
@@ -1701,35 +1453,19 @@ heredoc;
         }        
       }
     }
+    
 
-    function fn_addPalettePinComponentToLinkTable($int_idRecord){//added during packageproject           
-      //version uses save routnie to construct sufficient list    
-      //after this operaiton the list will be technically incorrect - including all pinned, including  required pinned componnents.
-      //however the list will be correct again when the operaiton is next saved , or versioned      
-      
-      //get all pinned components , and also any dependnt ids
-      $this->fn_setGroupConcatLimit();      
-      $str_sql="SELECT GROUP_CONCAT(CONCAT_WS(IF(`DependentId`='','',','), `id`, `DependentId`)) AS `list` FROM `instance` WHERE `PalettePin`;";                        
-      //$this->fn_addEcho("str_sql: ".$str_sql);
-      $stmt = $this->pdo->prepare($str_sql);
-      $stmt->execute();      
-      $row=$stmt->fetch();      
-      if($row){
-        $str_list=$row["list"];                            
-        $this->fn_addListToLinkTable("instancelink", $int_idRecord, $str_list);//add this list as records to the Link Table
-      }
-    }       
-
-    function fn_getPaletteComponentListId($int_id_record){        
+    function fn_getPaletteComponentListIdFromLinkTable($int_id_record){        
       
       $str_sql="SELECT group_concat(distinct `component`.`id`) as `listId` FROM instancelink join instance on LinkDependentId=instance.id join component on instance.type=component.Type ";
       $str_sql.="WHERE ";      
       $str_sql.="`InstanceId`=".$int_id_record.";";
       //$this->fn_addEcho("str_sql: ".$str_sql);                              
-      $stmt = $this->pdo->prepare($str_sql);
+      $stmt = $this->pdo_user->prepare($str_sql);
       $stmt->execute();      
       $row=$stmt->fetch();            
       if($row){$str_listId=$row["listId"];}      
+      $this->fn_addEcho("xxx str_listId: ".$str_listId);                              
       return $str_listId;
     }           
     
@@ -1771,7 +1507,7 @@ heredoc;
       $s.=";";                              
       $str_sql=$s;      
 
-      $stmt = $this->pdo->prepare($str_sql);
+      $stmt = $this->pdo_user->prepare($str_sql);
       $stmt->execute();      
       
       $this->str_listClassExpand="";
@@ -1847,7 +1583,7 @@ heredoc;
       if(empty($str_listId)){return;}      
       $str_listType="";      
       $str_sql="SELECT concat(\"'\", group_concat(`Type` SEPARATOR \"','\"), \"'\")  as `listType` FROM component where Id IN($str_listId);";                              
-      $stmt = $this->pdo->prepare($str_sql);
+      $stmt = $this->pdo_user->prepare($str_sql);
       $stmt->execute();      
       $row=$stmt->fetch(); 
       if($row){$str_listType=$row["listType"];}         
@@ -1871,7 +1607,7 @@ heredoc;
         $this->str_InstanceLinkList.=$str_type.",";   
 
         $str_sql="SELECT Concat(`Extend`, ',', `ClassList`) AS `listExtend` FROM `component` WHERE `Type`=?;";                              
-        $stmt = $this->pdo->prepare($str_sql);
+        $stmt = $this->pdo_user->prepare($str_sql);
         $stmt->execute([$str_type]);              
         $row=$stmt->fetch();            
         if($row){                
@@ -1891,7 +1627,7 @@ heredoc;
       }
     }
 
-    function fn_compileComponentCodeLinks($int_id_record){      
+    function fn_compileComponentCodeFromLinkTable($int_id_record){      
 
       
 
@@ -1910,7 +1646,7 @@ heredoc;
       
       //START Get List of Component Ids listed to be written to the browser.
       //important also generates component map      
-      $str_listId=$this->fn_getPaletteComponentListId($int_id_record);            
+      $str_listId=$this->fn_getPaletteComponentListIdFromLinkTable($int_id_record);            
       //$this->fn_addEcho("xxx str_listId: ".$str_listId);
       //END  Get List of Component Ids listed to be written to the browser.                  
       
@@ -1946,7 +1682,7 @@ heredoc;
 
         $str_sql="SELECT `id` as `recordId`, `Type` as `recordType`, `Code` as  `recordCode` FROM `component` WHERE `Type`=?;";                            
         //dont use protected here as it will be too restrictive
-        $stmt = $this->pdo->prepare($str_sql);        
+        $stmt = $this->pdo_user->prepare($str_sql);        
         $stmt->execute([$str_nameClass]);
         $row=$stmt->fetch();      
         
@@ -2005,7 +1741,7 @@ heredoc;
       
       $str_sql="SELECT DISTINCT * FROM `component` WHERE `id` IN($str_listRecord) ;";            
       //$this->fn_addEcho("str_sql: ".$str_sql);
-      $stmt = $this->pdo->prepare($str_sql);
+      $stmt = $this->pdo_user->prepare($str_sql);
       $stmt->execute();      
       $str_listCode=PHP_EOL;      
       
@@ -2053,7 +1789,7 @@ heredoc;
       $str_code="";      
       $str_sql="SELECT group_concat(distinct LinkDependentId) as `list` FROM `instancelink` WHERE `InstanceId`='$int_id_record';";      
       //$this->fn_addEcho($str_sql);      
-      $stmt = $this->pdo->prepare($str_sql);
+      $stmt = $this->pdo_user->prepare($str_sql);
       $stmt->execute();      
       $row=$stmt->fetch();      
       if($row){
@@ -2099,7 +1835,7 @@ heredoc;
       
       $str_sql="SELECT * FROM `instance` WHERE `id` IN($str_listRecord) ;";
       //$this->fn_addEcho($str_sql);
-      $stmt = $this->pdo->prepare($str_sql);
+      $stmt = $this->pdo_user->prepare($str_sql);
       $stmt->execute();      
       $str_listCode=PHP_EOL;      
 
@@ -2179,7 +1915,7 @@ heredoc;
       
       $str_sql="SELECT group_concat(Id) as `list` FROM `component` WHERE `Type`='$str_type';";      
       //$this->fn_addEcho("str_sql: ".$str_sql);
-      $stmt = $this->pdo->prepare($str_sql);      
+      $stmt = $this->pdo_user->prepare($str_sql);      
       $stmt->execute();      
       
       $row=$stmt->fetch();      
@@ -2247,7 +1983,7 @@ function fn_XDesigner_setPalettePinStatus($int_id_record, $bln_status){
   
   $str_sql="UPDATE `instance` SET PalettePin =$int_status WHERE `id`=$int_id_record;";
   //$this->fn_addEcho("pin str_sql: ".$str_sql);
-  $stmt = $this->pdo->prepare($str_sql);
+  $stmt = $this->pdo_user->prepare($str_sql);
   $stmt->execute();
 }
 function fn_XDesigner_setHiddenPalettePinStatus($int_id_record, $bln_status){                
@@ -2257,7 +1993,7 @@ function fn_XDesigner_setHiddenPalettePinStatus($int_id_record, $bln_status){
   
   $str_sql="UPDATE `instance` SET HiddenPalettePin =$int_status WHERE `id`=$int_id_record;";
   //$this->fn_addEcho("pin str_sql: ".$str_sql);
-  $stmt = $this->pdo->prepare($str_sql);
+  $stmt = $this->pdo_user->prepare($str_sql);
   $stmt->execute();
 }
 
@@ -2277,6 +2013,8 @@ function fn_XDesigner_setHiddenPalettePinStatus($int_id_record, $bln_status){
 //////////COMPILE////////////////  
 
 function fn_XDesigner_move(){  
+
+  
   
   //sniff the packagage  folder  for the first folder (version) and locate the ruck package from there
   $int_idRecord=$this->int_idRecordXDesign;  
@@ -2345,6 +2083,7 @@ function fn_isEmptyFolder($dir) {
 
 function fn_deleteFolder($dir) {
 
+
   if(!file_exists($dir)){return false;}
   if(!is_dir($dir)){return false;}
 
@@ -2376,27 +2115,27 @@ function fn_XDesigner_maintain(){
     $obj_post=$this->obj_post;           
     
     $str_sql="DELETE FROM `maintainlink`"; //future where userid =x
-    $stmt = $this->pdo->prepare($str_sql);
+    $stmt = $this->pdo_user->prepare($str_sql);
     $stmt->execute();      
     
     $str_sql="UPDATE `instance` SET MaintainStatus=0";            
-    $stmt = $this->pdo->prepare($str_sql);
+    $stmt = $this->pdo_user->prepare($str_sql);
     $stmt->execute();           
 
     $str_sql="UPDATE `instance` SET MaintainStatus=1 WHERE (ProjectPin OR HiddenProjectPin OR PalettePin OR HiddenPalettePin)";            
-    $stmt = $this->pdo->prepare($str_sql);
+    $stmt = $this->pdo_user->prepare($str_sql);
     $stmt->execute();
     
     $str_sql="SELECT `id` As `int_idRecord` FROM `instance` WHERE MaintainStatus;";            
     $this->fn_addEcho("MaintainStatus str_list: ".$str_sql);
-    $stmt = $this->pdo->prepare($str_sql);
+    $stmt = $this->pdo_user->prepare($str_sql);
     $stmt->execute();   
     
     while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
       
       $int_idRecord=$row["int_idRecord"];        
       //---Insert List of Required Components into Link table
-      $this->fn_createLinkTableEntries("maintainlink", $int_idRecord);//this is the complex dependent id function                                    
+      $this->fn_addDependentComponentToLinkTable("maintainlink", $int_idRecord);//this is the complex dependent id function                                    
       //There is now a list of dependent entries in the link table      
     }  
     
@@ -2405,11 +2144,11 @@ function fn_XDesigner_maintain(){
     //$this->fn_addEcho("str_list maintain: ".$str_list);    
 
     $str_sql="UPDATE `instance` SET MaintainStatus=1 WHERE id in($str_list)";            
-    $stmt = $this->pdo->prepare($str_sql);
+    $stmt = $this->pdo_user->prepare($str_sql);
     $stmt->execute();    
     
     $str_sql = "SELECT GROUP_CONCAT(Id) as 'list' FROM `instance` WHERE !MaintainStatus;";
-    $stmt = $this->pdo->prepare($str_sql);
+    $stmt = $this->pdo_user->prepare($str_sql);
     $stmt->execute();      
     $row=$stmt->fetch();            
     if($row){                
@@ -2419,17 +2158,17 @@ function fn_XDesigner_maintain(){
     
     //N.B. Below instance_archive table must be recreated/updated following any column change to the original instance table. 
     $str_sql="INSERT INTO `instance_archive` SELECT * FROM `instance` WHERE Id NOT IN(SELECT LinkDependentId FROM `maintainlink`);"; //future where userid =x            
-    $stmt = $this->pdo->prepare($str_sql);        
+    $stmt = $this->pdo_user->prepare($str_sql);        
     $stmt->execute();      
     
     $str_sql="DELETE FROM `instance` WHERE MaintainStatus=0;";                
-    $stmt = $this->pdo->prepare($str_sql);
+    $stmt = $this->pdo_user->prepare($str_sql);
     $stmt->execute();    
 
     $this->fn_removeOrphanFolderInstance();
 
     $str_sql="DELETE FROM `maintainlink`"; //future where userid =x
-    $stmt = $this->pdo->prepare($str_sql);
+    $stmt = $this->pdo_user->prepare($str_sql);
     $stmt->execute();      
     
   }
@@ -2592,13 +2331,13 @@ function fn_XDesigner_updateFileToInstanceTable($int_idFixed, $str_dbname, $str_
   
   if($int_id_record==0){    
     $str_sql="INSERT INTO `instance` (`id`, `Name`, `Type`, `HiddenProjectPin`, `DependentId`, `Serialize`) SELECT ?, ?, ?, ?, ?, ?;";
-    $stmt = $this->pdo->prepare($str_sql);    
+    $stmt = $this->pdo_user->prepare($str_sql);    
     $stmt->execute([$int_idFixed, $str_dbname, $str_dbtype, "1", "", $str_code]);
     $int_idFixed=$this->fn_get_last_insert_id();
   }
   else{
     $str_sql="UPDATE `instance` SET `Serialize`=? WHERE `id`=?;";    
-    $stmt = $this->pdo->prepare($str_sql);          
+    $stmt = $this->pdo_user->prepare($str_sql);          
     $stmt->execute([$str_code, $int_id_record]);
   }  
   
@@ -2607,7 +2346,7 @@ function fn_XDesigner_updateFileToInstanceTable($int_idFixed, $str_dbname, $str_
 function fn_XDesigner_dbTypeInstanceExist($int_idFixed, $str_dbtype){
 
   $str_sql="SELECT Id FROM `instance` WHERE Id=? AND Type =? ;";
-  $stmt = $this->pdo->prepare($str_sql);        
+  $stmt = $this->pdo_user->prepare($str_sql);        
   $stmt->execute([$int_idFixed, $str_dbtype]);
   $row=$stmt->fetch();        
   $int_id_record=0;  
@@ -2855,19 +2594,20 @@ function fn_XDesginer_transferFileToComponentTable($str_dbtype, $str_typeExtend,
   
   $str_sql="DELETE FROM `component` WHERE `Type`=?";
   //$this->fn_addEcho("str_sql: ".$str_sql);
-  $stmt = $this->pdo->prepare($str_sql);  
+  $stmt = $this->pdo_user->prepare($str_sql);  
   $stmt->execute([$str_dbtype]);  
   
   $str_sql="INSERT INTO `component` (`Type`, `Extend`, `ClassList`, `Code`, `LocationID`, `CreatedDate`, `ModifiedDate`) SELECT ?, ?, ?, ?, ?, ?, ?;";    
-  $stmt = $this->pdo->prepare($str_sql);
+  $stmt = $this->pdo_user->prepare($str_sql);
   $stmt->execute([$str_dbtype, $str_typeExtend, $str_ClassList, $str_code, $str_LocationID, $str_CreatedDate, $str_ModifiedDate]);
   
 }   
 
 
-function fn_removePackageFolders(){
-
+function fn_removePackageFolders(){   
   
+  //global package delete funciton - be careful where this is called.
+
   //for each strname_instance_folder in $this->str_folderPathInstanceXDesign;
   $arr_fobj = scandir($this->str_folderPathInstanceXDesign);
   
@@ -2885,6 +2625,7 @@ function fn_removePackageFolders(){
 
     $this->fn_deleteFolder($str_path);                 
   }
+  
 }
 
 private function isEmptyDir($dir)
@@ -3050,12 +2791,11 @@ function fn_removeOrphanFolder($int_idRecord){
     }
 }
     
-function fn_importInstanceFiles(){
+function fn_importInstanceFiles(){  
   
   
   //NB Under no circumstances run fn_removeOrphanFolderInstance, here. 
-  //That would mean foldres cannot be imported which have been erroneously deleted from the db!
-  $this->fn_removePackageFolders();
+  //That would mean foldres cannot be imported which have been erroneously deleted from the db!  
   
   //for each strname_instance_folder in $this->str_folderPathInstanceXDesign;
   $arr_fobj = scandir($this->str_folderPathInstanceXDesign);
@@ -3124,11 +2864,11 @@ function fn_importInstanceFiles(){
 function fn_XDesginer_transferFileToInstanceTable($int_idRecord, $str_Name, $str_Type, $str_DependentId, $bln_ProjectPin, $bln_HiddenProjectPin, $bln_PalettePin, $bln_HiddenPalettePin, $str_Serialize, $bln_ToggleProjectPin, $str_LocationID, $str_CreatedDate, $str_ModifiedDate){                   
   
   $str_sql="DELETE FROM `instance` WHERE `id`=?";
-  $stmt = $this->pdo->prepare($str_sql);
+  $stmt = $this->pdo_user->prepare($str_sql);
   $stmt->execute([$int_idRecord]);              
 
   $str_sql="INSERT INTO `instance` (`id`, `Name`,`Type`, `DependentId`, `ProjectPin`, `HiddenProjectPin`, `PalettePin`, `HiddenPalettePin`,`Serialize`,`ToggleProjectPin`, `LocationID`, `CreatedDate`, `ModifiedDate`) SELECT ?,?,?,?,?,?,?,?,?,?,?,?,?;";    
-  $stmt = $this->pdo->prepare($str_sql);      
+  $stmt = $this->pdo_user->prepare($str_sql);      
   $stmt->execute([$int_idRecord, $str_Name, $str_Type, $str_DependentId, $bln_ProjectPin,$bln_HiddenProjectPin, $bln_PalettePin, $bln_HiddenPalettePin, $str_Serialize, $bln_ToggleProjectPin, $str_LocationID,$str_CreatedDate, $str_ModifiedDate]);  
 }   
 
@@ -3196,11 +2936,18 @@ function fn_dataConnect($obj_connect) {
   try {      
       $pdo = new PDO($dsn, $obj_connect->User, $obj_connect->Pass, $options);      
       $obj_connect->HasError=false;  
-      $obj_connect->str_message="";              
+      $obj_connect->str_message="";      
    } catch (PDOException $e) {                   
     $obj_connect->str_message="CONNECT ERROR".$e->getMessage();    
-  }
+  }  
   return $pdo;
 }
+function fn_setGroupConcatLimit($int_limit=1000000){      
+      
+  $str_sql="SET SESSION group_concat_max_len = $int_limit;";
+  $stmt = $this->pdo_user->prepare($str_sql);      
+  $stmt->execute();
+}     
+
 }//END CLASS xdesign1
 ?>

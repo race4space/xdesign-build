@@ -1,0 +1,5 @@
+*.gitignore
+server-key.php
+build/
+vendor/
+sendgrid.env

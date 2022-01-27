@@ -19,6 +19,7 @@ class DesignDelegate{
         if(obj_design.bln_maintainId===undefined){obj_design.bln_maintainId=false;}
         if(obj_design.bln_registerAtProject===undefined){obj_design.bln_registerAtProject=false;}
         if(obj_design.bln_registerAtContainer===undefined){obj_design.bln_registerAtContainer=false;}        
+        if(obj_design.str_urlServer===undefined){obj_design.str_urlServer="server.php";}        
         if(obj_design.bln_themeType===undefined){obj_design.bln_themeType=false;}
         if(obj_design.bln_typeable===undefined){            
             let str_listIn="div,p,span,td,th";
@@ -27,7 +28,7 @@ class DesignDelegate{
             if(obj_design.bln_typeable===undefined){obj_design.bln_typeable=bln_typeable;}                                 
         }
         if(!obj_design.str_locationID){obj_design.str_locationID="notset";}//undefined or empty string or false                        
-        if(!obj_design.bln_createRelease){obj_design.bln_createRelease="false";}//reset any previou true settings        
+        if(!obj_design.bln_createRelease){obj_design.bln_createRelease="false";}//reset any previou true settings                
         if(!obj_design.str_nameRelease){obj_design.str_nameRelease="notset";}//reset any previou true settings        
         
         if(obj_design.str_text==undefined){obj_design.str_text="notset";}//Menu Button Only                      
@@ -61,6 +62,8 @@ class DesignDelegate{
         obj_item.obj_design.bln_palettePin=false;        
         obj_item.obj_design.bln_projectPin=false;              
         //*/
+        obj_item.obj_design.bln_palettePin=false;        
+        obj_item.obj_design.bln_projectPin=false;              
       
 
         //MAY NOT HAVE COMPLETE OBJECT INITIALIZATION , IF SERVER GRAB
@@ -107,9 +110,10 @@ class DesignDelegate{
             return;
         }        
 
-        //console.log("design delete fn_removeId: " +  obj_delegator.obj_design.int_idRecord);
+        console.log("design delete fn_removeId: " +  obj_delegator.obj_design.int_idRecord);
     
         obj_delegator.obj_design.int_idRecord=0;      
+        obj_delegator.fn_setIDXDesign();
         obj_delegator.obj_design.int_modeExecute=obj_holder.int_modeEdit;                            
     }
     fn_listenEventDesign(){

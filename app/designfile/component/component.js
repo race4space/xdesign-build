@@ -3,18 +3,42 @@ class designfile extends AJAX {
       super(obj_ini); // call the super class constructor                    
     }    
     fn_initialize(obj_ini){
+        
         super.fn_initialize(obj_ini);
 
         //START INITIALIZE DESIGN            
         this.fn_setType("designfile");      
-        this.fn_setTag("designfile", true);                                                           
-        this.obj_design.str_url_server=obj_path.fn_getURLServerFile("xdesign1", "server.php");
+        this.fn_setTag("designfile", true);                                                                          
+        
         //END INITIALIZE DESIGN      
         //START INITIALIZE STYLE                    
-        //END INITIALIZE STYLE                
-
-        
-    }         
+        //END INITIALIZE STYLE  
+    }  
+    /////////////////////                   
+    fn_onUnAuthorizeUserStatus(obj_post){
+        let obj_notifier;
+        //console.log("designfile fn_onUnAuthorizeUserStatus: " + obj_post.ObjectNotifier);
+        obj_notifier=obj_post.ObjectNotifier;   
+        let str_method="fn_onUnAuthorizeUserStatus";             
+        if(obj_notifier && obj_notifier!=this) {            
+            if(obj_notifier[str_method]){
+                obj_notifier[str_method](obj_post);
+            }
+        }
+    }  
+    fn_onAuthorizeUserStatus (obj_post){
+        let obj_notifier;
+        //console.log("designfile fn_onAuthorizeUserStatus: " + obj_post.ObjectNotifier);
+        obj_notifier=obj_post.ObjectNotifier;       
+        let str_method="fn_onAuthorizeUserStatus"; 
+        if(obj_notifier && obj_notifier!=this) {
+            if(obj_notifier[str_method]){
+                obj_notifier[str_method](obj_post);
+            }
+        }
+    }  
+    /////////////////////            
+    
     fn_runSave(obj_instance){                
         
         this.fn_save({obj_instance:obj_instance})
@@ -80,7 +104,7 @@ class designfile extends AJAX {
         else{            
             //if(bln_debug){obj_instance.fn_debug("ALL CHILD SAVED, I AM NON EDITABLE");}                
             //IF PARENT IS MARKED, TELL THEM                
-            let obj_parent=obj_instance.fn_getParentComponent();                                                        
+            let obj_parent=obj_instance.fn_getParentComponent();                                                                    
             if(obj_parent && obj_parent.obj_holder.bln_markSave){                            
                     if(bln_debug){obj_parent.fn_debug("PARENT");}                
                     if(bln_debug){obj_instance.fn_debug("PARENT MARKSAVE IS TRUE, CALL PARENT");}                                    
@@ -98,8 +122,8 @@ class designfile extends AJAX {
                         if(bln_debug){obj_instance.fn_debug("*************ERROR PARENT MARKSAVE IS FALSE");}                                    
                     }                    
                 }             
-                if(bln_debug){obj_instance.fn_debug("TOP LEVEL onSaveComponent");}   
-                this.obj_holder.obj_container.onSaveComponent(); //CallBack Function                                 
+                if(bln_debug){obj_instance.fn_debug("COMPLETE XDESIGN1 onSaveComponent");}   
+                this.obj_holder.obj_container.onSaveComponent(); //XDESIGN Program CallBack Function                                 
             }           
         }
 
@@ -165,10 +189,27 @@ class designfile extends AJAX {
 
     fn_formatPost(obj_ini){
 
-        
+        let obj_regisratorProject, str_nameApp, str_urlServer;
 
-        let obj_post=new Object;         
-        obj_post.URL=this.obj_design.str_url_server;
+        let obj_post=new Object;   
+        
+        obj_regisratorProject=this.obj_holder.obj_regisratorProject;
+        str_nameApp=obj_regisratorProject.obj_design.str_name;                 
+        str_urlServer=obj_regisratorProject.obj_design.str_urlServer;         
+
+        /*
+        this.fn_debug("Test");
+        console.log("this.obj_holder.obj_regisratorProject: " + this.obj_holder.obj_regisratorProject);        
+        console.log("str_nameApp: " + str_nameApp);        
+        console.log("str_urlServer: " + str_urlServer);        
+        //*/
+
+        if(!obj_regisratorProject){return;}
+        if(!str_nameApp){return;}
+        if(!str_urlServer){return;}        
+        
+        str_urlServer=obj_path.fn_getURLServerFile(str_nameApp, str_urlServer);      
+        obj_post.URL=str_urlServer
         
         obj_post.NotifierId=obj_ini.str_idAJAXNotifier;                        
         obj_post.Action=obj_ini.str_action;                
@@ -181,6 +222,7 @@ class designfile extends AJAX {
         obj_post.ProjectPin=obj_ini.bln_projectPin;        
         obj_post.PalettePin=obj_ini.bln_palettePin;        
         obj_post.DynamicPin=obj_ini.bln_dynamicPin;        
+        obj_post.Execute=obj_ini.bln_execute;           
 
         //only required on logon
         obj_post.AuthorizeUserEmail=obj_ini.AuthorizeUserEmail;        
@@ -207,8 +249,7 @@ class designfile extends AJAX {
             obj_post.LocationID=obj_instance.obj_design.str_locationID;
             obj_post.CreatedDate=obj_instance.obj_design.str_createdDate;
             obj_post.ModifiedDate=obj_instance.obj_design.str_modifiedDate;
-            obj_post.CreateRelease=obj_instance.obj_design.bln_createRelease;
-            obj_post.ReleaseName=obj_instance.obj_design.str_nameRelease;
+            obj_post.CreateRelease=obj_instance.obj_design.bln_createRelease;            
                         
             //get a list of your dependentid
             //does this need to run on every trip?                                                
@@ -405,6 +446,7 @@ class designfile extends AJAX {
 
     fn_debugServerPost(obj_post, str_comment){                                
 
+        //console.log("obj_project: " + obj_project.obj_design.int_idRecord);
         if(!obj_project.obj_holder.bln_debugServer){return;}
         
         if(str_comment===undefined){str_comment=""}
@@ -414,8 +456,7 @@ class designfile extends AJAX {
         if(obj_post.Action){s+=obj_post.Action + " ";}
         if(obj_post.RecordName && obj_post.RecordName!="New Project"){s+=obj_post.RecordName + " ";}
         if(obj_post.str_comment){s+=obj_post.str_comment + " ";}        
-        str_title=s;
-        
+        str_title=s;        
         
         console.groupCollapsed(str_title);
         let Context=obj_post.Context;
@@ -423,6 +464,7 @@ class designfile extends AJAX {
         
         //console.log("obj_post.Context: " + obj_post.Context);
         //console.log("obj_post.NotifierId: " + obj_post.NotifierId);
+        console.log("obj_post.URL: " + obj_post.URL);        
         console.log("obj_post.Action: " + obj_post.Action);
         console.log("obj_post.ActionCallBack: " + obj_post.ActionCallBack);
         //console.log("obj_post.DesignId: " + obj_post.DesignId);

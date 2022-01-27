@@ -26,7 +26,7 @@ class BaseObject extends LevelObject{
         
         //this.fn_setIsContainer(false);               
 
-        if(this.obj_design.str_idXDesign==undefined){this.obj_design.str_idXDesign=obj_shared.fn_getUniqueId("myId");}                
+        if(this.obj_design.str_idXDesign==undefined){this.fn_setIDXDesign();}
         if(obj_project){
             let str_idProject, str_idXDesign;
             str_idProject=this.obj_design.str_idProject;
@@ -119,6 +119,12 @@ class BaseObject extends LevelObject{
 
         
     }    
+
+    fn_setIDXDesign(){
+        
+        this.obj_design.str_idXDesign=obj_shared.fn_getUniqueId("myId");
+        
+    }
 
     //START CONTAINER FUNCTION
     fn_addItem(obj_ini){
@@ -1169,7 +1175,7 @@ class BaseObject extends LevelObject{
         }
         obj_enabled=this.obj_design.obj_enabled;
 
-        //console.log("fn_beforeDomProperty__disabled: " + bln_value);
+        //console.log("fn_beforeDomProperty_disabled: " + bln_value);
 
         switch(bln_value){
             case true:        

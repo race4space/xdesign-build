@@ -18,9 +18,9 @@ class AJAX extends component {
         return;
         }
 
-        if(this.obj_holder.bln_debug){
-            this.fn_debugServerPost(obj_post, "");
-        }
+        
+        this.fn_debugServerPost(obj_post, "");
+        
         
         if(obj_post.URL===undefined){
             console.log("obj_post.URL is undefined");        
@@ -45,13 +45,15 @@ class AJAX extends component {
         })
         .then(data => {            
             this.fn_putPostCallbackFetch(data);
-            //console.log(data)
+            //console.log(data);
         })
         .catch(err => {
             console.log(err);
-            console.log("obj_post.URL: " + obj_post.URL);            
+            console.log("obj_post.URL: " + obj_post.URL);                        
+            console.log("obj_post.body: " + obj_post.body);
             //this.fn_debugServerResponse(Response, true);
         })
+        
     }
 
     fn_AJAXLocateObjectInstance(obj_post){//generally overidden
@@ -66,14 +68,14 @@ class AJAX extends component {
     }
 
     fn_AJAXLocateObjectNotifier(obj_post){        
-        obj_post.ObjectNotifier=false;        
+        obj_post.ObjectNotifier=false; 
+        //console.log("obj_post.NotifierId: " + obj_post.NotifierId);       
         obj_post.ObjectNotifier=obj_project.fn_findItemById(obj_post.NotifierId);                                        
         return obj_post.ObjectNotifier;
     }
 
     fn_putPostCallbackFetch(data){
-        let obj_post=this.fn_formatPostFetch(data);    
-        let int_index, obj_notifier, str_action, str_actionCallback; 
+        let obj_post=this.fn_formatPostFetch(data);            
         
         if(obj_post.HasError){            
             console.log("HasError: " + obj_post.ErrorMessage);
@@ -83,12 +85,16 @@ class AJAX extends component {
         obj_post.ObjectInstance=this.fn_AJAXLocateObjectInstance(obj_post);
         obj_post.ObjectNotifier=this.fn_AJAXLocateObjectNotifier(obj_post);
         
-
+        this.fn_callbackFetch(obj_post);        
+    }    
+    
+    fn_callbackFetch(obj_post){      
+        let obj_notifier, str_action, str_actionCallback;   
         str_action=obj_post.Action;                
-        str_actionCallback=obj_post.ActionCallBack;                
+        str_actionCallback=obj_post.ActionCallBack;      
 
         obj_notifier=this;
-        if(obj_notifier){
+        if(obj_notifier){            
             if(obj_notifier[str_action]){
                 obj_notifier[str_action](obj_post);
             }        
@@ -96,12 +102,30 @@ class AJAX extends component {
         
         obj_notifier=obj_post.ObjectNotifier;        
         if(obj_notifier){                        
+            //obj_notifier.fn_callbackFetch(obj_post);
             if(obj_notifier[str_actionCallback]){
                 obj_notifier[str_actionCallback](obj_post);
-            }        
+            }
         }
 
+        obj_post.AuthorizeUserStatus=obj_shared.fn_parseBool(obj_post.AuthorizeUserStatus);
+        //console.log("ajax obj_post.AuthorizeUserStatus: " + obj_post.AuthorizeUserStatus);
+        if(!obj_post.AuthorizeUserStatus){
+            //console.log("ajax  obj_post.AuthorizeUserStatus is false");
+            this.fn_onUnAuthorizeUserStatus(obj_post);            
+        }
+        else{
+            //console.log("ajax  obj_post.AuthorizeUserStatus is true");
+            this.fn_onAuthorizeUserStatus(obj_post);            
+        }
     }
+    fn_onUnAuthorizeUserStatus(obj_post){
+        console.log("OVERIDDEN - SHOULD NEVER SEE fn_onUnAuthorizeUserStatus");
+    }    
+    fn_onAuthorizeUserStatus(obj_post){
+        console.log("OVERIDDEN - SHOULD NEVER SEE fn_onAuthorizeUserStatus");
+    }    
+    
     fn_formatPostFetch(obj_post, bln_expanded=false){//could this be overriden to allow for applicaiton specific processing
 
         let bln_debug =false;
@@ -121,6 +145,8 @@ class AJAX extends component {
 
         obj_post.ObjectData=obj_myJson.fn_deserialize(obj_post.ObjectData, "ObjectData");          
         obj_post.RowData=obj_myJson.fn_deserialize(obj_post.RowData, "RowData");//Array of  Recordset Rows          
+        //if(!obj_post.DesignId){obj_post.DesignId="";}
+        
 
         if(bln_debug){
             console.log("AFTER DESERIALIZE");
@@ -132,9 +158,9 @@ class AJAX extends component {
         if(Array.isArray(obj_post.RowData)){
             obj_post.RowObject=obj_post.RowData[0];//1st Row of RecordSet, for handy access ? otheriwse just use obj_post.RowData[0]
         }
-        if(this.obj_holder.bln_debug){
-            this.fn_debugServerPost(obj_post, "");
-        }
+        
+        this.fn_debugServerPost(obj_post, "");
+        
 
         return obj_post;
     }

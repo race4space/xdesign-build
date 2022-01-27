@@ -13,12 +13,9 @@
             this.obj_design.bln_isGenericTag=true;            
             //this.fn_extends("abc");            
           }
-          fn_XDesigner_onLogIn(obj_auth){            
-            //this.fn_newProject();
+          fn_XDesigner_onLogIn(){                      
           }
-          fn_XDesigner_onLogOut(obj_auth){
-            //this.fn_newProject();
-          }
+          
           fn_onStateChange(){                        
             
             if(!super.fn_onStateChange()){return;} 

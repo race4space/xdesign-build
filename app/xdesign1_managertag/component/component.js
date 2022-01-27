@@ -171,6 +171,7 @@
       
       
       obj_item.obj_design.int_idRecord=0;      
+      obj_item.fn_setIDXDesign();
       obj_item.obj_design.int_modeExecute=obj_holder.int_modeEdit;              
 
       let arr=obj_item.obj_design.arr_item;

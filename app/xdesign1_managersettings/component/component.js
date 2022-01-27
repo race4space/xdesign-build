@@ -15,29 +15,12 @@
           }
 
           
-          fn_XDesigner_onLogIn(obj_auth){            
+          fn_XDesigner_onLogIn(){            
             let obj_item;
-            let bln_displaySysAdmin=false;            
-            let bln_visibleUserAuthor=false;
             
-            obj_auth.AuthorizeStatusUserAuthor=true;
-            obj_auth.AuthorizeStatusSysAdmin=true;
-            if(obj_auth.AuthorizeStatusUserAuthor){                          
-              bln_visibleUserAuthor=true;              
-              if(obj_auth.AuthorizeStatusSysAdmin){                          
-                bln_displaySysAdmin=true;
-              }
-            }
-            else{
-              obj_item=this.fn_getComponent("xdesign1_console");
-              if(obj_item){obj_item.fn_setDisplay(true)};  
-
-              obj_project.fn_consoleLog("Please login");
-
-              obj_item=obj_project.fn_getComponent("loginPanel");                        
-              if(obj_item){obj_item.fn_setVisibility(false);}            
-            }
-
+            let bln_visibleUserAuthor=true;              
+            let bln_displaySysAdmin=true;            
+            
             obj_item=this.obj_holder.obj_xdesign1_import;
             if(obj_item){obj_item.fn_setVisibility(bln_visibleUserAuthor)};            
 
