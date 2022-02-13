@@ -5,25 +5,26 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
     super(obj_ini);        
   } 
   fn_initialize(obj_ini){
-    super.fn_initialize(obj_ini);                
-    
+    super.fn_initialize(obj_ini);                    
     
     this.fn_setType("xdesign1_managerpalette");      
     this.fn_setTag("xdesign1_managerpalette");                        
     this.fn_extends("xdesign1_managermenu");            
+    this.fn_requires("xdesign1_managercategorypalette");                      
+
+    this.obj_design.str_urlServer="server.php";
+    this.obj_holder.bln_debugServer=false;
   }
   fn_onStateChange(){      
     
-    if(!super.fn_onStateChange()){return;} 
+    super.fn_onStateChange();
+    
     if(!obj_projectTarget){return;}   
 
     let bln_value;
 
     bln_value=true;               
-    if(!obj_project.LocationMatchInstance){
-      bln_value=false;
-    }                 
-
+    
     let obj_item;                        
     obj_item=this.fn_getComponent("xdesign1_addtag");
     if(obj_item){      
@@ -32,59 +33,141 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
     
     this.obj_holder.obj_container.fn_setEnabled(bln_value);    
                     
-    this.fn_getListPinnedComponent();                
+    
+  }  
+  fn_getContent(){
+    //console.log("rrr fn_getContent");
+    this.fn_getListPinnedComponent();            
+  }
+  
+  fn_getListPinnedComponent(){         
+    //console.log("MENU PALLET fn_getListPinnedComponent");
+    //obj_project.fn_runAction("getListPalettePinnedComponentInCategory");          
+    
+    let obj_query={};            
+    obj_query.str_action="getListPaletteInCategory";            
+    this.fn_runQuery(obj_query);
+  }   
+
+  getListPaletteInCategory(obj_post){                                        
+    this.fn_getMenuItems(obj_post);  
+    
+    if(obj_projectTarget){      
+      //obj_projectTarget.obj_designDelegate.fn_setPaletteSelected();        
+    }
+  }            
+  
+  fn_addMenuItem(str_CategoryName){
+            
+    let obj_ini, obj_container;
+    obj_ini=new Holder;                                    
+    obj_ini.obj_design.str_type="menubutton";                    
+    obj_ini.obj_design.str_name=str_CategoryName;                
+    obj_container=this.obj_holder.obj_accordion.fn_addItem(obj_ini);                          
+    
+    obj_ini=new Holder;                                    
+    obj_ini.obj_design.str_name="xdesign1_managercategorypalette";                                    
+    obj_ini.obj_design.str_type="xdesign1_managercategorypalette";                                    
+    obj_ini.obj_design.str_categoryName=str_CategoryName;                                                    
+    obj_container.fn_addItem(obj_ini);                      
 
   }
 
-  fn_getListPinnedComponent(){      
-    obj_project.fn_runAction("getListPalettePinnedComponent");      
-  }
-  fn_onGetListPalettePinnedComponent(obj_post){          
-    //console.log("fn_onGetListPalettePinnedComponent");            
-    let arr_row=obj_post.RowData;    
-    this.fn_listPinnedComponent(arr_row);
-  }
-  fn_listPinnedComponent(arr_row){
+  
+  /*
+  fn_onGetListPalettePinnedComponentInCategory(obj_post){                  
+    
+    let obj_dynamicContentHolder, obj_container;
+    let obj_ini;
 
-    let obj_ini, obj_item, obj_dynamicContentHolder;                        
     
     obj_dynamicContentHolder=this.fn_getComponent("ListPaletteDynamicContent");                        
     if(!obj_dynamicContentHolder){
       return;
-    }
-    obj_dynamicContentHolder.fn_prepare();                  
+    }    
+    obj_dynamicContentHolder.fn_prepare();                          
 
-    let bln_disabled=false;
-    if(!obj_project.LocationMatchInstance){bln_disabled=true;}//CHECK SERVER LOCKED                              
+
+    obj_container=obj_dynamicContentHolder;
+    obj_ini=new Holder;                                    
+    obj_ini.obj_design.str_type="xdesign1_addtag";                              
+    obj_ini.obj_design.str_nameRegistrator=this.obj_design.str_name;                        
+    obj_container.fn_addItem(obj_ini);    
     
-    let obj_row, int_idRecord, str_nameRecord, str_typeRecord;
-    for(var i=0;i<arr_row.length;i++){
-      obj_row=arr_row[i];
-      if(obj_shared.fn_isObjectEmpty(obj_row)){continue;}//RowData Can contain a single empty object
 
-      int_idRecord=obj_row.id;
-      str_nameRecord=obj_row.Name;
-      str_typeRecord=obj_row.Type;
-      
-      obj_ini=new Holder;        
-      //obj_ini.obj_design.str_name="xdesign1 " + obj_row.Name;
-      obj_ini.obj_design.str_name="xdesign1_buttonAddPaletteItem" + obj_row.Name;
-      obj_ini.obj_design.str_text=obj_row.Name;
-      obj_ini.obj_design.str_type="button";
-      obj_ini.obj_design.int_idRecordTarget=int_idRecord;        
-      obj_ini.obj_design.str_typeRecordTarget=str_typeRecord;
-      obj_ini.obj_design.str_nameEventClick=obj_project.obj_holder.str_prefix + "myDesignerButtonClick";
-      obj_ini.obj_design.str_valueEventClick="fn_addComponentItem";                    
-      obj_ini.obj_domProperty.disabled=bln_disabled;         
-      obj_item=obj_dynamicContentHolder.fn_addItem(obj_ini);
+
+
+    obj_ini=new Holder;                                    
+    obj_ini.obj_design.str_type="accordion";    
+    this.obj_holder.obj_accordionCat=obj_dynamicContentHolder.fn_addItem(obj_ini);    
+
+    
+    this.fn_listPinnedComponentInCategory(obj_post);    
+    obj_post.bln_ListAll=obj_project.bln_ListAll;            
+    if(obj_post.bln_ListAll){
+      this.fn_listPinnedComponentInCategory(obj_post);    
     }
-
     
     if(obj_projectTarget){
       obj_projectTarget.obj_designDelegate.fn_setPaletteSelected();        
     }
   }
+  
 
+  
+  fn_listPinnedComponentInCategory(obj_post){
+
+    let obj_ini, obj_item, obj_container, obj_row, arr_row;           
+    let bln_disabled=false;        
+    let str_CategoryName, str_CategoryCurrent;
+
+    str_CategoryCurrent="";
+    arr_row=obj_post.RowData;          
+    if(obj_post.bln_ListAll){      
+      arr_row.sort((a, b) => (a.InstanceName.toLowerCase() > b.InstanceName.toLowerCase()) ? 1 : -1)                    
+    }
+    
+    for(var i=0;i<arr_row.length;i++){
+      
+      obj_row=arr_row[i];      
+
+      if(obj_shared.fn_isObjectEmpty(obj_row)){continue;}//RowData Can contain a single empty object      
+      
+      if(obj_post.bln_ListAll){        
+        str_CategoryName="All";
+      }
+      else{
+        str_CategoryName=obj_row.CategoryName;
+        if(str_CategoryName===null){
+          continue;
+        }                
+      }
+
+      if(str_CategoryName.toLowerCase()!==str_CategoryCurrent.toLowerCase()){
+        str_CategoryCurrent=str_CategoryName;
+        obj_ini=new Holder;                                    
+        obj_ini.obj_design.str_type="menubutton";                    
+        obj_ini.obj_design.str_name=str_CategoryName;                
+        obj_container=this.obj_holder.obj_accordionCat.fn_addItem(obj_ini);                      
+
+        if(obj_post.bln_ListAll){}  
+      }      
+      
+      obj_ini=new Holder;        
+      //obj_ini.obj_design.str_name="xdesign1 " + obj_row.InstanceName;
+      obj_ini.obj_design.str_name="xdesign1_buttonAddPaletteItem" + obj_row.InstanceName;
+      obj_ini.obj_design.str_text=obj_row.InstanceName;
+      obj_ini.obj_design.str_type="button";
+      obj_ini.obj_design.int_idRecordTarget=obj_row.InstanceId;        
+      obj_ini.obj_design.str_typeRecordTarget=obj_row.InstanceType;
+      obj_ini.obj_design.str_nameEventClick=obj_project.obj_holder.str_prefix + "myDesignerButtonClick";
+      obj_ini.obj_design.str_valueEventClick="fn_addComponentItem";                    
+      obj_ini.obj_domProperty.disabled=bln_disabled;         
+      obj_item=obj_container.fn_addItem(obj_ini);
+    }
+  }  
+  //*/
+  
   fn_onPaletteItemSelected(){                                             
     let obj_container=obj_project.obj_palettSelected;
     let bln_valid=this.fn_validateContainer(obj_container);   
@@ -186,7 +269,7 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
     if(!bln_canInsert){
       console.log("fn_addPaletteItem CANNOT INSERT ITEM: " + str_type + ": " + str_type_container);
       return;
-    }
+    }    
     
     switch(obj_ini.obj_design.str_type.toLowerCase()){        
       case "eazygriditem":
@@ -235,18 +318,7 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
     let obj_itemEvent, obj_item, obj_ini, str_tag, str_type, str_value, str_linkId;
     let foo_val, obj_tag, str_content;      
 
-    
-    /*
-    obj_itemEvent=obj_project.obj_projectEvent;//obj_itemEvent is the button
-    str_linkId=obj_itemEvent.obj_design.str_linkId;//str_linkId is the input
-    if(str_linkId===undefined){//likely just the input which was clicked
-      alert("str_linkId: " + str_linkId);
-      return;
-    }    
-    obj_item=obj_project.fn_findItemById(str_linkId);//this is the input
-    //*/
-
-    obj_item=this.fn_getComponent("xdesign1_addtagInput");                                    
+    obj_item=this.fn_getComponent("xdesign1_addtagInput");                                        
     if(!obj_item){return;}
     
     
@@ -289,7 +361,7 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
       default:
     }
 
-    obj_tag=this.fn_addPaletteItem(obj_ini);
+    obj_tag=this.fn_addPaletteItem(obj_ini);    
     return obj_tag;
   }
   
@@ -333,24 +405,51 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
     let obj_component=obj_dynamicContentHolder;
     arr=obj_component.obj_design.arr_item;                                  
     for(let i=0;i<arr.length;i++){
-        obj_item=obj_component.obj_design.arr_item[i];          
-        //console.log("obj_item: " + obj_item);
-        if(obj_item){            
+        obj_item=arr[i];          
+        
+        if(obj_item){                      
+
+          str_type=obj_item.obj_design.str_type;
+          //console.log("str_type: " + str_type);
+          if(str_type==="accordion"){
+            this.fn_setPaletteEnabledParent(obj_item, obj_container);
+            continue;
+          }
           str_type=obj_item.obj_design.str_typeRecordTarget;
           if(!str_type){str_type="";}    
-          str_type_container=obj_container.obj_design.str_type;
-          bln_canInsert=this.fn_validateInsertContainer(str_type, obj_container);                                
-          if(!bln_canInsert){            
-            obj_item.fn_setDisabled();            
-            //console.log("fn_setDisabled str_type: " + str_type);
-          }
-          else{
-            obj_item.fn_setEnabled();
-            //console.log("fn_setEnabled str_type: " + str_type);
-          }
+          this.fn_setPaletteEnabledItem(obj_item, obj_container);
+          
         }
     }                
   }  
+  fn_setPaletteEnabledParent(obj_parent, obj_container){    
+
+    let arr, obj_item;
+    let str_type, bln_canInsert;        
+    
+    arr=obj_parent.obj_design.arr_item;                                  
+    for(let i=0;i<arr.length;i++){
+        obj_item=arr[i];                  
+        if(obj_item){                      
+          this.fn_setPaletteEnabledItem(obj_item, obj_container);          
+        }
+    }                
+  }  
+  fn_setPaletteEnabledItem(obj_item, obj_container){    
+
+    if(obj_item){                      
+      let str_type=obj_item.obj_design.str_typeRecordTarget;
+      if(!str_type){str_type="";}             
+      let bln_canInsert=this.fn_validateInsertContainer(str_type, obj_container);                                
+      if(!bln_canInsert){            
+        obj_item.fn_setDisabled();                        
+      }
+      else{
+        obj_item.fn_setEnabled();            
+      }
+    }
+  }  
+
   fn_validateInsertContainer(str_type, obj_container){
       
     let str_typeToInsert, str_type_container, bln_value, str_listIn;
@@ -361,12 +460,17 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
     bln_value=false;        
     switch(str_type_container){                      
       case "eazygrid":                          
-        str_listIn="eazygriditem,xloginpanel";
+        str_listIn="eazygriditem";
         if(obj_shared.fn_inStr(","+str_typeToInsert+",", ","+str_listIn+",")){                
           bln_value=true;
         }                      
       break;              
-    break;        
+      case "accordion":                          
+        str_listIn="menubutton";
+        if(obj_shared.fn_inStr(","+str_typeToInsert+",", ","+str_listIn+",")){                
+          bln_value=true;
+        }                      
+      break;                  
       case "table":                          
         str_listIn="tablerow,tablebody,tablehead,tablefoot";
         if(obj_shared.fn_inStr(","+str_typeToInsert+",", ","+str_listIn+",")){                
@@ -420,19 +524,21 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
     return bln_value;
   }  
 
-  fn_removeId(obj_item){      
+deprecate_fn_removeId(obj_item){      
     
-
-    console.log("manager palette fn_removeId");
 
     let bln_locked=obj_item.obj_design.bln_lockComponent;              
     bln_locked=obj_shared.fn_parseBool(bln_locked);
     if(bln_locked){        
-      console.log("fn_removeId bln_locked");
+      console.log("bln_locked");
       return;
     } 
 
-    obj_item.obj_design.int_idRecord=0;          
+    obj_item.obj_design.int_idRecord=0;
+    obj_item.obj_design.bln_palettePin=false;        
+    obj_item.obj_design.bln_projectPin=false;              
+    obj_item.obj_design.str_cateogryList="";              
+               
     obj_item.fn_setIDXDesign();
     obj_item.obj_design.int_modeExecute=obj_holder.int_modeEdit;              
 

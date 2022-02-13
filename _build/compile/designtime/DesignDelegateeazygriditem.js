@@ -13,11 +13,11 @@ class DesignDelegateeazygriditem extends DesignDelegate{
         let obj_delegator=this.obj_delegator;        
         if(obj_delegator.obj_holder.obj_container.obj_design.bln_eazyGrid){          
             switch(obj_ini.obj_design.str_type.toLowerCase()){
-              case "eazygrid":
-                obj_ini.obj_design.bln_split=obj_shared.fn_flipBool(obj_delegator.obj_holder.obj_container.obj_design.bln_split);                
+              case "eazygrid":                                            
               break;      
             }
-          }
+          }          
+          
         return super.fn_addPaletteItem(obj_ini);        
     }    
     fn_setDesignProperty(str_name, foo_value){

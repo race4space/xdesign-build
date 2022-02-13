@@ -4,8 +4,7 @@
       super(obj_ini);        
     } 
     fn_initialize(obj_ini){
-      super.fn_initialize(obj_ini);                
-      
+      super.fn_initialize(obj_ini);
       
       this.fn_setType("xdesign1");      
       this.fn_setTag("xdesign1");            
@@ -96,6 +95,7 @@
     }
 
     fn_projectTarget_onLoad(){   //project target
+      //console.log("fn_projectTarget_onLoad");
 
       //set reference to design frames publish object, called when that object has loaded in the frame
       obj_projectTarget=this.obj_holder.obj_xdesign1_padiframe.dom_obj.contentWindow.obj_project;                         
@@ -103,10 +103,15 @@
         console.log("Error: obj_projectTarget is false");
       }
       //note  obj_projectTarget.obj_designDelegate will still be undefined at thsi point.  
+      obj_project.obj_palettSelected=obj_projectTarget;      
       this.fn_onStateChange();      
+      this.obj_holder.obj_xdesign1_managertag.fn_open();    
+
     }    
     
-    fn_onStateChange(){                
+    fn_onStateChange(){    
+      
+      //console.log("XDESIGN fn_onStateChange");
       
       this.obj_holder.obj_xdesign1_managersettings.fn_onStateChange();  
       this.obj_holder.obj_xdesign1_managerproject.fn_onStateChange();
@@ -117,8 +122,11 @@
     }          
     fn_onPaletteItemSelected(){             
       
-      let obj_item=this.obj_palettSelected;     
-      if(!obj_item){return;}               
+      let obj_item=this.obj_palettSelected; 
+
+      if(!obj_item){        
+        return;
+      }               
       
       this.obj_holder.obj_xdesign1_managerproject.fn_onPaletteItemSelected();
       this.obj_holder.obj_xdesign1_managerpalette.fn_onPaletteItemSelected();
@@ -133,9 +141,10 @@
       this.obj_holder.obj_managerTag.fn_onPaletteItemDeSelected();  
       //*/
     }    
-    fn_removeId(obj_item){
-      //console.log("project palette fn_removeId");
-      this.obj_holder.obj_xdesign1_managerpalette.fn_removeId(obj_item);
+    fn_removeId(obj_item){      
+      
+      this.obj_designDelegate.fn_removeId(obj_item);
+      //this.obj_holder.obj_xdesign1_managerpalette.fn_removeId(obj_item);
     }      
     fn_getGlass(){
       return this.obj_holder.obj_xdesign1_padiframe.dom_obj.contentWindow;
@@ -213,42 +222,45 @@
     }
     fn_addComponentItem(obj_ini){//refers to adding custom components from palett via button
       return this.obj_holder.obj_xdesign1_managerpalette.fn_addComponentItem();
-    }
-    fn_getListPalettePinnedComponent(){ //BUTTON EVENT
-      return this.obj_holder.obj_xdesign1_managerpalette.fn_getListPinnedComponent();        
-    }
-    getListPalettePinnedComponent(obj_post){  
-      this.obj_holder.obj_xdesign1_managerpalette.fn_onGetListPalettePinnedComponent(obj_post);
-    }
+    }        
+    getListPalettePinnedComponentInCategory(obj_post){  
+      this.obj_holder.obj_xdesign1_managerpalette.fn_onGetListPalettePinnedComponentInCategory(obj_post);
+    }    
     //END PALETTE MANAGER EVENTS
     //START PROJECT MANAGER EVENTS          
     fn_saveProject(){   //save the project in the iframe  
       this.obj_holder.obj_xdesign1_managerproject.fn_saveProject();    
     }
     fn_saveComponent(){ //save Selected Item                 
-      this.obj_holder.obj_xdesign1_managerproject.fn_saveComponent(obj_project.obj_palettSelected);
+      //console.log("XDESIGN1 fn_saveComponent click button")
+      this.obj_holder.obj_xdesign1_managerproject.fn_saveComponent(this.obj_palettSelected);
     }
     fn_saveAsComponent(){        
       this.obj_holder.obj_xdesign1_managerproject.fn_saveasProject();
     }
-    onSaveComponent(){//callback function from save function
-      this.obj_holder.obj_xdesign1_managerproject.fn_onSaveComponent();  
+    onSaveComponent(obj_post){//callback function from save function
+      //console.log("XDESIGN1 onSaveComponent call back function")
+      this.obj_holder.obj_xdesign1_managerproject.fn_onSaveComponent(obj_post);        
+
+      /*
       if(obj_project){
-        if(obj_project.obj_palettSelected){                
+        if(obj_project.obj_palettSelected){                          
+          console.log("Project: onSaveComponent call fn_setPaletteSelected");
           obj_project.obj_palettSelected.obj_designDelegate.fn_setPaletteSelected();                                        
+          
         }
       }  
+      //*/
     }
     fn_openComponent(){      
       this.obj_holder.obj_xdesign1_managerproject.fn_openComponent();
     }
-    fn_getListProject(){  //not required
+    deprecated_fn_getListProject(){  //not required
       this.obj_holder.obj_xdesign1_managerproject.getListProject();        
-    }
-    getListProject(obj_post){//run action callback
-      this.obj_holder.obj_xdesign1_managerproject.fn_onGetListProject(obj_post);
-    }
-    
+    }    
+    deprecated_getListProjectInCategory(obj_post){//run action callback
+      this.obj_holder.obj_xdesign1_managerproject.fn_onGetListProjectInCategory(obj_post);
+    }        
     fn_releaseProject(){  
       this.obj_holder.obj_xdesign1_managerproject.fn_releaseProject();        
     }
@@ -389,7 +401,18 @@
     //END COMPONENT EVENT HANDLING   
     
 
-    /////////////////////        
+    /////////////////////  
+    fn_setVersionButton(bln_createRelease=false){
+      this.obj_holder.bln_createRelease=bln_createRelease;
+      let obj_item=this.fn_getComponent("xdesign1_publishProject");            
+      if(!obj_item){return;}              
+
+      let str_text="Version";      
+      if(this.obj_holder.bln_createRelease){
+        str_text="Release";
+      }
+      obj_item.fn_setText(str_text);        
+    }
     //START Parent XDesginInterface LoginPanel Template 
     fn_navigateURLLogin(){
       let int_pos=window.location.href.indexOf("lokal");//localhost                   

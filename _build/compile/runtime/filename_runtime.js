@@ -39,10 +39,15 @@ class Shared{
   fn_validNumber(x) {
     if (Number.isNaN(x)) {
       return false;
-    }
-    if (isNaN(x)) {
+    }    
+    return true;
+  }
+
+  fn_validDate(x) {
+    let int_num=Date.parse(x);
+    if (Number.isNaN(int_num)) {
       return false;
-    }
+    }    
     return true;
   }
   
@@ -79,318 +84,398 @@ class Shared{
   }
 
 
-  fn_onlyUnique(value, index, self) {
-    return self.indexOf(value) === index;
+  fn_leadingZero(int_num){
+    let str_num=int_num;
+    if(int_num<10){str_num="0"+int_num};
+    return str_num;
   }
-  
   
   fn_getDate(int_flag){
     switch(int_flag){
       case obj_const.int_dateNow:      
-      let d=new Date();
-      return d.getFullYear()+"-"+d.getMonth()+"-"+d.getDate()+" "+d.getHours()+":"+d.getMinutes()+":"+d.getSeconds(); 
-    }
-  
+      let date=new Date();
+      //Y-m-d H:i:s
+      let Y=date.getFullYear();      
+      let m=this.fn_leadingZero(date.getMonth()+1);            
+      let d=this.fn_leadingZero(date.getDate());            
+      let H=this.fn_leadingZero(date.getHours());            
+      let i=this.fn_leadingZero(date.getMinutes());            
+      let s=this.fn_leadingZero(date.getSeconds());                  
+      return Y+"-"+m+"-"+d+" "+H+":"+i+":"+s; 
+    }  
   }
+  fn_onlyUnique(value, index, self) {
+    return self.indexOf(value) === index;
+  }
+  
 
-  fn_formatUniqueList(str_list){
-    let arr_list=str_list.split(",");
-    arr_list=arr_list.map(s => s.trim());        
+  fn_formatUniqueList(str_list){    
+
+    let arr_list=str_list.split(",");        
+    arr_list=arr_list.map(s => s.replace(/\s+/g, ' ').trim());     
+    
     let arr_unique = arr_list.filter(this.fn_onlyUnique);            
     str_list=arr_unique.toString();
     return str_list;
-}
-fn_formatString(str_value, int_flag){
-  
-  switch(int_flag){
-    case obj_const.int_alpha:      
-    return str_value.replace(/[^A-Z a-z_]+/g, "");        
-    case obj_const.int_alphaComma:      
-    return str_value.replace(/[^A-Z a-z,_]+/g, "");            
-    case obj_const.int_alphaNumeric:      
-    return str_value.replace(/[^A-Za-z0-9_]+/g, "");        
-    case obj_const.int_alphaNumericComma:      
-    return str_value.replace(/[^A-Za-z0-9,_]+/g, "");            
-    case obj_const.int_trimCommas:          
-    return str_value.replace(/^,|,$/gi,"");            
+  }  
+
+  fn_formatString(str_value, int_flag){
+    
+    switch(int_flag){
+      case obj_const.int_alpha:      
+      return str_value.replace(/[^A-Z a-z_]+/g, "");        
+      case obj_const.int_alphaComma:      
+      return str_value.replace(/[^A-Z a-z,_]+/g, "");            
+      case obj_const.int_alphaNumeric:      
+      return str_value.replace(/[^A-Za-z0-9_]+/g, "");        
+      case obj_const.int_alphaNumericComma:      
+      return str_value.replace(/[^A-Za-z0-9,_]+/g, "");            
+      case obj_const.int_trimCommas:          
+      return str_value.replace(/^,|,$/gi,"");            
+    }
   }
-}
-fn_formatDate(str_value){
-  
-  return str_value.replace(/[^A-Za-z0-9 :\-_]+/g, "");            
-  //return str_value;
-}
-
-fn_replace(str_source, str_find, str_replace){  
-  let re=new RegExp(str_find, "gi");
-  return str_source.replace(re, str_replace);
-}
-fn_remove(str_source, str_remove){
-  let re=new RegExp(str_remove, "g");
-  return str_source.replace(re, "");
-}
-fn_removeSpace(str){        
-  str = str.replace(/\s+/g, '');
-  return str;
-}
-
-fn_isObjectEmpty(obj) {
-  return Object.keys(obj).length === 0;
-}
-fn_hasMembersObject(obj) {
-  return Object.keys(obj).length !== 0;
-}
-
-fn_capitalizeTheFirstLetterOfEachWord(words) {
-  var separateWord = words.toLowerCase().split(' ');
-  for (var i = 0; i < separateWord.length; i++) {
-     separateWord[i] = separateWord[i].charAt(0).toUpperCase() +
-     separateWord[i].substring(1);
+  fn_formatDate(str_value){
+    
+    return str_value.replace(/[^A-Za-z0-9 :\-_]+/g, "");            
+    //return str_value;
   }
-  return separateWord.join(' ');
-}
+  fn_formatShortName(str_value){                    
+    str_value=str_value.toLowerCase().replace(/-/gi, "_");;                    
+    str_value=this.fn_removeSpace(str_value);            
+    str_value=this.fn_formatString(str_value, obj_const.int_alphaNumeric);                                      
+    return str_value;
+  }
+  fn_formatShortDate(str_value){                    
+    str_value=this.fn_formatDate(str_value);                                      
+    return str_value;
+  }
 
-fn_inStr(str_needle, str_haystack){
 
-  let int_pos=str_haystack.indexOf(str_needle);
-  if(int_pos===-1){return false;}
-  return true;
-}
+  fn_replace(str_source, str_find, str_replace){  
+    let re=new RegExp(str_find, "gi");
+    return str_source.replace(re, str_replace);
+  }
+  fn_remove(str_source, str_remove){
+    let re=new RegExp(str_remove, "g");
+    return str_source.replace(re, "");
+  }
+  fn_removeSpace(str){        
+    str = str.replace(/\s+/g, '');
+    return str;
+  }
 
-fn_isEmptyObject(empty) { 
-  if(Object.keys(empty).length === 0 && empty.constructor === Object){
+  fn_isObject(obj) {
+    return Object.prototype.toString.call(obj) === '[object Object]'
+  }
+
+  fn_isObjectEmpty(obj) {
+    return Object.keys(obj).length === 0;
+  }
+  fn_hasMembersObject(obj) {
+    return Object.keys(obj).length !== 0;
+  }
+
+  fn_capitalizeTheFirstLetterOfEachWord(words) {
+    var separateWord = words.toLowerCase().split(' ');
+    for (var i = 0; i < separateWord.length; i++) {
+      separateWord[i] = separateWord[i].charAt(0).toUpperCase() +
+      separateWord[i].substring(1);
+    }
+    return separateWord.join(' ');
+  }
+
+  fn_inStr(str_needle, str_haystack){
+
+    let int_pos=str_haystack.indexOf(str_needle);
+    if(int_pos===-1){return false;}
     return true;
-  } 
-  return false;
-}
-
- fn_removeAllChildNodes(parent) {
-  while (parent.firstChild) {
-      parent.removeChild(parent.firstChild);
-  }
-}
-
-fn_camelCaseToHyphen(str) { 
-
-    return str.replace(/([A-Z])/g, "-$1").toLowerCase();  
-}
-
-fn_debug(obj_myObj, str_message=""){
-  this.fn_enumerateObject(obj_myObj, str_message="");
-}
-
-fn_debugArrayItem(item, index) {
-  console.log("array item: " + index + ": " + item); 
-}
-
-
-fn_enumerateObject(obj_myObj, str_message=""){
-
-    console.groupCollapsed("ENUMERATE OBJECT :" + str_message);
-
-    for (let [key, foo_value] of Object.entries(obj_myObj)) {
-        console.log(`${key}: ${foo_value}`);
-        console.log("typeof : " + typeof foo_value);
-        //if (typeof foo_value === "object" && foo_value !== null && (key=="obj_design" || key=="obj_domProperty") )  {
-        //if (typeof foo_value === "object" && foo_value !== null && (key=="obj_design"))  {
-        //if (typeof foo_value === "object" && foo_value !== null && (key.indexOf("obj_")===0))  {          
-        switch(typeof foo_value){
-          case "object":
-            this.fn_enumerateObject(foo_value, "");
-            break;
-          case "array":
-            foo_value.forEach(this.fn_debugArrayItem);
-            break;
-          default:
-            //console.log(`${key}: ${foo_value}`);
-        }        
-    }
-    console.groupEnd();
-  }
-  fn_iteratePropertyNames(obj){
-    do Object.getOwnPropertyNames(obj).forEach(function(name) {
-        console.log(name);
-    });
-    while(obj = Object.getPrototypeOf(obj));
   }
 
-  fn_findInObject(obj_myObj, str_search){
-    for (let [key, foo_value] of Object.entries(obj_myObj)) {
-        console.log(`${key}: ${foo_value}`);
+  fn_isEmptyObject(empty) { 
+    if(Object.keys(empty).length === 0 && empty.constructor === Object){
+      return true;
+    } 
+    return false;
+  }
+
+  fn_removeAllChildNodes(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
     }
   }
 
-  fn_getUniqueId(str_value){
-    let generator = new IDGenerator();
-    return str_value +"_" + generator.generate();
-  }
-   fn_getRandom(number) {
-    return Math.floor(Math.random() * (number+1));
+  fn_camelCaseToHyphen(str) { 
+
+      return str.replace(/([A-Z])/g, "-$1").toLowerCase();  
   }
 
-  fn_getRandomColor() {
-    return 'rgb(' + this.fn_getRandom(255) + ',' + this.fn_getRandom(255) + ',' + this.fn_getRandom(255) + ')';
+  fn_debug(obj_myObj, str_message=""){
+    this.fn_enumerateObject(obj_myObj, str_message="");
+  }
+
+  fn_debugArrayItem(item, index) {
+    console.log("array item: " + index + ": " + item); 
   }
 
 
-  fn_flipBool(bln_val){
-    if(bln_val){return false;}
-    else{return true;}
-  }
-  fn_parseBool(foo_val){  
+  fn_enumerateObject(obj_myObj, str_message=""){
 
-    switch(typeof(foo_val)){      
-      case undefined:
-          return false;                         
-      case "undefined":
-          return false;                         
-      case "boolean":
-          return foo_val;                         
-      case "string":
-        switch(foo_val.toLowerCase()){      
-          case "false":
-            return false;                
-          case "0":
-            return false;        
-          case "no":
-            return false;        
-          case "true":
-            return true;        
-          case "1":
-            return true;        
-          case "yes":
-            return true;                       
-          default:
-            // other string e.g. "green"
-            return foo_val;     
-        }            
-      default:        
-        return foo_val;           
-    }
-  }
+      console.groupCollapsed("ENUMERATE OBJECT :" + str_message);
 
-  getAllFuncs(toCheck) {
-    var props = [];
-    var obj = toCheck;
-    do {
-        props = props.concat(Object.getOwnPropertyNames(obj));
-    } while (obj = Object.getPrototypeOf(obj));
-
-    return props.sort().filter(function(e, i, arr) {
-       if (e!=arr[i+1] && typeof toCheck[e] == 'function') return true;
-    });
-  }
-
-  fn_removeArrOfArrays(arr_first, arrOfArrays) {
-    let str_value1, str_value2;
-    let i, j;
-    for (i=0; i<arr_first.length; i++) {
-        str_value1=arr_first[i];
-
-        for (j=0; j<arrOfArrays.length; j++) {
-          str_value2=arrOfArrays[j][0];
-          if(str_value1===str_value2){
-            arrOfArrays.splice(j, 1);
-          }
-        }
-
-    }
-    return arrOfArrays;
-}
-
-  fn_setMapItem(obj_map, foo_key, foo_value){
-    obj_map.set(foo_key, foo_value);
-  }
-  fn_getMapItem(obj_map, foo_key){
-    return obj_map.get(foo_key);
-  }   
-  fn_loopmap(myMap){   
-    console.log("START fn_loopmap");
-    for (const [key, value] of myMap.entries()) {
-        console.log(key, value);
+      for (let [key, foo_value] of Object.entries(obj_myObj)) {
+          console.log(`${key}: ${foo_value}`);
+          console.log("typeof : " + typeof foo_value);
+          //if (typeof foo_value === "object" && foo_value !== null && (key=="obj_design" || key=="obj_domProperty") )  {
+          //if (typeof foo_value === "object" && foo_value !== null && (key=="obj_design"))  {
+          //if (typeof foo_value === "object" && foo_value !== null && (key.indexOf("obj_")===0))  {          
+          switch(typeof foo_value){
+            case "object":
+              this.fn_enumerateObject(foo_value, "");
+              break;
+            case "array":
+              foo_value.forEach(this.fn_debugArrayItem);
+              break;
+            default:
+              //console.log(`${key}: ${foo_value}`);
+          }        
       }
-      console.log("END fn_loopmap");
-
-  }   
-
-  // Parameters:
-  // code 								- (string) code you wish to format
-  // stripWhiteSpaces			- (boolean) do you wish to remove multiple whitespaces coming after each other?
-  // stripEmptyLines 			- (boolean) do you wish to remove empty lines?
-  fn_formatCode(code, stripWhiteSpaces=true, stripEmptyLines=true) {
-    //"use strict";
-    var whitespace          = ' '.repeat(4);             // Default indenting 4 whitespaces
-    var currentIndent       = 0;
-    var char                = null;
-    var nextChar            = null;
-
-
-    var result = '';
-    for(var pos=0; pos <= code.length; pos++) {
-        char            = code.substr(pos, 1);
-        nextChar        = code.substr(pos+1, 1);
-
-        // If opening tag, add newline character and indention
-        if(char === '<' && nextChar !== '/') {
-            result += '\n' + whitespace.repeat(currentIndent);
-            currentIndent++;
-        }
-        // if Closing tag, add newline and indention
-        else if(char === '<' && nextChar === '/') {
-            // If there're more closing tags than opening
-            if(--currentIndent < 0) currentIndent = 0;
-            result += '\n' + whitespace.repeat(currentIndent);
-        }
-
-        // remove multiple whitespaces
-        else if(stripWhiteSpaces === true && char === ' ' && nextChar === ' ') char = '';
-        // remove empty lines
-        else if(stripEmptyLines === true && char === '\n' ) {
-            //debugger;
-            if(code.substr(pos, code.substr(pos).indexOf("<")).trim() === '' ) char = '';
-        }
-
-        result += char;
+      console.groupEnd();
     }
-    return result;
-  }
-}//END CLS
-
-//START SHARED GLOBAL SCOPE
-function IDGenerator() {
-
-  this.length = 8;
-  this.timestamp = +new Date;
-
-  var _getRandomInt = function( min, max ) {
-   return Math.floor( Math.random() * ( max - min + 1 ) ) + min;
-  }
-
-  this.generate = function() {
-    var ts = this.timestamp.toString();
-    var parts = ts.split( "" ).reverse();
-    var id = "";
-
-    for( var i = 0; i < this.length; ++i ) {
-     var index = _getRandomInt( 0, parts.length - 1 );
-     id += parts[index];
+    fn_iteratePropertyNames(obj){
+      do Object.getOwnPropertyNames(obj).forEach(function(name) {
+          console.log(name);
+      });
+      while(obj = Object.getPrototypeOf(obj));
     }
 
-    return id;
+    fn_findInObject(obj_myObj, str_search){
+      for (let [key, foo_value] of Object.entries(obj_myObj)) {
+          console.log(`${key}: ${foo_value}`);
+      }
+    }
+
+    fn_getUniqueId(str_value){
+      let generator = new IDGenerator();
+      return str_value +"_" + generator.generate();
+    }
+    fn_getRandom(number) {
+      return Math.floor(Math.random() * (number+1));
+    }
+
+    fn_getRandomColor() {
+      return 'rgb(' + this.fn_getRandom(255) + ',' + this.fn_getRandom(255) + ',' + this.fn_getRandom(255) + ')';
+    }
+
+
+    fn_flipBool(bln_val){
+      if(bln_val){return false;}
+      else{return true;}
+    }
+    fn_parseBool(foo_val){  
+
+      switch(typeof(foo_val)){      
+        case undefined:
+            return false;                         
+        case "undefined":
+            return false;                         
+        case "boolean":
+            return foo_val;                         
+        case "string":
+          switch(foo_val.toLowerCase()){      
+            case "false":
+              return false;                
+            case "0":
+              return false;        
+            case "no":
+              return false;        
+            case "true":
+              return true;        
+            case "1":
+              return true;        
+            case "yes":
+              return true;                       
+            default:
+              // other string e.g. "green"
+              return foo_val;     
+          }            
+        default:        
+          return foo_val;           
+      }
+    }
+
+    getAllFuncs(toCheck) {
+      var props = [];
+      var obj = toCheck;
+      do {
+          props = props.concat(Object.getOwnPropertyNames(obj));
+      } while (obj = Object.getPrototypeOf(obj));
+
+      return props.sort().filter(function(e, i, arr) {
+        if (e!=arr[i+1] && typeof toCheck[e] == 'function') return true;
+      });
+    }
+
+    fn_removeArrOfArrays(arr_first, arrOfArrays) {
+      let str_value1, str_value2;
+      let i, j;
+      for (i=0; i<arr_first.length; i++) {
+          str_value1=arr_first[i];
+
+          for (j=0; j<arrOfArrays.length; j++) {
+            str_value2=arrOfArrays[j][0];
+            if(str_value1===str_value2){
+              arrOfArrays.splice(j, 1);
+            }
+          }
+
+      }
+      return arrOfArrays;
   }
-}
 
-String.prototype.trimLeft = function(str_char) {
-  if (str_char === undefined)
-  str_char = "\s";  
-return this.replace(new RegExp("^" + str_char + "+"), "");
-};
+    fn_setMapItem(obj_map, foo_key, foo_value){
+      obj_map.set(foo_key, foo_value);
+    }
+    fn_getMapItem(obj_map, foo_key){
+      return obj_map.get(foo_key);
+    }   
+    fn_loopmap(myMap){   
+      console.log("START fn_loopmap");
+      for (const [key, value] of myMap.entries()) {
+          console.log(key, value);
+        }
+        console.log("END fn_loopmap");
 
-String.prototype.trimRight = function(str_char) {
-  if (str_char === undefined)
-  str_char = "\s";  
-return this.replace(new RegExp("" + str_char + "+$"), "");
-};
+    }   
+
+    // Parameters:
+    // code 								- (string) code you wish to format
+    // stripWhiteSpaces			- (boolean) do you wish to remove multiple whitespaces coming after each other?
+    // stripEmptyLines 			- (boolean) do you wish to remove empty lines?
+    fn_formatCode(code, stripWhiteSpaces=true, stripEmptyLines=true) {
+      //"use strict";
+      var whitespace          = ' '.repeat(4);             // Default indenting 4 whitespaces
+      var currentIndent       = 0;
+      var char                = null;
+      var nextChar            = null;
+
+
+      var result = '';
+      for(var pos=0; pos <= code.length; pos++) {
+          char            = code.substr(pos, 1);
+          nextChar        = code.substr(pos+1, 1);
+
+          // If opening tag, add newline character and indention
+          if(char === '<' && nextChar !== '/') {
+              result += '\n' + whitespace.repeat(currentIndent);
+              currentIndent++;
+          }
+          // if Closing tag, add newline and indention
+          else if(char === '<' && nextChar === '/') {
+              // If there're more closing tags than opening
+              if(--currentIndent < 0) currentIndent = 0;
+              result += '\n' + whitespace.repeat(currentIndent);
+          }
+
+          // remove multiple whitespaces
+          else if(stripWhiteSpaces === true && char === ' ' && nextChar === ' ') char = '';
+          // remove empty lines
+          else if(stripEmptyLines === true && char === '\n' ) {
+              //debugger;
+              if(code.substr(pos, code.substr(pos).indexOf("<")).trim() === '' ) char = '';
+          }
+
+          result += char;
+      }
+      return result;
+    }
+
+    fn_convertRGBToHex(rgb) {
+      // Choose correct separator
+      let sep = rgb.indexOf(",") > -1 ? "," : " ";
+      // Turn "rgb(r,g,b)" into [r,g,b]
+      rgb = rgb.substr(4).split(")")[0].split(sep);
+    
+      let r = (+rgb[0]).toString(16),
+          g = (+rgb[1]).toString(16),
+          b = (+rgb[2]).toString(16);
+    
+      if (r.length == 1)
+        r = "0" + r;
+      if (g.length == 1)
+        g = "0" + g;
+      if (b.length == 1)
+        b = "0" + b;
+    
+      return "#" + r + g + b;
+    }
+    
+    fn_lightenGradient(col, amt) {
+      
+      var usePound = false;
+    
+      if (col[0] == "#") {
+          col = col.slice(1);
+          usePound = true;
+      }
+    
+      var num = parseInt(col,16);
+    
+      var r = (num >> 16) + amt;
+    
+      if (r > 255) r = 255;
+      else if  (r < 0) r = 0;
+    
+      var b = ((num >> 8) & 0x00FF) + amt;
+    
+      if (b > 255) b = 255;
+      else if  (b < 0) b = 0;
+    
+      var g = (num & 0x0000FF) + amt;
+    
+      if (g > 255) g = 255;
+      else if (g < 0) g = 0;
+    
+      return (usePound?"#":"") + (g | (b << 8) | (r << 16)).toString(16);
+    
+    }
+    
+  }//END CLS
+
+  //START SHARED GLOBAL SCOPE
+  function IDGenerator() {
+
+    this.length = 8;
+    this.timestamp = +new Date;
+
+    var _getRandomInt = function( min, max ) {
+    return Math.floor( Math.random() * ( max - min + 1 ) ) + min;
+    }
+
+    this.generate = function() {
+      var ts = this.timestamp.toString();
+      var parts = ts.split( "" ).reverse();
+      var id = "";
+
+      for( var i = 0; i < this.length; ++i ) {
+      var index = _getRandomInt( 0, parts.length - 1 );
+      id += parts[index];
+      }
+
+      return id;
+    }
+  }
+
+  String.prototype.trimLeft = function(str_char) {
+    if (str_char === undefined)
+    str_char = "\s";  
+  return this.replace(new RegExp("^" + str_char + "+"), "");
+  };
+
+  String.prototype.trimRight = function(str_char) {
+    if (str_char === undefined)
+    str_char = "\s";  
+  return this.replace(new RegExp("" + str_char + "+$"), "");
+  };
 //END SHARED GLOBAL SCOPE
 
 //END Shared.js
@@ -500,7 +585,7 @@ class BaseObject extends LevelObject{
         }     
         //this.obj_holder.bln_loaded=false;
         
-        //START INITIALIZE DESIGN
+        //START INITIALIZE DESIGN        
         this.obj_design=obj_ini.obj_design;                
         if(!this.obj_design){//ensure continuity of obj_holder variables e.g obj_holder.obj_container
             this.obj_design={};//required        
@@ -624,8 +709,10 @@ class BaseObject extends LevelObject{
         if(this.obj_design.bln_dynamicPin){         
             obj_ini.obj_design.bln_dynamicPin=true;
         }
-
+        
         let obj_item=this.fn_createChildObject(obj_ini);
+
+        
         
         this.fn_createChildDom(obj_item);
         //creae dom object into HTML
@@ -640,16 +727,19 @@ class BaseObject extends LevelObject{
 
         let str_type, int_idRecord, bln_removeId;        
 
+        //PLACE NUMBER 1 WHEN OBJ INI CAN GET KNOCKED OFF
+
         int_idRecord=obj_ini.obj_design.int_idRecord;           
-        str_type=obj_ini.obj_design.str_type;                           
+        str_type=obj_ini.obj_design.str_type;                                   
         
         
         if(!obj_ini.obj_design.arr_item){            
             obj_ini=new Holder;            
             obj_ini.obj_design.int_idRecord=int_idRecord;           
-            obj_ini.obj_design.str_type=str_type;                       
-            //obj_shared.fn_enumerateObject(obj_ini, "test");            
+            obj_ini.obj_design.str_type=str_type;                                   
         }        
+
+        //PLACE NUMBER 1 WHEN OBJ INI CAN GET KNOCKED OFF
         
         return obj_ini;
     }
@@ -657,26 +747,32 @@ class BaseObject extends LevelObject{
     fn_createChildObject(obj_ini){
 
         let str_type, int_idRecord, obj_item, bln_removeId;        
-        
-        obj_ini=this.fn_checkIni(obj_ini);
+
+        //PLACE NUMBER 2 WHEN OBJ INI CAN GET KNOCKED OFF
+
+        obj_ini=this.fn_checkIni(obj_ini);        
         
         int_idRecord=obj_ini.obj_design.int_idRecord;           
-        str_type=obj_ini.obj_design.str_type;                
+        str_type=obj_ini.obj_design.str_type;                        
         
         if(obj_ini){//see fi we can get the correct ini object, partucuarly to ensure the type is correct.
             if(obj_ini.obj_design){
                 int_idRecord=parseInt(obj_ini.obj_design.int_idRecord);        
-                let ObjectData=obj_shared.fn_getMapItem(obj_InstanceJSONMap,  int_idRecord);//get a reference to the the object that has been published from the db        
+                let ObjectData=obj_shared.fn_getMapItem(obj_InstanceJSONMap,  int_idRecord);//get a reference to the the object that has been published from the db                        
                 if(ObjectData){
-                    if(ObjectData.obj_design){
-                        obj_ini=ObjectData;
+                    var NewObjectData=JSON.parse(JSON.stringify(ObjectData));        
+                    if(NewObjectData.obj_design){
+                        obj_ini=NewObjectData;
                     }
                 }
             }
         } 
+
+        //PLACE NUMBER 2 WHEN OBJ INI CAN GET KNOCKED OFF
         
 
-        str_type=obj_ini.obj_design.str_type;                           
+        str_type=obj_ini.obj_design.str_type;                          
+
         //console.log("str_type: " + str_type);
         if(str_type==="theme"){//hide any theme                                 
             if(obj_ini.obj_domStyle){                
@@ -915,6 +1011,7 @@ class BaseObject extends LevelObject{
                     console.log("BaseObject fn_loadChildren OBJ INI IS NULL");                                                
                 }
             }
+
             obj_item=this.fn_addItem(obj_ini);//ServerSideItem or BootItem
             
             
@@ -1011,6 +1108,7 @@ class BaseObject extends LevelObject{
         console.log("str_name: " + obj_design.str_name);        
         console.log("str_type: " + obj_design.str_type);        
         console.log("str_tag: " + obj_design.str_tag);        
+        console.log("bln_split: " + obj_design.bln_split);        
         console.log("str_classList: " + obj_design.str_classList);        
         console.log("str_nameEventClick: " + obj_design.str_nameEventClick);        
         console.log("str_valueEventClick: " + obj_design.str_valueEventClick);                              
@@ -1464,9 +1562,10 @@ class BaseObject extends LevelObject{
     
     fn_applyMyTheme(){         
 
-        let str_type,  str_name, obj_myTheme, obj_myThemeItem, str_nameTheme;
+        let str_type,  str_themeType, str_name, obj_myTheme, obj_myThemeItem, str_nameTheme;
         
         str_type=this.obj_design.str_type;        
+        str_themeType=this.obj_design.str_themeType;        
         if(str_type==="theme"){return;}        
         
         obj_myTheme=obj_project.fn_getComponent("myRegisteredXTheme");                
@@ -1507,6 +1606,15 @@ class BaseObject extends LevelObject{
                 //this.fn_debug("FOUND THEME ITEM VIA TYPE: " + obj_myThemeItem.obj_design.str_name);                           
             }
         }
+        if(!obj_myThemeItem){            
+            
+            obj_myThemeItem=obj_myTheme.fn_getThemeViaType(str_themeType);                                                     
+            if(obj_myThemeItem){
+                //this.fn_debug("FOUND THEME ITEM VIA TYPE: " + obj_myThemeItem.obj_design.str_name);                           
+            }
+        }
+
+        
         
         if(obj_myThemeItem){            
             let str_display=this.obj_domStyle.display;
@@ -1515,7 +1623,8 @@ class BaseObject extends LevelObject{
         }
     }
 
-    fn_getMyThemeItem(obj_myTheme){return false}//overidden, currently only by project
+    fn_getMyThemeItem(obj_myTheme){return false}//overidden, currently only by project   
+    
 
     fn_getThemeViaType(str_value){        
 
@@ -1759,7 +1868,7 @@ class BaseObject extends LevelObject{
     }
     fn_getText(str_text){//should be overidden, but called
         return this.obj_design.str_text;
-    }
+    }    
     
     fn_setItemStyleProperty(str_type, str_name, str_value){          
 
@@ -1788,7 +1897,7 @@ class BaseObject extends LevelObject{
     
     fn_setHTMLContent(){
 
-        let str_content=this.fn_getContent();
+        let str_content=this.fn_getHTMLContent();
 
         if(str_content==="nocontent"){
                 return;
@@ -1808,7 +1917,7 @@ class BaseObject extends LevelObject{
         }
         
     }                
-    fn_getContent(str_value){              
+    fn_getHTMLContent(str_value){              
         
         str_value=this.obj_design.str_content;
         
@@ -1855,10 +1964,24 @@ class BaseObject extends LevelObject{
             str_value=foo_val;
         }            
         this.fn_setStyleProperty("visibility", str_value);                                            
-    }          
+    }      
+    fn_setColor(str_value){
+        this.fn_setStyleProperty("color", str_value);
+    }    
     
     
-    
+    fn_getObjectMatching(str_method){        
+
+        if(this[str_method]){
+            return this;
+        }   
+        let obj_container=this.fn_getParentComponent();                                
+        if(obj_container){                    
+            return obj_container.fn_getObjectMatching(str_method);
+        }
+        return false;        
+        
+    }
     
 
     fn_getNextLocalHome(){                        
@@ -2035,8 +2158,10 @@ class component extends BaseObject {
         if(!ObjectData.obj_design){return true;}
         //indicate success, but dont initialize with a blank object                
         //may be a blank object if instance id has been renamed/deleted/corrupted etc on the server
-        let NewObjectData=JSON.parse(JSON.stringify(ObjectData));//create a copy of the object that has been published from the db //not sure why
-        NewObjectData.obj_design.int_modeExecute=this.obj_design.int_modeExecute;//Continuity of Mode                                                                                
+        
+        var NewObjectData=JSON.parse(JSON.stringify(ObjectData));        
+        NewObjectData.obj_holder=new Holder;                 
+        NewObjectData.obj_design.int_modeExecute=this.obj_design.int_modeExecute;//Continuity of Mode                                                                                        
         this.fn_initialize(NewObjectData);//initialize with self from db                                
         return true;
     }    
@@ -2053,7 +2178,7 @@ class component extends BaseObject {
         this.fn_createSelf();//create self                
         this.fn_onOpenInstance();//run  baseobvject onopeninstance
     }      
-    fn_openInstanceorig(){//wont run on boot as will not have a record id        
+    deprecate_fn_openInstanceorig(){//wont run on boot as will not have a record id        
         if(!this.fn_validIdHistory()){return;}
         let ObjectData=obj_InstanceJSONMap.get(parseInt(this.obj_design.int_idRecord));//get a reference to the the object that has been published from the db
         if(!ObjectData || (ObjectData && !ObjectData.obj_design)){return;}//dont intialize with blank object                
@@ -2070,7 +2195,7 @@ class component extends BaseObject {
     
     fn_getComponent(str_variableName){        
         
-        let str_name="obj_" + this.fn_formatShortName(str_variableName);                                        
+        let str_name="obj_" + obj_shared.fn_formatShortName(str_variableName);                                        
         return this.obj_holder[str_name];
     }      
     
@@ -2140,55 +2265,19 @@ class component extends BaseObject {
     fn_setType(str_value){    
 
         if(str_value===""){str_value="tag";}                            
-        str_value=this.fn_formatShortName(str_value);                    
+        str_value=obj_shared.fn_formatShortName(str_value);                    
         this.obj_design.str_type=str_value;
     }          
     fn_defaultNotSet(str_value){
         if(str_value===""){str_value="notset";}
         return str_value;
     }    
-    fn_defaultNotSetDate(str_value){
-        if(str_value===""){
-            str_value=obj_shared.fn_getDate(obj_const.int_dateNow);
-        }
-        return str_value;
-    }    
-    fn_setClassExtend(str_value){
-        str_value=this.fn_defaultNotSet(str_value);                
-        str_value=this.fn_formatShortName(str_value);                    
-        this.obj_design.str_classExtend=str_value;
-    }
-    fn_setLocationID(str_value){
-        str_value=this.fn_defaultNotSet(str_value);        
-        str_value=this.fn_formatShortName(str_value);                    
-        this.obj_design.str_locationID=str_value;
-    }
-    fn_setCreatedDate(str_value){
-        str_value=this.fn_defaultNotSetDate(str_value);                
-        str_value=this.fn_formatShortDate(str_value);                    
-        this.obj_design.str_createdDate=str_value;
-    }
-    fn_setModifiedDate(str_value){
-        str_value=this.fn_defaultNotSetDate(str_value);                
-        str_value=this.fn_formatShortDate(str_value);                    
-        this.obj_design.str_modifiedDate=str_value;
-    }
-    fn_setClassList(str_value){        
-        
-        str_value=this.fn_defaultNotSet(str_value);        
-        str_value=str_value.toLowerCase();
-        str_value=obj_shared.fn_replace(str_value, " ", ",");                        
-        str_value=obj_shared.fn_formatString(str_value, obj_const.int_alphaComma);                        
-        str_value=obj_shared.fn_formatUniqueList(str_value);                
-        this.obj_design.str_classList=str_value;
-    }
-    
     fn_getTag(){
         return this.obj_design.str_tag;
     }
     fn_setTag(str_value, bln_mandatory){
         if(str_value===""){str_value="component";}
-        str_value=this.fn_formatShortName(str_value);        
+        str_value=obj_shared.fn_formatShortName(str_value);        
         if(this.obj_design.str_tag===undefined || this.obj_design.str_tag==="component"){        
             this.obj_design.str_tag=str_value;      
         }              
@@ -2202,7 +2291,7 @@ class component extends BaseObject {
     }
     fn_setName(str_name){        
         this.obj_design.str_name=str_name;                
-        let str_value=this.fn_formatShortName(this.obj_design.str_name);        
+        let str_value=obj_shared.fn_formatShortName(this.obj_design.str_name);        
         this.fn_setVariableName(str_value);                                
     }
     fn_setVariableName(str_value){           
@@ -2211,19 +2300,8 @@ class component extends BaseObject {
     fn_getVariableName(){        
         return this.obj_design.str_variableName;
     }    
-    fn_formatShortName(str_value){                    
-        str_value=str_value.toLowerCase().replace(/-/gi, "_");;                    
-        str_value=obj_shared.fn_removeSpace(str_value);            
-        str_value=obj_shared.fn_formatString(str_value, obj_const.int_alphaNumeric);                                      
-        return str_value;
-    }
-    fn_formatShortDate(str_value){                    
-        //str_value=str_value.toLowerCase().replace(/-/gi, "_");;                    
-        //str_value=obj_shared.fn_removeSpace(str_value);            
-        str_value=obj_shared.fn_formatDate(str_value);                                      
-        return str_value;
-    }
-
+    
+    
     /////////////////////START REGISTRATION EVENT
     fn_register(obj_item){ 
         let str_name;
@@ -2232,7 +2310,7 @@ class component extends BaseObject {
     }    
     fn_registerName(obj_item, str_variableName){ 
         let str_name;    
-        str_name="obj_" + this.fn_formatShortName(str_variableName);                                
+        str_name="obj_" + obj_shared.fn_formatShortName(str_variableName);                                
         this.obj_holder[str_name]=obj_item;                                
     }    
     /////////////////////END REGISTRATION EVENT
@@ -2442,8 +2520,7 @@ class AJAX extends component {
     fn_initialize(obj_ini){
         super.fn_initialize(obj_ini);
 
-        this.obj_holder.bln_debug=true;
-        //this.obj_design.bln_hiddenProjectPin=true;    
+        this.obj_holder.bln_debug=true;        
     }
     
     ///START AJAX     
@@ -2454,10 +2531,8 @@ class AJAX extends component {
         console.log("Error: Data Put Post: Action is not specified");
         return;
         }
-
         
-        this.fn_debugServerPost(obj_post, "");
-        
+        this.fn_debugServerPost(obj_post, "");        
         
         if(obj_post.URL===undefined){
             console.log("obj_post.URL is undefined");        
@@ -2521,6 +2596,9 @@ class AJAX extends component {
 
         obj_post.ObjectInstance=this.fn_AJAXLocateObjectInstance(obj_post);
         obj_post.ObjectNotifier=this.fn_AJAXLocateObjectNotifier(obj_post);
+
+        
+        
         
         this.fn_callbackFetch(obj_post);        
     }    
@@ -2530,16 +2608,18 @@ class AJAX extends component {
         str_action=obj_post.Action;                
         str_actionCallback=obj_post.ActionCallBack;      
 
-        obj_notifier=this;
-        if(obj_notifier){            
-            if(obj_notifier[str_action]){
-                obj_notifier[str_action](obj_post);
-            }        
+        
+        if(this[str_action]){            
+            this[str_action](obj_post);
+        }   
+        if(str_actionCallback!==str_action){
+            if(this[str_actionCallback]){
+                this[str_actionCallback](obj_post);
+            }     
         }
         
-        obj_notifier=obj_post.ObjectNotifier;        
-        if(obj_notifier){                        
-            //obj_notifier.fn_callbackFetch(obj_post);
+        obj_notifier=obj_post.ObjectNotifier;                
+        if(obj_notifier && obj_notifier!=this){                             
             if(obj_notifier[str_actionCallback]){
                 obj_notifier[str_actionCallback](obj_post);
             }
@@ -2557,13 +2637,29 @@ class AJAX extends component {
         }
     }
     fn_onUnAuthorizeUserStatus(obj_post){
-        console.log("OVERIDDEN - SHOULD NEVER SEE fn_onUnAuthorizeUserStatus");
-    }    
-    fn_onAuthorizeUserStatus(obj_post){
-        console.log("OVERIDDEN - SHOULD NEVER SEE fn_onAuthorizeUserStatus");
+        let obj_notifier;
+        //console.log("designfile fn_onUnAuthorizeUserStatus: " + obj_post.ObjectNotifier);
+        obj_notifier=obj_post.ObjectNotifier;   
+        let str_method="fn_onUnAuthorizeUserStatus";             
+        if(obj_notifier && obj_notifier!=this) {            
+            if(obj_notifier[str_method]){
+                obj_notifier[str_method](obj_post);
+            }
+        }
+    }  
+    fn_onAuthorizeUserStatus (obj_post){
+        let obj_notifier;
+        //console.log("designfile fn_onAuthorizeUserStatus: " + obj_post.ObjectNotifier);
+        obj_notifier=obj_post.ObjectNotifier;       
+        let str_method="fn_onAuthorizeUserStatus"; 
+        if(obj_notifier && obj_notifier!=this) {
+            if(obj_notifier[str_method]){
+                obj_notifier[str_method](obj_post);
+            }
+        }
     }    
     
-    fn_formatPostFetch(obj_post, bln_expanded=false){//could this be overriden to allow for applicaiton specific processing
+    fn_formatPostFetch(obj_post){//could this be overriden to allow for applicaiton specific processing
 
         let bln_debug =false;
 
@@ -2579,7 +2675,12 @@ class AJAX extends component {
             obj_shared.fn_debug(obj_post, "obj_post");
         }
     
-
+        if(obj_post.ObjectData===undefined){            
+            //obj_post.ObjectData="{}";
+        }
+        if(obj_post.RowData===undefined){            
+            //obj_post.RowData="[]";
+        }
         obj_post.ObjectData=obj_myJson.fn_deserialize(obj_post.ObjectData, "ObjectData");          
         obj_post.RowData=obj_myJson.fn_deserialize(obj_post.RowData, "RowData");//Array of  Recordset Rows          
         //if(!obj_post.DesignId){obj_post.DesignId="";}
@@ -2600,6 +2701,11 @@ class AJAX extends component {
         
 
         return obj_post;
+    }
+
+    fn_debugServerPost(obj_post, str_message){
+        //overidden
+        //console.log("THIS FUNCTION SHOULD BE OVERRIDDEN: AJAX fn_debugServerPost");
     }
 
 
@@ -2631,13 +2737,25 @@ class AJAX extends component {
         }      
         return obj_json;
     }
-    fn_formatPost(){//to be overriden by component.
-        let obj_post=new Object;         
-        return obj_post;
-    }       
 
-    fn_debugServerPost(obj_post, str_title){//to be overidden by component
-    }
+    fn_formatPost(obj_ini){  
+
+        let obj_post=new Object;
+        
+        obj_post.URL=obj_ini.str_urlServer                
+        obj_post.QueryString=obj_ini.str_queryString;
+        obj_post.NotifierId=obj_ini.str_idAJAXNotifier;                        
+        obj_post.Action=obj_ini.str_action;                
+        obj_post.ActionCallBack=obj_ini.str_actionCallback;                                        
+        if(!obj_post.ActionCallBack){            
+            obj_post.ActionCallBack=obj_ini.str_action;                
+        }        
+        obj_post.RecordId=obj_ini.RecordId;
+        
+        
+        
+        return obj_post;
+    }   
 }//END CLS
 //END AJAX.js
 

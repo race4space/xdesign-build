@@ -124,8 +124,7 @@ class Desk{
 
     function fn_GetListProgram(){
 
-      $obj_post=$this->obj_post;
-      //$str_sql="SELECT `id`, Lower(`Name`) AS `Name`, `Type` FROM  `instance` WHERE `PalettePin` AND !HiddenPalettePin ORDER BY `Name` LIMIT 5;";                  
+      $obj_post=$this->obj_post;      
       $str_sql="SELECT * FROM  `control`.`desktop` ORDER BY `control`.`desktop`.`Subdomain` ASC;";                  
       $this->fn_addEcho($str_sql);
       $stmt = $this->obj_loginpanel->pdo_standard->prepare($str_sql);

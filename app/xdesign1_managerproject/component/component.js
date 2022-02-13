@@ -11,14 +11,18 @@
             this.fn_setType("xdesign1_managerproject");      
             this.fn_setTag("xdesign1_managerproject");            
             this.obj_design.bln_isGenericTag=true;            
-            //this.fn_extends("abc");            
-          }
-          fn_XDesigner_onLogIn(){                      
-          }
+            this.fn_extends("xdesign1_managermenu");          
+            this.fn_requires("xdesign1_managercategoryproject");                      
+
+            this.obj_design.str_urlServer="server.php";
+            this.obj_holder.bln_debugServer=false;
+          }                   
           
-          fn_onStateChange(){                        
+          
+          fn_onStateChange(){                
             
-            if(!super.fn_onStateChange()){return;} 
+            super.fn_onStateChange();
+
             let bln_value, bln_valueFlip;
             bln_value=false;                        
             if(obj_projectTarget){              
@@ -32,7 +36,6 @@
               bln_value=false;
             }                 
             
-            
             bln_valueFlip==obj_shared.fn_flipBool(bln_value);            
 
             let obj_item;                        
@@ -41,13 +44,44 @@
             obj_item=this.obj_holder.obj_xdesign1_publishproject;       
             if(obj_item){obj_item.fn_setEnabled(bln_value)};            
             obj_item=this.obj_holder.obj_xdesign1_releaseproject;       
-            if(obj_item){obj_item.fn_setEnabled(bln_value)};            
+            if(obj_item){obj_item.fn_setEnabled(bln_value)}; 
             
-            this.obj_holder.obj_container.fn_setEnabled();        
-            this.fn_getListProject();
-            
+            this.obj_holder.obj_container.fn_setEnabled();                    
           }
-          fn_listProject(arr_row){            
+          fn_getContent(){
+            //console.log("fn_getContent");
+            this.fn_getListProject();            
+          }
+          
+          fn_getListProject(){                     
+            let obj_query={};            
+            obj_query.str_action="getListProjectInCategory";            
+            this.fn_runQuery(obj_query);
+          }           
+          getListProjectInCategory(obj_post){                                        
+            this.fn_getMenuItems(obj_post);      
+          }          
+          
+          fn_addMenuItem(str_CategoryName){
+            
+            let obj_ini, obj_container;
+            obj_ini=new Holder;                                    
+            obj_ini.obj_design.str_type="menubutton";                    
+            obj_ini.obj_design.str_name=str_CategoryName;                
+            obj_container=this.obj_holder.obj_accordion.fn_addItem(obj_ini);                          
+            
+            obj_ini=new Holder;                                    
+            obj_ini.obj_design.str_name="xdesign1_managercategoryproject";                                    
+            obj_ini.obj_design.str_type="xdesign1_managercategoryproject";                                    
+            obj_ini.obj_design.str_categoryName=str_CategoryName;                                                    
+            obj_container.fn_addItem(obj_ini);                      
+
+          }
+
+          
+
+
+          deprecated_fn_listProject(arr_row){            
             
             //console.log("fn_listProject");            
       
@@ -66,27 +100,19 @@
               if(obj_shared.fn_isObjectEmpty(obj_row)){continue;}//RowData Can contain a single empty object
               obj_ini=new Holder;
               obj_ini.obj_design.bln_dynamicPin=true;                            
-              obj_ini.obj_design.str_name="xdesign1_buttonOpenProject" + obj_row.Name;
-              obj_ini.obj_design.str_text=obj_row.Name;
+              obj_ini.obj_design.str_name="xdesign1_buttonOpenProject" + obj_row.InstanceName;
+              obj_ini.obj_design.str_text=obj_row.InstanceName;
               obj_ini.obj_design.str_type="button";
-              obj_ini.obj_design.int_idRecordTarget=obj_row.id;
-              obj_ini.obj_design.str_typeRecord=obj_row.Type;
+              obj_ini.obj_design.int_idRecordTarget=obj_row.InstanceId;
+              obj_ini.obj_design.str_typeRecord=obj_row.InstanceType;
               obj_ini.obj_design.str_nameEventClick=obj_project.obj_holder.str_prefix + "myDesignerButtonClick";
               obj_ini.obj_design.str_valueEventClick="fn_openProject";
               obj_ini.obj_domProperty.disabled=false;      
-              obj_ini.obj_design.int_idRecordTarget=obj_row.id;              
+              obj_ini.obj_design.int_idRecordTarget=obj_row.InstanceId;              
               obj_item=obj_dynamicContentHolder.fn_addItem(obj_ini);//BootItem                                                 
             }
           }              
-          //Event
-          fn_getListProject(){
-            //console.log("fn_getListProject");
-            obj_project.fn_runAction("getListProject");
-          }
-          fn_onGetListProject(obj_post){
-            let arr_row=obj_post.RowData;
-            this.fn_listProject(arr_row);
-          }
+          //Event          
           fn_releaseProject(){
 
             console.log("fn_releaseProject");
@@ -112,6 +138,8 @@
             }
 
             obj_project.fn_close();
+
+            obj_projectTarget.obj_holder.bln_createRelease=true;
       
             
             let obj_serverManager=obj_project.obj_holder.obj_xdesign1_designfile;
@@ -124,7 +152,11 @@
           }
           fn_onPublishProject(obj_post){
             console.log("Published Project: " + obj_projectTarget.obj_design.str_name);            
-            console.log("URLProjectVersion: " + obj_post.URLProjectVersion);                        
+            console.log("URLProjectVersion: " + obj_post.URLProjectVersion);                                    
+
+            //obj_projectTarget.obj_design.str_lastVersionDate=obj_post.LastVersionDate;
+            
+            
             obj_project.fn_onStateChange();            
             this.fn_viewInBrowser(obj_post.URLProjectVersion);
           }
@@ -201,16 +233,28 @@
             this.obj_holder.obj_container.fn_close();              
             
             this.obj_holder.obj_container.fn_setText(obj_post.RecordName);                  
-            obj_project.fn_onStateChange();      
+            
+            //obj_project.fn_onStateChange();      
 
             obj_project.fn_consoleLog("Loaded: " + obj_post.RecordName);
-            //console.log("Loaded: " + obj_post.RecordName);            
+            
+            //console.log("ReleaseReady: " + obj_post.ReleaseReady);
+            obj_project.fn_setVersionButton(obj_post.ReleaseReady);
+            
           }    
           fn_onPaletteItemSelected(){
             //console.log("fn_onPaletteItemSelected");            
           }          
-          fn_toggleProjectPin(){
-            obj_project.fn_runAction("toggleProjectPin");
+          fn_toggleProjectPin(){ 
+            
+            if(obj_project.bln_ListAll){
+              obj_project.bln_ListAll=false;
+            }
+            else{
+              obj_project.bln_ListAll=true;
+            }
+            
+            obj_project.fn_onStateChange();      
           }
           fn_onToggleProjectPin(){                  
             obj_project.fn_onStateChange();
@@ -251,22 +295,25 @@
             obj_serverManager.fn_saveComponent(obj_ini);
           }
           fn_saveComponent(obj_item){//This relates to saving a component within the Project Isntance ie from the action button      
+
+            //console.log("fn_saveComponent");
             
             let obj_parent=obj_item.obj_holder.obj_container;            
             let obj_serverManager=obj_project.fn_getComponent("xdesign1_designfile");      
             let obj_ini=new Object;
-            obj_ini.ObjectInstance=obj_item;                 
-            obj_item.obj_designDelegate.fn_setPaletteSelected();
-            obj_serverManager.fn_saveComponent(obj_ini);           
+            obj_ini.ObjectInstance=obj_item;                                         
+            this.obj_holder.ObjectInstance=obj_item;              
+            obj_serverManager.fn_saveComponent(obj_ini);                    
           }
+          //*
           fn_onSaveComponent(){//CallBack Function from designfile            
             this.obj_holder.obj_container.fn_setText(obj_projectTarget.obj_design.str_name);            
+            obj_projectTarget.obj_design.str_lastVersionDate="notset";
             this.fn_onStateChange();           
-            console.log("Saved: " + obj_project.obj_palettSelected.obj_design.str_name);
-          }              
-          fn_close(){                        
-            super.fn_close();
-          }
+            console.log("Saved: " + obj_project.obj_palettSelected.obj_design.str_name);   
+            this.obj_holder.ObjectInstance.obj_designDelegate.fn_setPaletteSelected();            
+          } 
+          //*/                       
 
         }//END CLS
         //END TAG

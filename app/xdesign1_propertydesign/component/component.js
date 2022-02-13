@@ -157,7 +157,7 @@
                 break;                        
                 case "str_name": 
                       if(!blnEditXDesigner){               
-                        let str_nameShort=this.fn_formatShortName(str_value);     
+                        let str_nameShort=obj_shared.fn_formatShortName(str_value);     
                         obj_instance=obj_projectTarget.fn_findItemByVariableName(str_nameShort, obj_project.obj_palettSelected);                                                
                         if(obj_instance && obj_instance!==obj_project.obj_palettSelected){
                           //internal duplicate error                                                     
@@ -212,8 +212,8 @@
                 return obj_ini;
               }      
 
-              let str_listIn="bln_isContainer,bln_maintainId,bln_registerAtContainer,bln_showToolbar,bln_themeType,bln_toggleProjectPin,bln_typeable,str_nameRegistrator,bln_registerAtProject,bln_palettePin,bln_projectPin,dataSVG,filterSVG,gridTemplate,str_classList,str_classExtend,str_createdDate,str_locationID,str_idProject,str_modifiedDate,str_name,str_nameTheme,str_subType,str_text,str_tag,str_urlServer,str_value,";              
-              let str_listInProjectOnly="bln_createRelease,bln_lockComponent,str_nameRelease,str_type,str_urlServer";
+              let str_listIn="bln_isContainer,bln_maintainId,bln_registerAtContainer,bln_showToolbar,bln_themeType,bln_toggleProjectPin,bln_typeable,str_nameRegistrator,bln_registerAtProject,bln_palettePin,bln_projectPin,dataSVG,filterSVG,gridTemplate,str_categoryList,str_classList,str_classExtend,str_createdDate,str_locationID,str_idProject,str_modifiedDate,str_name,str_nameTheme,str_subType,str_tag,str_text,str_themeType,str_urlServer,str_urlServer, str_value,";              
+              let str_listInProjectOnly="bln_lockComponent,str_nameRelease,str_type,str_urlServer";
               str_listIn+=str_listInProjectOnly;
 
               //obj_design.bln_useOwnButton

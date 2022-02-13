@@ -11,11 +11,12 @@
                   this.fn_setType("xdesign1_addtagbutton");      
                   this.fn_setTag("xdesign1_addtagbutton");            
                   this.obj_design.bln_isGenericTag=true;
-                   this.fn_extends("button");            
+                  this.fn_extends("button");                               
+                   
                 }
 
                 fn_onClick(){                                   
-                  //this.fn_event();                                       
+                  //this.fn_event();                      
                   obj_project.fn_addPaletteTagFromInput();           
                 }
               }//END CLS

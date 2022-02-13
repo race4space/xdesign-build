@@ -33,8 +33,8 @@ class button extends component {
       //this.obj_domProperty.disabled=false;
       
     }         
-    fn_onClick(){                  
-      //this.fn_event();                
+    fn_onClick(){                        
+      //console.log("button click")
     }    
   
   fn_setHTMLContent(){

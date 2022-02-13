@@ -1,21 +1,20 @@
 class menubutton extends component {
     constructor(obj_ini) {
         super(obj_ini); // call the super class constructor        
-
-        
-    }    
+    }        
     fn_initialize(obj_ini){                
         
         super.fn_initialize(obj_ini);
         
         this.fn_setType("menubutton");      
-        this.fn_setTag("button", true);      
+        this.fn_setTag("button", true);              
+        this.obj_design.bln_isMenuButton=true;
 
         this.fn_setIsContainer(true);
 
-        //START INITIALIZE DESIGN
-        this.bln_isOpen=obj_ini.bln_isOpen;
-        if(this.bln_isOpen===undefined){this.bln_isOpen=false}                                        
+        //START INITIALIZE DESIGN        
+        if(this.obj_design.bln_isOpen==undefined){this.obj_design.bln_isOpen=false;}//ensure visible placeholder at front of object defintion
+        
 
         this.obj_design.bln_listenClick=true;
         this.obj_design.str_nameEventClick=this.obj_holder.str_prefix + "MenuButtonClick";  
@@ -25,25 +24,9 @@ class menubutton extends component {
         //END INITIALIZE DESIGN     
         
         //START INITIALIZE DOM
-        
-        
         //END INITIALIZE DOM
         
-        //START INITIALIZE STYLE        
-        /*
-        if(this.fn_getStyleProperty("flex-wrap")===undefined){this.fn_setStyleProperty("flex-wrap", "wrap");}
-        if(this.fn_getStyleProperty("display")===undefined){this.fn_setStyleProperty("display", "block");}
-        if(this.fn_getStyleProperty("width")===undefined){this.fn_setStyleProperty("width", "100%");}
-        if(this.fn_getStyleProperty("height")===undefined){this.fn_setStyleProperty("height", "45px");}
-        if(this.fn_getStyleProperty("padding")===undefined){this.fn_setStyleProperty("padding", "3px 12px");}
-        if(this.fn_getStyleProperty("border")===undefined){this.fn_setStyleProperty("border", "0px solid black");}
-        if(this.fn_getStyleProperty("font-size")===undefined){this.fn_setStyleProperty("font-size", "12pt");}        
-        if(this.fn_getStyleProperty("cursor")===undefined){this.fn_setStyleProperty("cursor", "pointer");}
-        if(this.fn_getStyleProperty("margin-right")===undefined){this.fn_setStyleProperty("margin-right", "1px");}
-        if(this.fn_getStyleProperty("margin-bottom")===undefined){this.fn_setStyleProperty("margin-bottom", "1px");}
-        //*/  
-
-        //*
+        //START INITIALIZE STYLE                        
         if(this.obj_domStyle.display===undefined){this.obj_domStyle.display="block";}
         if(this.obj_domStyle.width===undefined){this.obj_domStyle.width="100%";}
         if(this.obj_domStyle.height===undefined){this.obj_domStyle.height="45px";}    
@@ -51,12 +34,16 @@ class menubutton extends component {
         if(this.obj_domStyle.border===undefined){this.obj_domStyle.border="0px solid black";}                          
         if(this.obj_domStyle.fontSize===undefined){this.obj_domStyle.fontSize="12pt";}        
         if(this.obj_domStyle.cursor===undefined){this.obj_domStyle.cursor="pointer";}
-        if(this.obj_domStyle.marginRight===undefined){this.obj_domStyle.marginRight="1px";}      
-        if(this.obj_domStyle.marginBottom===undefined){this.obj_domStyle.marginBottom="1px";}      
-        //*/  
+        if(this.obj_domStyle.marginRight===undefined){this.obj_domStyle.marginRight="0px";}      
+        if(this.obj_domStyle.marginBottom===undefined){this.obj_domStyle.marginBottom="1px";}              
         //END INITIALIZE STYLE
-
-        
+    }            
+    fn_onLoad(){
+        super.fn_onLoad();        
+        if(this.obj_design.bln_isOpen){
+            this.fn_openContent();        
+        }        
+        //this.fn_setColorGradient();
     }        
     
     fn_createSelf(){
@@ -70,7 +57,8 @@ class menubutton extends component {
         this.dom_objContentContainer=dom_obj;            
 
         dom_obj=document.createElement("flex");
-        dom_obj.style.display="flex";        
+        //dom_obj.style.display="flex";        
+        dom_obj.style.display="block";        
         dom_obj.style.flexWrap=this.obj_domStyle.flexWrap;        
         dom_obj.style.padding="0px";                        
         dom_obj.style.marginBottom="0px";                        
@@ -79,59 +67,109 @@ class menubutton extends component {
         dom_obj.innerHTML=this.obj_design.str_content;
         this.dom_objContent=dom_obj;
         this.dom_flex=dom_obj;
-        this.dom_objContentContainer.append(dom_obj);        
+        this.dom_objContentContainer.append(dom_obj);     
     }
+    
+    /*
+    fn_setColorGradient(){
+        let obj_parent=this.fn_getParentComponent();                
+        let obj_container=obj_parent.fn_getObjectMatching("fn_setColorGradient");                
+        if(obj_container){            
+            if(obj_container){
+                console.log("MENU BUTTON HIERACHY");
+    
+                let str_rgb=obj_container.dom_obj.style.backgroundColor;                              
+                let str_hex=obj_shared.fn_convertRGBToHex(str_rgb);                    
+                let str_hex_new=obj_shared.fn_lightenGradient(str_hex, 25);                
+                this.fn_setStyleProperty("backgroundColor", str_hex_new);                                    
+            }
+        }      
+    }
+    //*/
+    
+    fn_setHTMLContent(){
+        super.fn_setHTMLContent();    
+        this.fn_setText(this.obj_design.str_text);                
+    } 
     
     fn_addItem(obj_ini){
         let obj_item;        
         if(obj_ini.obj_design.str_type===undefined){
             obj_ini.obj_design.str_type="button";                   
-        }        
-        obj_ini.obj_theme=this.fn_shallowCopyObject(this.obj_theme);                                  
+        }                
         obj_item=super.fn_addItem(obj_ini);//CallSuper
         
         return obj_item;
+    }        
+    fn_open(){
+        this.fn_openContent();
     }
-    fn_onLoad(){
-        super.fn_onLoad();        
-        if(this.bln_isOpen){
-            this.fn_open();        
-        }
-    }    
-    fn_openContainer(){//not currently in use, assumes container has this funciton
-        this.obj_holder.obj_container.fn_open(this);
-        
+    fn_close(){
+        if(!this.obj_design.bln_pin){
+            this.fn_closeContent();
+        }        
     }
-    fn_open(){  
+    fn_openContent(){  
         if(this.obj_domProperty.disabled){            
             return;
         }
-        let style=this.dom_objContentContainer.style;
-        style.display="block";
-        this.bln_isOpen=true;
-        //alert("fn_open: " + this.obj_domProperty.innerText);
+
+        let obj_container=this.fn_getParentComponent();        
+        let str_method="fn_open";        
+        if(obj_container && obj_container[str_method]){
+            obj_container[str_method]();
+        }      
+        
+        this.dom_objContentContainer.style.display="block";
+        this.obj_design.bln_isOpen=true;        
+
+        //console.log("menu tab fn_openContent");
+
+        let arr=this.obj_design.arr_item;
+        for(let i=0;i<arr.length;i++){
+            let obj_item=arr[i];                                    
+            let str_method="fn_openContent";        
+            if(obj_item && obj_item[str_method]){
+                //console.log("obj_item fn_openContent");
+                obj_item[str_method]();
+            }                  
+        }
     }
-    fn_close(){                       
-        let style=this.dom_objContentContainer.style;
-        style.display="none";
-        this.bln_isOpen=false;        
-        //alert("fn_close: " + this.obj_domProperty.innerText);
-    }
-    fn_toggle(){                
-        if(this.bln_isOpen){this.fn_close();}
-        else{this.fn_open();}
+    fn_closeContent(){                           
+        
+        this.dom_objContentContainer.style.display="none";
+        this.obj_design.bln_isOpen=false;                
+
+        let arr=this.obj_design.arr_item;
+        for(let i=0;i<arr.length;i++){
+            let obj_item=arr[i];                                    
+            let str_method="fn_closeContent";        
+            if(obj_item && obj_item[str_method]){
+                obj_item[str_method]();
+            }                  
+        }
+    }    
+    fn_toggle(bln_isOpen=false){                
+        if(bln_isOpen){            
+            this.obj_design.bln_pin=false;
+            this.fn_closeContent();
+        }
+        else{            
+            this.fn_openContent();
+        }
     }        
-    fn_setHTMLContent(){
-        super.fn_setHTMLContent();    
-        this.fn_setText(this.obj_design.str_text);                
-    } 
-    fn_onClick(){          
-        //this.fn_event();                
-        this.fn_toggle();
-    }
-
-
-      
     
+    fn_onClick(){                  
+
+        let bln_isOpen=this.obj_design.bln_isOpen;        
+        let obj_container=this.fn_getParentComponent();        
+        let str_method="fn_close";        
+        if(obj_container && obj_container[str_method]){
+            obj_container[str_method]();
+        }      
+
+        
+        this.fn_toggle(bln_isOpen)        
+    }
 }//END CLS
 //END MENUBUTTON

@@ -21,15 +21,48 @@
       this.fn_requires("xdesign1_propertydesign");
     }
     fn_onStateChange(){
-      if(!super.fn_onStateChange()){return;}       
+      super.fn_onStateChange();
+
       if(!obj_projectTarget){return;}                 
       
       let bln_value=true;      
       if(!obj_project.LocationMatchInstance){bln_value=false;}                 
       this.obj_holder.obj_container.fn_setEnabled(bln_value);
     } 
+
+    fn_getContent(){ 
+      //console.log("TAG fn_getContent: " + obj_project.obj_palettSelected);          
+
+      let obj_container=this.fn_getParentComponent();
+        console.log("obj_container.obj_design.bln_pin: " + obj_container.obj_design.bln_pin);
+        if(obj_container.obj_design.bln_pin===undefined){
+          obj_container.obj_design.bln_pin=true;
+          //console.log("turn pin on");
+        }      
+      
+      
+        /*
+        if(!obj_project.obj_palettSelected){       
+          if(obj_projectTarget){                  
+            //obj_project.obj_palettSelected=obj_projectTarget;
+          }
+        }
+        //*/
+        //*
+        if(obj_project.obj_palettSelected){          
+          obj_project.obj_palettSelected.obj_designDelegate.fn_setPaletteSelected();                                                  
+        }
+        //*/
+      
+    }
+
     fn_onPaletteItemSelected(){
 
+      //console.log("fn_onPaletteItemSelected");   
+      
+      
+        
+      
       let obj_item;  
 
       this.fn_addDynamicItems();      
@@ -61,22 +94,25 @@
 
       let bln_value=true;      
       if(!obj_project.LocationMatchInstance){bln_value=false;}                 
-      this.obj_holder.obj_container.fn_setEnabled(bln_value);      
-      this.obj_holder.obj_container.fn_open();
+      //this.obj_holder.obj_container.fn_setEnabled(bln_value);      
+      //this.obj_holder.obj_container.fn_open();
 
     }
 
     fn_addDynamicItems(){    
 
-      let obj_ini, obj_item, obj_dynamicContentHolder;  
-      
-      obj_dynamicContentHolder=this.fn_getComponent("ListTagDynamicContent");
-      
-      if(!obj_dynamicContentHolder){
-        return;
-      }     
+      let obj_ini, obj_item, obj_dynamiccontent;        
 
-      obj_dynamicContentHolder.fn_prepare();        
+      obj_dynamiccontent=this.fn_getComponent("dynamiccontent");                        
+      obj_dynamiccontent=this.obj_holder.obj_dynamiccontent;
+
+      //console.log("tag before fn_addDynamicItems");
+      if(!obj_dynamiccontent){
+        return;
+      }           
+      //console.log("tag past fn_addDynamicItems");
+
+      obj_dynamiccontent.fn_prepare();        
       
       
       obj_ini=new Holder;                            
@@ -84,7 +120,7 @@
       obj_ini.obj_design.str_text="MAP";                        
       obj_ini.obj_design.str_tag="xdesign1_objectmap";                               
       obj_ini.obj_design.str_type="xdesign1_objectmap";       
-      obj_item=obj_dynamicContentHolder.fn_addItem(obj_ini);      
+      obj_item=obj_dynamiccontent.fn_addItem(obj_ini);      
       this.fn_register(obj_item);      
       
       obj_ini=new Holder;                
@@ -92,7 +128,7 @@
       obj_ini.obj_design.str_text="ACTION";                      
       obj_ini.obj_design.str_tag="xdesign1_objectaction";                     
       obj_ini.obj_design.str_type="xdesign1_objectaction";                   
-      obj_item=obj_dynamicContentHolder.fn_addItem(obj_ini);
+      obj_item=obj_dynamiccontent.fn_addItem(obj_ini);
       this.fn_register(obj_item);      
 
       obj_ini=new Holder;                
@@ -100,7 +136,7 @@
       obj_ini.obj_design.str_text="DESIGN UI";                       
       obj_ini.obj_design.str_type="xdesign1_propertydesignui";       
       obj_ini.obj_design.str_tag="xdesign1_propertydesignui";                         
-      obj_item=obj_dynamicContentHolder.fn_addItem(obj_ini);
+      obj_item=obj_dynamiccontent.fn_addItem(obj_ini);
       this.fn_register(obj_item);      
       
       obj_ini=new Holder;                    
@@ -108,7 +144,7 @@
       obj_ini.obj_design.str_text="STYLE";                        
       obj_ini.obj_design.str_type="xdesign1_propertydomstyle";       
       obj_ini.obj_design.str_tag="xdesign1_propertydomstyle";        
-      obj_item=obj_dynamicContentHolder.fn_addItem(obj_ini);           
+      obj_item=obj_dynamiccontent.fn_addItem(obj_ini);           
       this.fn_register(obj_item);
 
       obj_ini=new Holder;                
@@ -116,7 +152,7 @@
       obj_ini.obj_design.str_text="PROPERTY";                           
       obj_ini.obj_design.str_type="xdesign1_propertydomproperty";       
       obj_ini.obj_design.str_tag="xdesign1_propertydomproperty";                   
-      obj_item=obj_dynamicContentHolder.fn_addItem(obj_ini);           
+      obj_item=obj_dynamiccontent.fn_addItem(obj_ini);           
       this.fn_register(obj_item);
 
       obj_ini=new Holder;                
@@ -124,7 +160,7 @@
       obj_ini.obj_design.str_text="ATTRIBUTE";                           
       obj_ini.obj_design.str_type="xdesign1_propertydomattribute";       
       obj_ini.obj_design.str_tag="xdesign1_propertydomattribute";                   
-      obj_item=obj_dynamicContentHolder.fn_addItem(obj_ini);
+      obj_item=obj_dynamiccontent.fn_addItem(obj_ini);
       this.fn_register(obj_item);
 
       obj_ini=new Holder;                
@@ -132,8 +168,10 @@
       obj_ini.obj_design.str_text="DESIGN";                       
       obj_ini.obj_design.str_type="xdesign1_propertydesign";       
       obj_ini.obj_design.str_tag="xdesign1_propertydesign";                         
-      obj_item=obj_dynamicContentHolder.fn_addItem(obj_ini);
+      obj_item=obj_dynamiccontent.fn_addItem(obj_ini);
       this.fn_register(obj_item);
+
+      
     }
     fn_linkCompassItem(obj_target){                     
 
@@ -149,29 +187,27 @@
       obj_clipboard.fn_copy(obj_item);
       let obj_copy=obj_clipboard.fn_get();     
       
-      this.fn_removeId(obj_copy);      
-      obj_copy.obj_design.bln_palettePin=false;        
-      obj_copy.obj_design.bln_projectPin=false;              
-      
+      obj_project.fn_removeId(obj_copy);            
 
       obj_item.obj_designDelegate.fn_setPaletteSelected();       
     }
-    fn_removeId(obj_item){   
-      
-      console.log("manager tag fn_removeId");
+    deprecate_fn_removeId(obj_item){   
 
       let bln_locked=obj_item.obj_design.bln_lockComponent;              
       bln_locked=obj_shared.fn_parseBool(bln_locked);
       if(bln_locked){        
         return;
-      } 
-
-      //let obj_localHome=obj_selected.fn_getLocalHome();      
-      //bln_locked=obj_localHome.fn_getLocked();
-      
+      }       
       
       obj_item.obj_design.int_idRecord=0;      
-      obj_item.fn_setIDXDesign();
+      obj_item.obj_design.bln_palettePin=false;        
+      obj_item.obj_design.bln_projectPin=false;              
+      obj_item.obj_design.str_categoryList="";              
+      
+      let str_method="fn_setIDXDesign";        
+      if(obj_item && obj_item[str_method]){
+        obj_item[str_method]();
+      }                  
       obj_item.obj_design.int_modeExecute=obj_holder.int_modeEdit;              
 
       let arr=obj_item.obj_design.arr_item;
@@ -185,12 +221,7 @@
       let obj_container=obj_clipboard.fn_validatePaste(obj_item, obj_localHome);
       if(!obj_container){return;}
 
-      obj_item=obj_clipboard.fn_paste(obj_container);       
-      //obj_item.obj_designDelegate.fn_removeId();
-      //obj_clipboard.fn_clear();                                            
-      
-      //obj_container.obj_design.int_modeExecute=obj_holder.int_modeEdit;      
-      //obj_container.obj_designDelegate.fn_setPaletteSelected();          
+      obj_item=obj_clipboard.fn_paste(obj_container);             
       obj_item.obj_design.int_modeExecute=obj_holder.int_modeEdit;      
       obj_item.obj_designDelegate.fn_setPaletteSelected();          
     }
@@ -200,9 +231,7 @@
       let obj_insertNextTo=obj_clipboard.fn_validateInsert(obj_item, obj_localHome);
       if(!obj_insertNextTo){return;}
       
-      obj_item=obj_clipboard.fn_insert(obj_insertNextTo);                   
-      //obj_item.obj_designDelegate.fn_removeId();
-      //obj_clipboard.fn_clear();                                                  
+      obj_item=obj_clipboard.fn_insert(obj_insertNextTo);                         
       obj_item.obj_designDelegate.fn_setPaletteSelected();          
     }
     fn_cutTag(){
@@ -224,13 +253,6 @@
       obj_container.fn_removeItem(obj_item);
 
       obj_container.obj_design.int_modeExecute=obj_holder.int_modeEdit;      
-
-      /*
-      obj_item=obj_container.fn_getEndItem();//return the item or its last child for seleciton                                      
-      obj_item.obj_designDelegate.fn_setPaletteSelected();      
-      obj_item.fn_debug("END ITEM");
-      //*/
-
       obj_container.obj_designDelegate.fn_setPaletteSelected();      
     }    
     fn_selectLocalHome(){      

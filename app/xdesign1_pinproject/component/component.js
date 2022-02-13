@@ -14,7 +14,7 @@
             //this.fn_extends("abc");            
           }
           fn_onClick(){      
-            obj_project.fn_toggleProjectPin();
+            obj_project.fn_toggleProjectPin();            
           }
         }//END CLS
         //END TAG

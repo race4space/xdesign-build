@@ -15,28 +15,7 @@ class designfile extends AJAX {
         //END INITIALIZE STYLE  
     }  
     /////////////////////                   
-    fn_onUnAuthorizeUserStatus(obj_post){
-        let obj_notifier;
-        //console.log("designfile fn_onUnAuthorizeUserStatus: " + obj_post.ObjectNotifier);
-        obj_notifier=obj_post.ObjectNotifier;   
-        let str_method="fn_onUnAuthorizeUserStatus";             
-        if(obj_notifier && obj_notifier!=this) {            
-            if(obj_notifier[str_method]){
-                obj_notifier[str_method](obj_post);
-            }
-        }
-    }  
-    fn_onAuthorizeUserStatus (obj_post){
-        let obj_notifier;
-        //console.log("designfile fn_onAuthorizeUserStatus: " + obj_post.ObjectNotifier);
-        obj_notifier=obj_post.ObjectNotifier;       
-        let str_method="fn_onAuthorizeUserStatus"; 
-        if(obj_notifier && obj_notifier!=this) {
-            if(obj_notifier[str_method]){
-                obj_notifier[str_method](obj_post);
-            }
-        }
-    }  
+    
     /////////////////////            
     
     fn_runSave(obj_instance){                
@@ -77,21 +56,20 @@ class designfile extends AJAX {
                 obj_ini=new Object;
                 obj_ini.ObjectInstance=obj_item;                
                 this.fn_saveComponent(obj_ini);
-                bln_allSaved=false;
-                break;
+                bln_allSaved=false;                
+                return;
             }
         }
+        /*
         if(!bln_allSaved){
             if(bln_debug){obj_instance.fn_debug("bln_allSaved is false, return");}
             return;
         }
+        //*/
         
         obj_instance.obj_holder.bln_markSave=false;
 
-        //SAVE        
-        if(bln_debug){
-            
-        }            
+        //SAVE                
         if(parseInt(obj_instance.obj_design.int_modeExecute)===obj_holder.int_modeEdit){        
             if(bln_debug){obj_instance.fn_debug("ALL CHILD SAVED, I AM EDITABLE");}            
             obj_ini=new Object;
@@ -100,14 +78,16 @@ class designfile extends AJAX {
             obj_ini.str_actionCallback="fn_saveComponent";                        
             this.fn_save(obj_ini);            
             obj_instance.obj_design.int_modeExecute=obj_holder.int_modeReadOnly;
+            if(bln_debug){obj_instance.fn_debug("I AM NOT EDITABLE");}                        
         }
+
+        //*
         else{            
             //if(bln_debug){obj_instance.fn_debug("ALL CHILD SAVED, I AM NON EDITABLE");}                
             //IF PARENT IS MARKED, TELL THEM                
             let obj_parent=obj_instance.fn_getParentComponent();                                                                    
-            if(obj_parent && obj_parent.obj_holder.bln_markSave){                            
-                    if(bln_debug){obj_parent.fn_debug("PARENT");}                
-                    if(bln_debug){obj_instance.fn_debug("PARENT MARKSAVE IS TRUE, CALL PARENT");}                                    
+            if(obj_parent && obj_parent.obj_holder.bln_markSave){                                                
+                    if(bln_debug){obj_parent.fn_debug("PARENT MARKSAVE IS TRUE, CALL PARENT");}                                    
                     obj_ini=new Object;
                     obj_ini.ObjectInstance=obj_parent;                                
                     this.fn_saveComponent(obj_ini);                                        
@@ -118,19 +98,28 @@ class designfile extends AJAX {
                         if(bln_debug){obj_instance.fn_debug("CORRECT PARENT IS FALSE");}                                        
                     }
                     else{                        
-                        if(bln_debug){obj_parent.fn_debug("*************ERROR PARENT");}                                        
-                        if(bln_debug){obj_instance.fn_debug("*************ERROR PARENT MARKSAVE IS FALSE");}                                    
+                        if(bln_debug){obj_instance.fn_debug("ERROR PARENT IS TRUE");}                                        
+                        if(obj_parent.obj_holder.bln_markSave){
+                            if(bln_debug){obj_instance.fn_debug("MARKSSAVE IS TRUE");}                                        
+                        }
+                        else{
+                            if(bln_debug){obj_instance.fn_debug("MARKSSAVE IS FALSE");}                                        
+                        }
+                        
                     }                    
                 }             
                 if(bln_debug){obj_instance.fn_debug("COMPLETE XDESIGN1 onSaveComponent");}   
-                this.obj_holder.obj_container.onSaveComponent(); //XDESIGN Program CallBack Function                                 
+                this.obj_holder.obj_container.onSaveComponent(obj_iniSave); //XDESIGN Program CallBack Function                                 
             }           
         }
+        //*/
 
         if(bln_debug){obj_instance.fn_debug("EXIT");}                
     }    
 
     fn_save(obj_ini){         
+
+        let bln_debug=false;
         
         
         let obj_instance=obj_ini.obj_instance;
@@ -142,6 +131,8 @@ class designfile extends AJAX {
 
         obj_instance=obj_ini.obj_instance;
         obj_instance.fn_onBeforeSave();        
+
+        if(bln_debug){obj_instance.fn_debug("ENTER SAVE");}
         
         //str_action could be publish
         obj_ini.str_action="save";
@@ -159,16 +150,20 @@ class designfile extends AJAX {
         let obj_post=this.fn_formatPost(obj_ini);                       
 
         obj_post.ObjectData=this.fn_actionSerialize(obj_instance);//obj_post.ObjectData is now a JSON String        
+        if(bln_debug){obj_instance.fn_debug("BEFORE PUT POST");}
         this.fn_putPost(obj_post);
+
+        if(bln_debug){obj_instance.fn_debug("AFTER PUT POST");}
         
         //Very Important - do not fuck about with this
         obj_instance.obj_design.int_modeExecute=int_modeExecuteCopy;//put back in original mode
         //Very Important - do not fuck about with this
     }
-    save(obj_post){ //native callback generally overidden        
+    save(obj_post){ //native callback generally overidden                
     }
+    
     saveAs(obj_post){//native callback
-        obj_post.ObjectInstance.obj_design.int_idRecord=obj_post.RecordId;
+        obj_post.ObjectInstance.obj_design.int_idRecord=obj_post.RecordId;        
     }
     openComponentCode(obj_post){//native callback
         //console.log("openComponentCode");        
@@ -221,6 +216,7 @@ class designfile extends AJAX {
         obj_post.Query=obj_ini.Query;
         obj_post.ProjectPin=obj_ini.bln_projectPin;        
         obj_post.PalettePin=obj_ini.bln_palettePin;        
+        obj_post.CatQuery=obj_ini.str_catQuery;            
         obj_post.DynamicPin=obj_ini.bln_dynamicPin;        
         obj_post.Execute=obj_ini.bln_execute;           
 
@@ -242,19 +238,25 @@ class designfile extends AJAX {
             //console.log("obj_post.RecordExtend: " + obj_post.RecordExtend);
             obj_post.RecordId=obj_instance.obj_design.int_idRecord;            
             obj_post.ToggleProjectPin=obj_instance.obj_design.bln_toggleProjectPin;
-            obj_post.HiddenProjectPin=obj_instance.obj_design.bln_hiddenProjectPin;
+            obj_post.ProtectedProjectPin=obj_instance.obj_design.bln_protectedProjectPin;
             obj_post.ProjectPin=obj_instance.obj_design.bln_projectPin;
             obj_post.PalettePin=obj_instance.obj_design.bln_palettePin;     
             obj_post.DynamicPin=obj_instance.obj_design.bln_dynamicPin;                                
             obj_post.LocationID=obj_instance.obj_design.str_locationID;
             obj_post.CreatedDate=obj_instance.obj_design.str_createdDate;
-            obj_post.ModifiedDate=obj_instance.obj_design.str_modifiedDate;
-            obj_post.CreateRelease=obj_instance.obj_design.bln_createRelease;            
+            obj_post.ModifiedDate=obj_instance.obj_design.str_modifiedDate;            
+            obj_post.LastVersionDate=obj_instance.obj_design.str_lastVersionDate;            
+            obj_post.CategoryList=obj_instance.obj_design.str_categoryList;            
+
+            obj_post.CreateRelease=obj_project.obj_holder.bln_createRelease;                        
                         
             //get a list of your dependentid
             //does this need to run on every trip?                                                
             obj_post.DependentId=obj_instance.fn_compileDependentId();
             //console.log(obj_instance.obj_design.str_name + " obj_post.DependentId: " + obj_post.DependentId);
+
+            
+            
             
             //get a list of your classlist
             let str_List1=obj_instance.obj_design.str_classList;            
@@ -277,8 +279,7 @@ class designfile extends AJAX {
             obj_post.ComponentCode=obj_instance.obj_holder.str_componentCode;
         }
         return obj_post;
-    }    
-
+    }   
     
 
     fn_delete(obj_ini){        
@@ -444,8 +445,8 @@ class designfile extends AJAX {
         };
     }  
 
-    fn_debugServerPost(obj_post, str_comment){                                
-
+    fn_debugServerPost(obj_post, str_comment){                                        
+        
         //console.log("obj_project: " + obj_project.obj_design.int_idRecord);
         if(!obj_project.obj_holder.bln_debugServer){return;}
         
@@ -472,13 +473,13 @@ class designfile extends AJAX {
         //console.log("obj_post.RecordType: " + obj_post.RecordType);
         //console.log("obj_post.RecordId: " + obj_post.RecordId);
         //console.log("obj_post.ToggleProjectPin: " + obj_post.ToggleProjectPin);
-        //console.log("obj_post.HiddenProjectPin: " + obj_post.HiddenProjectPin);
+        //console.log("obj_post.ProtectedProjectPin: " + obj_post.ProtectedProjectPin);
         //console.log("obj_post.ProjectPin: " + obj_post.ProjectPin);
         //console.log("obj_post.PalettePin: " + obj_post.PalettePin);
         //console.log("obj_post.DependentId: " + obj_post.DependentId);
         //console.log("obj_post.ClassList: " + obj_post.ClassList);
         //console.log("obj_post.Query: " + obj_post.Query);
-        console.log("obj_post.Echo: " + obj_post.Echo);
+        console.log("obj_post.Echo: " + obj_post.Echo);        
         //console.log("obj_post.Hidden: " + obj_post.Hidden);
         if(obj_post.HasError){            
             console.log("obj_post.ErrorMessage: " + obj_post.ErrorMessage);        

@@ -9,30 +9,32 @@ class DesignDelegate{
         this.obj_delegator=obj_delegator;
         let obj_design=this.obj_delegator.obj_design;
 
-        if(obj_design.bln_hiddenProjectPin===undefined){obj_design.bln_hiddenProjectPin=false;}                        
+        if(obj_design.bln_protectedProjectPin===undefined){obj_design.bln_protectedProjectPin=false;}                        
         if(obj_design.bln_projectPin===undefined){obj_design.bln_projectPin=false;}
         if(obj_design.bln_palettePin===undefined){obj_design.bln_palettePin=false;}                
-        if(obj_design.bln_hiddenProjectPin===undefined){obj_design.bln_hiddenProjectPin=false;}
+        if(obj_design.bln_protectedProjectPin===undefined){obj_design.bln_protectedProjectPin=false;}
         if(obj_design.bln_toggleProjectPin===undefined){obj_design.bln_toggleProjectPin=false;}
         if(obj_design.bln_maintainId===undefined){obj_design.bln_maintainId=false;}
         if(obj_design.bln_registerAtProject===undefined){obj_design.bln_registerAtProject=false;}
         if(obj_design.bln_registerAtContainer===undefined){obj_design.bln_registerAtContainer=false;}        
-        if(obj_design.str_urlServer===undefined){obj_design.str_urlServer="server.php";}        
+        if(obj_design.str_urlServer===undefined){obj_design.str_urlServer="notset";}                
         if(obj_design.bln_themeType===undefined){obj_design.bln_themeType=false;}
+        if(obj_design.str_themeType===undefined){obj_design.str_themeType="notset";}        
         if(obj_design.bln_typeable===undefined){            
             let str_listIn="div,p,span,td,th";
             let bln_typeable=false;
             if(obj_shared.fn_inStr(","+obj_design.str_tag+",", ","+str_listIn+",")){bln_typeable=true;}
             if(obj_design.bln_typeable===undefined){obj_design.bln_typeable=bln_typeable;}                                 
         }
-        if(!obj_design.str_locationID){obj_design.str_locationID="notset";}//undefined or empty string or false                        
-        if(!obj_design.bln_createRelease){obj_design.bln_createRelease="false";}//reset any previou true settings                
-        if(!obj_design.str_nameRelease){obj_design.str_nameRelease="notset";}//reset any previou true settings        
+        if(obj_design.str_categoryList===undefined){obj_design.str_categoryList="notset";}                
+        if(!obj_design.str_locationID){obj_design.str_locationID="notset";}//undefined or empty string or false                                
+        if(!obj_design.str_nameRelease){obj_design.str_nameRelease="notset";}//reset any previou true settings                
         
         if(obj_design.str_text==undefined){obj_design.str_text="notset";}//Menu Button Only                      
         //if(obj_design.str_nameEventClick==undefined){obj_design.str_nameEventClick="notset";}
         //if(obj_design.str_valueEventClick==undefined){obj_design.str_valueEventClick="notset";}
         if(obj_design.str_nameTheme==undefined){obj_design.str_nameTheme="notset";}       
+        if(obj_design.str_lastVersionDate==undefined){obj_design.str_lastVersionDate="notset";}       
         
         
         //this.fn_setClipBoardContent(false);
@@ -42,27 +44,15 @@ class DesignDelegate{
     fn_addPaletteItem(obj_ini){//required  as is overidden by eazygrid etc                        
         let obj_delegator=this.obj_delegator;
 
-        let obj_item;                 
+        let obj_item;                         
         
         obj_delegator.bln_removeId=true;        
-        obj_item=obj_delegator.fn_addItem(obj_ini);//ServerSideItem                                        
+        obj_item=obj_delegator.fn_addItem(obj_ini);//ServerSideItem                                                
         
         if(!obj_item){            
             console.log("obj_item is false, check dynamic content")
             return;
-        }
-
-        /*
-        let bln_maintainId=obj_item.obj_design.bln_maintainId;                        
-        if(!bln_maintainId){                        
-            obj_projectParent.fn_removeId(obj_item);
         }        
-        obj_item.obj_design.bln_palettePin=false;        
-        obj_item.obj_design.bln_projectPin=false;              
-        //*/
-        obj_item.obj_design.bln_palettePin=false;        
-        obj_item.obj_design.bln_projectPin=false;              
-      
 
         //MAY NOT HAVE COMPLETE OBJECT INITIALIZATION , IF SERVER GRAB
         //DO NOT CALL SET PALETTE SELECTED HERE
@@ -72,10 +62,7 @@ class DesignDelegate{
     fn_setup(){//is overriden by project instance 
         //lastStep                        
         //AFTER OBJECT INITIALIZATION
-        this.fn_listenEventDesign();          
-        //this.fn_setPaletteSelected();        
-        //this.fn_setPaletteSelectedLocalHome();
-        //let obj_delegator=this.obj_delegator;        
+        this.fn_listenEventDesign();                          
         //PaletteSelected is first set in Palette fn_listPinnedComponent       
         
         this.fn_removeId();
@@ -84,13 +71,16 @@ class DesignDelegate{
     fn_onLoadItem(obj_item){                        
     }
     fn_removeId(){      
+
+        //called by setup
         
         let obj_delegator=this.obj_delegator;
+        
 
         let bln_locked=obj_delegator.obj_design.bln_lockComponent;              
         bln_locked=obj_shared.fn_parseBool(bln_locked);
         if(bln_locked){        
-          console.log("fn_removeId bln_locked");
+          console.log("bln_locked");
           return;
         } 
 
@@ -107,10 +97,12 @@ class DesignDelegate{
         if(bln_maintainId){
             return;
         }        
-
-        console.log("design delete fn_removeId: " +  obj_delegator.obj_design.int_idRecord);
     
-        obj_delegator.obj_design.int_idRecord=0;      
+        obj_delegator.obj_design.int_idRecord=0; 
+        obj_delegator.obj_design.bln_palettePin=false;        
+        obj_delegator.obj_design.bln_projectPin=false;              
+        obj_delegator.obj_design.str_categoryList=false;              
+
         obj_delegator.fn_setIDXDesign();
         obj_delegator.obj_design.int_modeExecute=obj_holder.int_modeEdit;                            
     }
@@ -151,42 +143,19 @@ class DesignDelegate{
     fn_onPaletteItemClickCapture(){//event capture, overidden for base element             
     }
         
-    fn_onPaletteItemClickBubble(){//event capture 
+    fn_onPaletteItemClickBubble(){//event capture        
         
-        //console.log("fn_onPaletteItemClickBubble");
         
         if(obj_projectParent.obj_palettSelected){            
-            return;
-            //select only first item
-        }   
-        //alert("fn_onPaletteItemClickBubble");
-
-        ////this refers to obj_delegator.obj_designDelegate
-        //console.log("fn_onPaletteItemClickBubble")        
-
-        /*
-        // A implmentation: set selected to local home, if unlocked set chlidren to editable        
-        let obj_localHome=this.obj_delegator.fn_getLocalHome();        
-        let bln_locked=obj_localHome.fn_getLocked();        
-        if(!bln_locked){            
-            obj_localHome.obj_design.int_modeExecute=obj_holder.int_modeEdit;
-            obj_localHome.obj_designDelegate.fn_setChildrenModeExecute(obj_holder.int_modeEdit);//new change to also set children to editable                    
-            this.fn_setPaletteSelectedLocalHome();
-        }
-        else{//local home is locked , lets select that            
-            obj_localHome.obj_designDelegate.fn_setPaletteSelected();
-        }
-        //*/
-
-        //*
-        // B implmentation: simply set item that was clicked to selected
+            return;            
+        }           
+        
+        // set item that was clicked to selected
         this.fn_setPaletteSelected();
-        //*/   
+        
         
     }
     fn_setPaletteSelectedLocalHome(){
-
-        //console.log("fn_setPaletteSelectedLocalHome");
         
         let obj_localHome;
 
@@ -222,48 +191,26 @@ class DesignDelegate{
             }
         }
     }     
-    fn_setPaletteSelected(bln_maintainMap){                  
+    fn_setPaletteSelected(bln_maintainMap){                         
 
-        //console.log("design delgate fn_setPaletteSelected");
-        let bln_debug=true;
+        //console.log("DESIGN DELEGATE fn_setPaletteSelected");
         
-        let obj_delegator=this.obj_delegator;          
-
-        //if(bln_debug){obj_delegator.fn_debug("fn_setPaletteSelected");}        
+        
+        let obj_delegator=this.obj_delegator;                  
 
         //this refers to obj_delegator.obj_designDelegate
         obj_delegator.fn_setLevelLimit();                              
         
-        if(!obj_projectParent){alert("obj_projectParent is false: fn_setPaletteSelected");return;}
-        
-
-        /* deprecated 2021-09-06
-        //something to do with input subitem
-        if(!bln_maintainMap && obj_delegator!==obj_project){
-            if(obj_delegator.obj_holder.obj_levelLimit.bln_limitBottom){          
-                let obj_container=obj_delegator.obj_holder.obj_container;
-                obj_container.obj_holder.obj_subItem=obj_delegator;
-                if(obj_container.obj_designDelegate){
-                    if(bln_debug){console.log("bln_LimitBottom set SUBITEM selected");}                                                
-                    obj_container.obj_designDelegate.fn_setPaletteSelected(false);//not quite sure what this is doing 
-                }
-                if(bln_debug){console.log("RETURN bln_LimitBottom");}                            
-                return;      
-            }        
-        }
-        //*/
+        if(!obj_projectParent){alert("obj_projectParent is false");return;}
 
         obj_delegator.obj_holder.bln_maintainMap=bln_maintainMap;        
         
         if(obj_project.obj_designDelegate){            
             obj_project.obj_designDelegate.fn_deSelectPaletteItems();
-        }                       
-        
+        }                               
         
         obj_projectParent.obj_palettSelected=obj_delegator;         
-        obj_projectParent.obj_palettSelectedLast=obj_projectParent.obj_palettSelected;                  
-        
-        //if(bln_debug){obj_projectParent.obj_palettSelected.fn_debug("bubble obj_projectParent.obj_palettSelected");}        
+        obj_projectParent.obj_palettSelectedLast=obj_projectParent.obj_palettSelected;                                 
         
         if(obj_delegator.obj_holder.obj_container){                        
             obj_delegator.obj_holder.obj_container.obj_holder.obj_lastItem=obj_delegator;            
@@ -273,23 +220,7 @@ class DesignDelegate{
             //obj_delegator.obj_design.int_modeExecute=obj_holder.int_modeReadOnly;
         }        
         
-        obj_projectParent.fn_onPaletteItemSelected();//update environment, property sheets etc        
-
-        //console.log("aaaaa");
-        
-        
-        /*
-        //something to do with input subitem
-        if(obj_delegator.obj_holder.obj_subItem){
-            if(bln_debug){obj_projectParent.obj_palettSelected.fn_debug("fn_setPaletteSelected obj_subItem: fn_linkCompassItem");}        
-            let obj_subItem=obj_delegator.obj_holder.obj_subItem;                        
-            obj_projectParent.fn_linkCompassItem(obj_subItem);
-            obj_delegator.obj_holder.obj_subItem=false;
-        }
-        //*/
-        
-
-
+        obj_projectParent.fn_onPaletteItemSelected();//update environment, property sheets etc                
     } 
     
     fn_deSelectPaletteItems(){        
@@ -531,24 +462,73 @@ class DesignDelegate{
         if(str_value===""){str_value="notset";}
         return str_value;
     }    
+    fn_defaultNotSetDate(str_value){
+        if(str_value===""){
+            str_value=obj_shared.fn_getDate(obj_const.int_dateNow);
+        }
+        return str_value;
+    }       
+
+    fn_setList(str_value, bln_disallowSpace=true){                
+        
+        str_value=this.fn_defaultNotSet(str_value);                                
+        if(bln_disallowSpace){            
+            str_value=str_value.toLowerCase();        
+            str_value=obj_shared.fn_replace(str_value, " ", ",");                               
+        }        
+        str_value=obj_shared.fn_formatString(str_value, obj_const.int_alphaNumericComma);
+        str_value=obj_shared.fn_formatUniqueList(str_value);                        
+        
+        return str_value;        
+    }    
+    
+    fn_setClassList(str_value){                
+        this.obj_delegator.obj_design.str_classList=this.fn_setList(str_value);
+    }        
+    fn_setCategoryList(str_value){                
+        this.obj_delegator.obj_design.str_categoryList=this.fn_setList(str_value, false);
+    }
+    fn_setClassExtend(str_value){
+        str_value=this.fn_defaultNotSet(str_value);                
+        str_value=obj_shared.fn_formatShortName(str_value);                    
+        this.obj_delegator.obj_design.str_classExtend=str_value;
+    }
+    fn_setLocationID(str_value){
+        str_value=this.fn_defaultNotSet(str_value);        
+        str_value=obj_shared.fn_formatShortName(str_value);                    
+        this.obj_delegator.obj_design.str_locationID=str_value;
+    }
+    fn_setCreatedDate(str_value){
+        str_value=this.fn_defaultNotSetDate(str_value);                
+        str_value=obj_shared.fn_formatShortDate(str_value);                    
+        this.obj_delegator.obj_design.str_createdDate=str_value;
+    }
+    fn_setModifiedDate(str_value){
+        str_value=this.fn_defaultNotSetDate(str_value);                
+        str_value=obj_shared.fn_formatShortDate(str_value);                    
+        this.obj_delegator.obj_design.str_modifiedDate=str_value;
+    }    
     
     fn_setDesignProperty(str_name, foo_value){  
 
         switch(str_name){                                                    
             case "str_classExtend":            
-                this.obj_delegator.fn_setClassExtend(foo_value);                                                
+                this.fn_setClassExtend(foo_value);                                                
                 return; 
             case "str_classList":            
-                this.obj_delegator.fn_setClassList(foo_value);                                                                
+                this.fn_setClassList(foo_value);                                                                
+                return;                
+                case "str_categoryList":            
+                this.fn_setCategoryList(foo_value);                                                                
                 return;                
             case "str_locationID":            
-                this.obj_delegator.fn_setLocationID(foo_value);                                                
+                this.fn_setLocationID(foo_value);                                                
                 return; 
             case "str_createdDate":            
-                this.obj_delegator.fn_setCreatedDate(foo_value);                                                
+                this.fn_setCreatedDate(foo_value);                                                
                 return; 
             case "str_modifiedDate":            
-                this.obj_delegator.fn_setModifiedDate(foo_value);                                                
+                this.fn_setModifiedDate(foo_value);                                                
                 return; 
             case "str_name":                
                 this.obj_delegator.fn_setName(foo_value);                                

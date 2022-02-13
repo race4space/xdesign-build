@@ -5,8 +5,7 @@ class AJAX extends component {
     fn_initialize(obj_ini){
         super.fn_initialize(obj_ini);
 
-        this.obj_holder.bln_debug=true;
-        //this.obj_design.bln_hiddenProjectPin=true;    
+        this.obj_holder.bln_debug=true;        
     }
     
     ///START AJAX     
@@ -17,10 +16,8 @@ class AJAX extends component {
         console.log("Error: Data Put Post: Action is not specified");
         return;
         }
-
         
-        this.fn_debugServerPost(obj_post, "");
-        
+        this.fn_debugServerPost(obj_post, "");        
         
         if(obj_post.URL===undefined){
             console.log("obj_post.URL is undefined");        
@@ -84,6 +81,9 @@ class AJAX extends component {
 
         obj_post.ObjectInstance=this.fn_AJAXLocateObjectInstance(obj_post);
         obj_post.ObjectNotifier=this.fn_AJAXLocateObjectNotifier(obj_post);
+
+        
+        
         
         this.fn_callbackFetch(obj_post);        
     }    
@@ -93,16 +93,18 @@ class AJAX extends component {
         str_action=obj_post.Action;                
         str_actionCallback=obj_post.ActionCallBack;      
 
-        obj_notifier=this;
-        if(obj_notifier){            
-            if(obj_notifier[str_action]){
-                obj_notifier[str_action](obj_post);
-            }        
+        
+        if(this[str_action]){            
+            this[str_action](obj_post);
+        }   
+        if(str_actionCallback!==str_action){
+            if(this[str_actionCallback]){
+                this[str_actionCallback](obj_post);
+            }     
         }
         
-        obj_notifier=obj_post.ObjectNotifier;        
-        if(obj_notifier){                        
-            //obj_notifier.fn_callbackFetch(obj_post);
+        obj_notifier=obj_post.ObjectNotifier;                
+        if(obj_notifier && obj_notifier!=this){                             
             if(obj_notifier[str_actionCallback]){
                 obj_notifier[str_actionCallback](obj_post);
             }
@@ -120,13 +122,29 @@ class AJAX extends component {
         }
     }
     fn_onUnAuthorizeUserStatus(obj_post){
-        console.log("OVERIDDEN - SHOULD NEVER SEE fn_onUnAuthorizeUserStatus");
-    }    
-    fn_onAuthorizeUserStatus(obj_post){
-        console.log("OVERIDDEN - SHOULD NEVER SEE fn_onAuthorizeUserStatus");
+        let obj_notifier;
+        //console.log("designfile fn_onUnAuthorizeUserStatus: " + obj_post.ObjectNotifier);
+        obj_notifier=obj_post.ObjectNotifier;   
+        let str_method="fn_onUnAuthorizeUserStatus";             
+        if(obj_notifier && obj_notifier!=this) {            
+            if(obj_notifier[str_method]){
+                obj_notifier[str_method](obj_post);
+            }
+        }
+    }  
+    fn_onAuthorizeUserStatus (obj_post){
+        let obj_notifier;
+        //console.log("designfile fn_onAuthorizeUserStatus: " + obj_post.ObjectNotifier);
+        obj_notifier=obj_post.ObjectNotifier;       
+        let str_method="fn_onAuthorizeUserStatus"; 
+        if(obj_notifier && obj_notifier!=this) {
+            if(obj_notifier[str_method]){
+                obj_notifier[str_method](obj_post);
+            }
+        }
     }    
     
-    fn_formatPostFetch(obj_post, bln_expanded=false){//could this be overriden to allow for applicaiton specific processing
+    fn_formatPostFetch(obj_post){//could this be overriden to allow for applicaiton specific processing
 
         let bln_debug =false;
 
@@ -142,7 +160,12 @@ class AJAX extends component {
             obj_shared.fn_debug(obj_post, "obj_post");
         }
     
-
+        if(obj_post.ObjectData===undefined){            
+            //obj_post.ObjectData="{}";
+        }
+        if(obj_post.RowData===undefined){            
+            //obj_post.RowData="[]";
+        }
         obj_post.ObjectData=obj_myJson.fn_deserialize(obj_post.ObjectData, "ObjectData");          
         obj_post.RowData=obj_myJson.fn_deserialize(obj_post.RowData, "RowData");//Array of  Recordset Rows          
         //if(!obj_post.DesignId){obj_post.DesignId="";}
@@ -163,6 +186,11 @@ class AJAX extends component {
         
 
         return obj_post;
+    }
+
+    fn_debugServerPost(obj_post, str_message){
+        //overidden
+        //console.log("THIS FUNCTION SHOULD BE OVERRIDDEN: AJAX fn_debugServerPost");
     }
 
 
@@ -194,11 +222,23 @@ class AJAX extends component {
         }      
         return obj_json;
     }
-    fn_formatPost(){//to be overriden by component.
-        let obj_post=new Object;         
-        return obj_post;
-    }       
 
-    fn_debugServerPost(obj_post, str_title){//to be overidden by component
-    }
+    fn_formatPost(obj_ini){  
+
+        let obj_post=new Object;
+        
+        obj_post.URL=obj_ini.str_urlServer                
+        obj_post.QueryString=obj_ini.str_queryString;
+        obj_post.NotifierId=obj_ini.str_idAJAXNotifier;                        
+        obj_post.Action=obj_ini.str_action;                
+        obj_post.ActionCallBack=obj_ini.str_actionCallback;                                        
+        if(!obj_post.ActionCallBack){            
+            obj_post.ActionCallBack=obj_ini.str_action;                
+        }        
+        obj_post.RecordId=obj_ini.RecordId;
+        
+        
+        
+        return obj_post;
+    }   
 }//END CLS

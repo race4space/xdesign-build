@@ -12,7 +12,7 @@ class BaseObject extends LevelObject{
         }     
         //this.obj_holder.bln_loaded=false;
         
-        //START INITIALIZE DESIGN
+        //START INITIALIZE DESIGN        
         this.obj_design=obj_ini.obj_design;                
         if(!this.obj_design){//ensure continuity of obj_holder variables e.g obj_holder.obj_container
             this.obj_design={};//required        
@@ -136,8 +136,10 @@ class BaseObject extends LevelObject{
         if(this.obj_design.bln_dynamicPin){         
             obj_ini.obj_design.bln_dynamicPin=true;
         }
-
+        
         let obj_item=this.fn_createChildObject(obj_ini);
+
+        
         
         this.fn_createChildDom(obj_item);
         //creae dom object into HTML
@@ -152,16 +154,19 @@ class BaseObject extends LevelObject{
 
         let str_type, int_idRecord, bln_removeId;        
 
+        //PLACE NUMBER 1 WHEN OBJ INI CAN GET KNOCKED OFF
+
         int_idRecord=obj_ini.obj_design.int_idRecord;           
-        str_type=obj_ini.obj_design.str_type;                           
+        str_type=obj_ini.obj_design.str_type;                                   
         
         
         if(!obj_ini.obj_design.arr_item){            
             obj_ini=new Holder;            
             obj_ini.obj_design.int_idRecord=int_idRecord;           
-            obj_ini.obj_design.str_type=str_type;                       
-            //obj_shared.fn_enumerateObject(obj_ini, "test");            
+            obj_ini.obj_design.str_type=str_type;                                   
         }        
+
+        //PLACE NUMBER 1 WHEN OBJ INI CAN GET KNOCKED OFF
         
         return obj_ini;
     }
@@ -169,26 +174,32 @@ class BaseObject extends LevelObject{
     fn_createChildObject(obj_ini){
 
         let str_type, int_idRecord, obj_item, bln_removeId;        
-        
-        obj_ini=this.fn_checkIni(obj_ini);
+
+        //PLACE NUMBER 2 WHEN OBJ INI CAN GET KNOCKED OFF
+
+        obj_ini=this.fn_checkIni(obj_ini);        
         
         int_idRecord=obj_ini.obj_design.int_idRecord;           
-        str_type=obj_ini.obj_design.str_type;                
+        str_type=obj_ini.obj_design.str_type;                        
         
         if(obj_ini){//see fi we can get the correct ini object, partucuarly to ensure the type is correct.
             if(obj_ini.obj_design){
                 int_idRecord=parseInt(obj_ini.obj_design.int_idRecord);        
-                let ObjectData=obj_shared.fn_getMapItem(obj_InstanceJSONMap,  int_idRecord);//get a reference to the the object that has been published from the db        
+                let ObjectData=obj_shared.fn_getMapItem(obj_InstanceJSONMap,  int_idRecord);//get a reference to the the object that has been published from the db                        
                 if(ObjectData){
-                    if(ObjectData.obj_design){
-                        obj_ini=ObjectData;
+                    var NewObjectData=JSON.parse(JSON.stringify(ObjectData));        
+                    if(NewObjectData.obj_design){
+                        obj_ini=NewObjectData;
                     }
                 }
             }
         } 
+
+        //PLACE NUMBER 2 WHEN OBJ INI CAN GET KNOCKED OFF
         
 
-        str_type=obj_ini.obj_design.str_type;                           
+        str_type=obj_ini.obj_design.str_type;                          
+
         //console.log("str_type: " + str_type);
         if(str_type==="theme"){//hide any theme                                 
             if(obj_ini.obj_domStyle){                
@@ -427,6 +438,7 @@ class BaseObject extends LevelObject{
                     console.log("BaseObject fn_loadChildren OBJ INI IS NULL");                                                
                 }
             }
+
             obj_item=this.fn_addItem(obj_ini);//ServerSideItem or BootItem
             
             
@@ -523,6 +535,7 @@ class BaseObject extends LevelObject{
         console.log("str_name: " + obj_design.str_name);        
         console.log("str_type: " + obj_design.str_type);        
         console.log("str_tag: " + obj_design.str_tag);        
+        console.log("bln_split: " + obj_design.bln_split);        
         console.log("str_classList: " + obj_design.str_classList);        
         console.log("str_nameEventClick: " + obj_design.str_nameEventClick);        
         console.log("str_valueEventClick: " + obj_design.str_valueEventClick);                              
@@ -976,9 +989,10 @@ class BaseObject extends LevelObject{
     
     fn_applyMyTheme(){         
 
-        let str_type,  str_name, obj_myTheme, obj_myThemeItem, str_nameTheme;
+        let str_type,  str_themeType, str_name, obj_myTheme, obj_myThemeItem, str_nameTheme;
         
         str_type=this.obj_design.str_type;        
+        str_themeType=this.obj_design.str_themeType;        
         if(str_type==="theme"){return;}        
         
         obj_myTheme=obj_project.fn_getComponent("myRegisteredXTheme");                
@@ -1019,6 +1033,15 @@ class BaseObject extends LevelObject{
                 //this.fn_debug("FOUND THEME ITEM VIA TYPE: " + obj_myThemeItem.obj_design.str_name);                           
             }
         }
+        if(!obj_myThemeItem){            
+            
+            obj_myThemeItem=obj_myTheme.fn_getThemeViaType(str_themeType);                                                     
+            if(obj_myThemeItem){
+                //this.fn_debug("FOUND THEME ITEM VIA TYPE: " + obj_myThemeItem.obj_design.str_name);                           
+            }
+        }
+
+        
         
         if(obj_myThemeItem){            
             let str_display=this.obj_domStyle.display;
@@ -1027,7 +1050,8 @@ class BaseObject extends LevelObject{
         }
     }
 
-    fn_getMyThemeItem(obj_myTheme){return false}//overidden, currently only by project
+    fn_getMyThemeItem(obj_myTheme){return false}//overidden, currently only by project   
+    
 
     fn_getThemeViaType(str_value){        
 
@@ -1271,7 +1295,7 @@ class BaseObject extends LevelObject{
     }
     fn_getText(str_text){//should be overidden, but called
         return this.obj_design.str_text;
-    }
+    }    
     
     fn_setItemStyleProperty(str_type, str_name, str_value){          
 
@@ -1300,7 +1324,7 @@ class BaseObject extends LevelObject{
     
     fn_setHTMLContent(){
 
-        let str_content=this.fn_getContent();
+        let str_content=this.fn_getHTMLContent();
 
         if(str_content==="nocontent"){
                 return;
@@ -1320,7 +1344,7 @@ class BaseObject extends LevelObject{
         }
         
     }                
-    fn_getContent(str_value){              
+    fn_getHTMLContent(str_value){              
         
         str_value=this.obj_design.str_content;
         
@@ -1367,10 +1391,24 @@ class BaseObject extends LevelObject{
             str_value=foo_val;
         }            
         this.fn_setStyleProperty("visibility", str_value);                                            
-    }          
+    }      
+    fn_setColor(str_value){
+        this.fn_setStyleProperty("color", str_value);
+    }    
     
     
-    
+    fn_getObjectMatching(str_method){        
+
+        if(this[str_method]){
+            return this;
+        }   
+        let obj_container=this.fn_getParentComponent();                                
+        if(obj_container){                    
+            return obj_container.fn_getObjectMatching(str_method);
+        }
+        return false;        
+        
+    }
     
 
     fn_getNextLocalHome(){                        

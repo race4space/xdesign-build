@@ -123,8 +123,10 @@ class component extends BaseObject {
         if(!ObjectData.obj_design){return true;}
         //indicate success, but dont initialize with a blank object                
         //may be a blank object if instance id has been renamed/deleted/corrupted etc on the server
-        let NewObjectData=JSON.parse(JSON.stringify(ObjectData));//create a copy of the object that has been published from the db //not sure why
-        NewObjectData.obj_design.int_modeExecute=this.obj_design.int_modeExecute;//Continuity of Mode                                                                                
+        
+        var NewObjectData=JSON.parse(JSON.stringify(ObjectData));        
+        NewObjectData.obj_holder=new Holder;                 
+        NewObjectData.obj_design.int_modeExecute=this.obj_design.int_modeExecute;//Continuity of Mode                                                                                        
         this.fn_initialize(NewObjectData);//initialize with self from db                                
         return true;
     }    
@@ -141,7 +143,7 @@ class component extends BaseObject {
         this.fn_createSelf();//create self                
         this.fn_onOpenInstance();//run  baseobvject onopeninstance
     }      
-    fn_openInstanceorig(){//wont run on boot as will not have a record id        
+    deprecate_fn_openInstanceorig(){//wont run on boot as will not have a record id        
         if(!this.fn_validIdHistory()){return;}
         let ObjectData=obj_InstanceJSONMap.get(parseInt(this.obj_design.int_idRecord));//get a reference to the the object that has been published from the db
         if(!ObjectData || (ObjectData && !ObjectData.obj_design)){return;}//dont intialize with blank object                
@@ -158,7 +160,7 @@ class component extends BaseObject {
     
     fn_getComponent(str_variableName){        
         
-        let str_name="obj_" + this.fn_formatShortName(str_variableName);                                        
+        let str_name="obj_" + obj_shared.fn_formatShortName(str_variableName);                                        
         return this.obj_holder[str_name];
     }      
     
@@ -228,55 +230,19 @@ class component extends BaseObject {
     fn_setType(str_value){    
 
         if(str_value===""){str_value="tag";}                            
-        str_value=this.fn_formatShortName(str_value);                    
+        str_value=obj_shared.fn_formatShortName(str_value);                    
         this.obj_design.str_type=str_value;
     }          
     fn_defaultNotSet(str_value){
         if(str_value===""){str_value="notset";}
         return str_value;
     }    
-    fn_defaultNotSetDate(str_value){
-        if(str_value===""){
-            str_value=obj_shared.fn_getDate(obj_const.int_dateNow);
-        }
-        return str_value;
-    }    
-    fn_setClassExtend(str_value){
-        str_value=this.fn_defaultNotSet(str_value);                
-        str_value=this.fn_formatShortName(str_value);                    
-        this.obj_design.str_classExtend=str_value;
-    }
-    fn_setLocationID(str_value){
-        str_value=this.fn_defaultNotSet(str_value);        
-        str_value=this.fn_formatShortName(str_value);                    
-        this.obj_design.str_locationID=str_value;
-    }
-    fn_setCreatedDate(str_value){
-        str_value=this.fn_defaultNotSetDate(str_value);                
-        str_value=this.fn_formatShortDate(str_value);                    
-        this.obj_design.str_createdDate=str_value;
-    }
-    fn_setModifiedDate(str_value){
-        str_value=this.fn_defaultNotSetDate(str_value);                
-        str_value=this.fn_formatShortDate(str_value);                    
-        this.obj_design.str_modifiedDate=str_value;
-    }
-    fn_setClassList(str_value){        
-        
-        str_value=this.fn_defaultNotSet(str_value);        
-        str_value=str_value.toLowerCase();
-        str_value=obj_shared.fn_replace(str_value, " ", ",");                        
-        str_value=obj_shared.fn_formatString(str_value, obj_const.int_alphaComma);                        
-        str_value=obj_shared.fn_formatUniqueList(str_value);                
-        this.obj_design.str_classList=str_value;
-    }
-    
     fn_getTag(){
         return this.obj_design.str_tag;
     }
     fn_setTag(str_value, bln_mandatory){
         if(str_value===""){str_value="component";}
-        str_value=this.fn_formatShortName(str_value);        
+        str_value=obj_shared.fn_formatShortName(str_value);        
         if(this.obj_design.str_tag===undefined || this.obj_design.str_tag==="component"){        
             this.obj_design.str_tag=str_value;      
         }              
@@ -290,7 +256,7 @@ class component extends BaseObject {
     }
     fn_setName(str_name){        
         this.obj_design.str_name=str_name;                
-        let str_value=this.fn_formatShortName(this.obj_design.str_name);        
+        let str_value=obj_shared.fn_formatShortName(this.obj_design.str_name);        
         this.fn_setVariableName(str_value);                                
     }
     fn_setVariableName(str_value){           
@@ -299,19 +265,8 @@ class component extends BaseObject {
     fn_getVariableName(){        
         return this.obj_design.str_variableName;
     }    
-    fn_formatShortName(str_value){                    
-        str_value=str_value.toLowerCase().replace(/-/gi, "_");;                    
-        str_value=obj_shared.fn_removeSpace(str_value);            
-        str_value=obj_shared.fn_formatString(str_value, obj_const.int_alphaNumeric);                                      
-        return str_value;
-    }
-    fn_formatShortDate(str_value){                    
-        //str_value=str_value.toLowerCase().replace(/-/gi, "_");;                    
-        //str_value=obj_shared.fn_removeSpace(str_value);            
-        str_value=obj_shared.fn_formatDate(str_value);                                      
-        return str_value;
-    }
-
+    
+    
     /////////////////////START REGISTRATION EVENT
     fn_register(obj_item){ 
         let str_name;
@@ -320,7 +275,7 @@ class component extends BaseObject {
     }    
     fn_registerName(obj_item, str_variableName){ 
         let str_name;    
-        str_name="obj_" + this.fn_formatShortName(str_variableName);                                
+        str_name="obj_" + obj_shared.fn_formatShortName(str_variableName);                                
         this.obj_holder[str_name]=obj_item;                                
     }    
     /////////////////////END REGISTRATION EVENT

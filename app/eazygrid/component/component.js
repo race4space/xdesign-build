@@ -7,16 +7,22 @@ class eazygrid extends component {
 
       //START INITIALIZE DESIGN
       this.fn_setType("eazygrid");      
-      this.fn_setTag("eazygrid");
+      this.fn_setTag("eazygrid");      
+      this.fn_requires("eazygriditem");      
       
-      if(this.obj_design.bln_split==undefined){this.obj_design.bln_split=false;}            
       this.fn_setIsContainer(true);      
+
+      if(this.obj_design.bln_split===undefined){      
+        //this.obj_design.bln_split= false;
+      }
+      
       
       if(this.obj_design.bln_eazyGrid===undefined){this.obj_design.bln_eazyGrid=true;}      
       //if(this.obj_design.bln_isLocalHome===undefined){this.obj_design.bln_isLocalHome=true;}      
       
       if(this.obj_design.str_minDim==undefined){this.obj_design.str_minDim="100px";}      
       if(this.obj_design.str_gridTemplateDefault==undefined){this.obj_design.str_gridTemplateDefault="minmax(" + this.obj_design.str_minDim + ", 1fr)";}
+      
       //END  INITIALIZE DESIGN
       
       //START INITIALIZE STYLE                          
@@ -32,37 +38,41 @@ class eazygrid extends component {
       if(this.fn_getStyleProperty("grid-template-rows")===undefined){this.fn_setStyleProperty("grid-template-rows", this.obj_design.str_gridTemplateDefault);}
       if(this.fn_getStyleProperty("grid-template-columns")===undefined){this.fn_setStyleProperty("grid-template-columns", this.obj_design.str_gridTemplateDefault);}                 
       //END INITIALIZE STYLE
-    }     
+    }
+    
+    fn_beforeAddChildren(){      
+      
+      if(this.obj_design.bln_split===undefined){        
+        let obj_parent=this.fn_getParentComponent();
+        if(obj_parent){
+          let obj_container=obj_parent.fn_getParentComponent();
+          this.obj_design.bln_split=false;
+          if(obj_container){              
+              let bln_value=obj_container.obj_design.bln_split;                        
+              this.obj_design.bln_split=obj_shared.fn_flipBool(bln_value);                            
+          }
+        }
+      }            
+    }
+
+
+
     fn_initializePluginDesign(){
       this.obj_designDelegate=new DesignDelegateeazygrid(this);                              
     }
     
     fn_addItem(obj_ini){
+      console.log("fn_addItem");
       let obj_item;        
       if(obj_ini.obj_design.str_type==undefined){
         obj_ini.obj_design.str_type="eazygriditem";
-      } 
-
+      }       
       
-      this.fn_setOrientation(obj_ini);
       obj_item=super.fn_addItem(obj_ini)//CallSuper
 
       this.fn_applyFeatures();
       return obj_item;
     }
-    fn_setOrientation(obj_ini){ // now moved to eazygrid
-      if(this.obj_design.bln_split!==undefined){
-          return;
-        }
-      if(obj_ini.obj_design.bln_split===undefined){
-          return;
-      }
-      if (typeof obj_ini.obj_design.bln_split !== "boolean"){
-          return;
-      }
-      this.obj_design.bln_split=obj_ini.obj_design.bln_split;
-  }
-    
     
     fn_getIsEmpty(){
       let arr, obj_item;
@@ -89,7 +99,9 @@ class eazygrid extends component {
       
     
     fn_bootChildren(){//only in boot/pallteItem phase
-
+      
+      console.log("fn_bootChildren");
+      
       let obj_ini;
       
       
@@ -112,12 +124,9 @@ class eazygrid extends component {
       this.obj_domStyle.gridTemplateRows=this.obj_design.str_gridTemplateDefault;
       this.obj_domStyle.gridTemplateColumns=this.obj_design.str_gridTemplateDefault;     
 
-      if(this.obj_design.bln_split===undefined){
-        //console.log("eazygrid bln_split is undefined: " + this.obj_design.bln_split);
+      if(this.obj_design.bln_split===undefined){        
         return;
       }
-
-      //console.log("eazygrid fn_compileTemplate");
       
       let obj_item;
       let s="";            
@@ -133,14 +142,13 @@ class eazygrid extends component {
         s=s.trim();
       }
 
-      //console.log(" eazygrid s: " + s);
-      
+      //console.log(" eazygrid s: " + s);      
 
       switch(this.obj_design.bln_split){
-            case(true):
+            case(true):            
               this.obj_domStyle.gridTemplateColumns=s;              
             break;
-            case(false):
+            case(false):            
               this.obj_domStyle.gridTemplateRows=s;
             break;
             default:              

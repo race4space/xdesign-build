@@ -12,7 +12,7 @@ class abcconsumer extends component{
     this.fn_setTag("abcconsumer");            
     this.obj_design.bln_isGenericTag=true;
     // this.fn_extends("component");            
-    this.obj_holder.bln_debugServer=true;
+    this.obj_holder.bln_debugServer=false;
   }
 
   fn_onLoad(){ //design project on load
@@ -43,7 +43,7 @@ class abcconsumer extends component{
     }          
   }  
   fn_onAuthorizeUserStatus(obj_post){
-    console.log("BBB PROJECT COMPONENT  fn_onAuthorizeUserStatus: " + obj_post.AuthorizeUserStatus);
+    //console.log("BBB PROJECT COMPONENT  fn_onAuthorizeUserStatus: " + obj_post.AuthorizeUserStatus);
     let obj_item; 
     obj_item=this;
     if(obj_item){        

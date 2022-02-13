@@ -3,15 +3,6 @@ require_once $_SERVER["DOCUMENT_ROOT"]."/app/shared/server/header.php";
 
 require_once APPROOT . '/loginpanel/server/vendor/autoload.php';
 
-$obj_loginpanel=new loginpanel();
-
-try {
-  $obj_loginpanel->fn_execute();
-} catch (Error $e) { // Error is the base class for all internal PHP error exceptions.  
-  $str_message="SCRIPT ERROR: ".$e->getMessage();
-  //$obj_loginpanel->fn_setError($str_message);
-}
-
 class loginpanel{ 
 
   function __construct() {
@@ -45,7 +36,11 @@ class loginpanel{
 
     function fn_setPost(){
 
-      global $obj_shared;
+      global $obj_shared;      
+      if(empty($obj_shared)){      
+        $obj_shared=new stdClass();
+        $obj_shared->obj_post=new stdClass();
+      }
       $this->obj_post=$obj_shared->obj_post;
     }
     
@@ -127,7 +122,7 @@ class loginpanel{
     function fn_setAuthorizeSessionKey(){
 
       if(!empty($this->AuthorizeSessionKey)){
-        $this->fn_addEcho("NOT EMPTY SESSION KEY: ".$this->AuthorizeSessionKey);                  
+        //$this->fn_addEcho("NOT EMPTY SESSION KEY: ".$this->AuthorizeSessionKey);                  
         return;
       }      
       
@@ -168,7 +163,7 @@ class loginpanel{
       $str_sql.="(`AuthorizeSessionKey`=:AuthorizeSessionKey) ";
       $str_sql.="AND `AuthorizeUserPass`=`AuthorizeSentPass` ";
       $str_sql.=";";      
-      $this->fn_addEcho($str_sql);                  
+      //$this->fn_addEcho($str_sql);                  
       //$this->fn_addEcho("this->AuthorizeSessionKey: ".$this->AuthorizeSessionKey);                  
       
       $stmt = $this->pdo_standard->prepare($str_sql);                                                    
@@ -190,13 +185,13 @@ class loginpanel{
         $this->fn_dbAlterUser("xdesign", $this->AuthorizeUserEmail, $this->AuthorizeUserPass);                     
       } 
       else{
-        $this->fn_addEcho("EMTPY AUTH RS");                  
+        //$this->fn_addEcho("EMTPY AUTH RS");                  
       }           
       
       $this->fn_formatPostAuthorize();      
       
       
-      $this->fn_addEcho("END fn_XDesigner_checkAuthorize: AuthorizeUserStatus: [". $this->obj_post->AuthorizeUserStatus ."]");
+      //$this->fn_addEcho("END fn_XDesigner_checkAuthorize: AuthorizeUserStatus: [". $this->obj_post->AuthorizeUserStatus ."]");
     }    
     
     function fn_XDesigner_startAuthorize(){      
@@ -221,7 +216,7 @@ class loginpanel{
       }            
       else if(!empty($this->AuthorizeUserEmail) && !empty($this->AuthorizeUserPass)){                
       
-        $this->fn_addEcho("UPDATE ");                  
+        //$this->fn_addEcho("UPDATE ");                  
         $str_sql="UPDATE control.`user_session` SET `AuthorizeUserPass`=:AuthorizeUserPass, `ModifiedDate`=:ModifiedDate WHERE ";
         $str_sql.="(`AuthorizeSessionKey`=:AuthorizeSessionKey AND `AuthorizeUserEmail`=:AuthorizeUserEmail) ";
         $str_sql.=";";        
@@ -363,7 +358,7 @@ class loginpanel{
       
       try {
           $response = $sendgrid->send($email);        
-          $this->fn_addEcho("ONE TIME PASS SENT");
+          //$this->fn_addEcho("ONE TIME PASS SENT");
       } catch (Exception $e) {         
         $this->fn_addEcho("ERROR: ".$e->getMessage());                  
       }      
@@ -372,7 +367,7 @@ class loginpanel{
 
     function fn_XDesigner_endAuthorize(){            
 
-      $this->fn_addEcho("START fn_XDesigner_endAuthorize");
+      //$this->fn_addEcho("START fn_XDesigner_endAuthorize");
       
 
       $this->fn_setAuthorizeSessionKey();
@@ -402,19 +397,19 @@ class loginpanel{
       $obj_post->AuthorizeUserStatus=$this->AuthorizeUserStatus;
       
       //$this->fn_addEcho("this->AuthorizeUserPass: ".$this->AuthorizeUserPass);
-      $this->fn_addEcho("END fn_XDesigner_endAuthorize: ".$obj_post->AuthorizeUserStatus);
+      //$this->fn_addEcho("END fn_XDesigner_endAuthorize: ".$obj_post->AuthorizeUserStatus);
     }
 
     function fn_dbDropUser($DBUserName){
 
-      $this->fn_addEcho("START fn_dbDropUser");
+      //$this->fn_addEcho("START fn_dbDropUser");
 
       $str_sql="DROP USER '$DBUserName';";                  
-      $this->fn_addEcho($str_sql);               
+      //$this->fn_addEcho($str_sql);               
       $stmt = $this->pdo_standard->prepare($str_sql);                                        
       $stmt->execute();                          
 
-      $this->fn_addEcho("END fn_dbDropUser");
+      //$this->fn_addEcho("END fn_dbDropUser");
     }
     function fn_setLoginCookie($cookie_name, $cookie_value, $bln_expire=false){      
       
@@ -530,7 +525,15 @@ class loginpanel{
 }//END CLASS xdesign1
 
 
-
-
-
+//////////////////////
+//Instance Creation goes at bottom the page
+$obj_loginpanel=new loginpanel();
+try {
+  $obj_loginpanel->fn_execute();
+} catch (Error $e) { // Error is the base class for all internal PHP error exceptions.  
+  $str_message="SCRIPT ERROR: ".$e->getMessage();
+  //$obj_loginpanel->fn_setError($str_message);
+}
+//Instance Creation goes at bottom the page
+//////////////////////
 ?>

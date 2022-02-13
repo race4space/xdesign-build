@@ -111,8 +111,7 @@ class Project extends {str_nameTargetClass}{
     xfn_applyTheme(){//for the moment empty to prevent theme being uncessily applied, needs theme moved to obj_holder        
     }       
     fn_initializePluginDesign(){                  
-        this.obj_designDelegate=new DesignDelegateProjectInstance(this);//this will call the design programs component onload event                          
-        //this.obj_designDelegate.fn_setPaletteSelected();        
+        this.obj_designDelegate=new DesignDelegateProjectInstance(this);//this will call the design programs component onload event                                  
     }  
     fn_applyTheme(){
         //apply theme to all child objects of type eazygrid and eazygriditem

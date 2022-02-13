@@ -95,15 +95,15 @@
                       if(obj_shared.fn_isObjectEmpty(obj_row)){continue;}//RowData Can contain a single empty object
 
                       int_idRecord=obj_row.id;
-                      //str_nameRecord=obj_row.Name;
-                      //str_typeRecord=obj_row.Type;
+                      //str_nameRecord=obj_row.InstanceName;
+                      //str_typeRecord=obj_row.InstanceType;
         
                       
                       //*                      
                       obj_ini=new Holder;                              
                       obj_ini.obj_design.str_subdomain=obj_row.Subdomain;
-                      obj_ini.obj_design.str_name=obj_row.Name;
-                      //console.log("obj_row.Name: " + obj_row.Name);
+                      obj_ini.obj_design.str_name=obj_row.InstanceName;
+                      //console.log("obj_row.InstanceName: " + obj_row.InstanceName);
                       obj_ini.obj_design.str_text=obj_row.Subdomain;
                       obj_ini.obj_design.str_type="programiconbutton";
                       obj_ini.obj_design.int_idRecordTarget=int_idRecord;                                                    

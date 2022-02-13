@@ -9,6 +9,9 @@ class inputandbutton extends component {
 
         this.fn_setType("inputandbutton");      
         this.fn_setTag("inputandbutton");                        
+
+        this.fn_requires("input");                        
+        this.fn_requires("xdesign1_addtagbutton");                                
         
         this.fn_setIsContainer(true);
 
@@ -20,10 +23,8 @@ class inputandbutton extends component {
         //END INITIALIZE DOM         
         
         //START INITIALIZE STYLE  
-        if(this.obj_domStyle.height===undefined){this.obj_domStyle.height="40px";}              
-        if(this.obj_domStyle.padding===undefined){this.obj_domStyle.paddingLeft="12px";}            
-        if(this.obj_domStyle.marginRight===undefined){this.obj_domStyle.marginRight="1px";}
-        if(this.obj_domStyle.marginRight===undefined){this.obj_domStyle.marginRight="1px";}
+        if(this.obj_domStyle.height===undefined){this.obj_domStyle.height="40px";}                      
+        if(this.obj_domStyle.marginRight===undefined){this.obj_domStyle.marginRight="1px";}        
         if(this.obj_domStyle.marginBottom===undefined){this.obj_domStyle.marginBottom="1px";}        
         //END INITIALIZE STYLE
     }    
@@ -39,7 +40,7 @@ class inputandbutton extends component {
     fn_bootChildren(){//only in boot/pallteItem phase
 
         let obj_ini, obj_input;
-        let obj_row, obj_cell, obj_container;
+        let obj_row, obj_cell, obj_container;        
 
         obj_container=this;
         
@@ -49,21 +50,22 @@ class inputandbutton extends component {
         obj_ini.obj_design.str_type="input";        
         obj_ini.obj_domProperty.value="";                         
         obj_ini.obj_domStyle.marginRight="3px";                        
+        obj_ini.obj_design.bln_registerAtContainer=true;
         obj_input=obj_container.fn_addItem(obj_ini);//BootItem                
         //END TEXT INPUT        
 
         //ADD BUTTON TO VALUE CELL
         obj_ini=new Holder;
-        obj_ini.obj_design.str_type="button";                
+        obj_ini.obj_design.str_type="xdesign1_addtagbutton";                
         obj_ini.obj_design.str_name=this.obj_design.str_text;
         obj_ini.obj_theme=this.obj_theme;
-        obj_ini.obj_design.str_linkId=obj_input.obj_design.str_idXDesign;            
+        obj_ini.obj_design.str_linkId=obj_input.obj_design.str_idXDesign;                    
         //obj_ini.obj_design.str_nameEventClick=this.obj_design.str_nameEventButtonClick;
         //obj_ini.obj_design.xstr_valuexEventClick=this.obj_design.str_valueEventButtonClick;
         obj_container.fn_addItem(obj_ini);//BootItem                      
         //ADD BUTTON TO VALUE CELL    
     }
-    fn_setEnabled(bln_value){
+    xfn_setEnabled(bln_value){
         super.fn_setEnabled(bln_value);
 
         let obj_item;

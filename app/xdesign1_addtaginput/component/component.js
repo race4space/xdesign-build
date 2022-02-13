@@ -9,9 +9,13 @@
                   
                   
                   this.fn_setType("xdesign1_addtaginput");      
-                  this.fn_setTag("xdesign1_addtaginput");            
+                  this.fn_setTag("xdesign1_addtaginput");                              
                   this.obj_design.bln_isGenericTag=true;
                    this.fn_extends("input");            
+
+                   this.fn_setTag("xdesign1_addtaginput");                                          
+                   
+                   
                 }
               }//END CLS
               //END TAG

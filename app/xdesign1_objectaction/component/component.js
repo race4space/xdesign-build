@@ -282,6 +282,8 @@
             //ADD BUTTON TO VALUE CELL      
           }
           fn_setEazyGridSwitch(){
+
+            console.log("fn_setEazyGridSwitch");
             
               let obj_eazygrid=obj_project.obj_palettSelected;            
               obj_eazygrid.obj_design.bln_split=obj_shared.fn_flipBool(obj_eazygrid.obj_design.bln_split);    
@@ -293,9 +295,7 @@
               let obj_ini;
               //ADD BUTTON TO VALUE CELL
               obj_ini=new Holder;
-              obj_ini.obj_design.str_type="button";      
-              //obj_ini.obj_design.str_name="SPLIT " + obj_selected.obj_design.bln_split;          
-              //obj_ini.obj_theme=this.obj_theme;
+              obj_ini.obj_design.str_type="button";                                  
               obj_ini.obj_design.str_name="ROTATE";    
               obj_ini.obj_design.str_linkId=obj_selected.obj_design.str_idXDesign;          
               obj_ini.obj_design.str_nameEventClick=obj_project.obj_holder.str_prefix + "myDesignerButtonClick";
