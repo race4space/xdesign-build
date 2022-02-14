@@ -51,8 +51,10 @@ class clipboard extends component{
       let bln_locked=obj_localHome.fn_getLocked();        
       if(bln_locked){//cannot manipulate locked component
       //if(bln_locked && obj_localHome!==obj_item){//cannot manipulate locked component
-          if(bln_debug){console.log("VALIDATE COPY: LOCALHOME IS LOCKED")};
-          return false;
+
+          //if(bln_debug){console.log("VALIDATE COPY: LOCALHOME IS LOCKED")};
+          //return false;
+
       //}        
       }
 
@@ -162,7 +164,14 @@ class clipboard extends component{
 
     if(bln_debug){console.log("VALIDATE INSERT: GET CONTAINER")};   
 
-    let obj_container=obj_insertNextTo.obj_holder.obj_container;
+
+    let obj_container=obj_insertNextTo.fn_getParentComponent();
+    if(!obj_container){
+        if(bln_debug){console.log("VALIDATE INSERT: NO VALID CONTAINER")};   
+        return false;
+    }
+
+    obj_container=obj_project.fn_getInsertContainer(obj_container, obj_localHome, obj_container.obj_design.int_idRecord);        
     if(!obj_container){
         if(bln_debug){console.log("VALIDATE INSERT: NO VALID CONTAINER")};   
         return false;
@@ -191,7 +200,7 @@ class clipboard extends component{
         if(!obj_container){
             console.log("CLIPBOARD INSERT ERROR: CONTAINER IS FALSE");
             return false;
-        }
+        }     
 
         this.fn_copy(obj_item);
         obj_item=this.fn_get();                        
@@ -205,28 +214,40 @@ class clipboard extends component{
     }
 
 
-  fn_validateCut(obj_item, obj_localHome){
+  fn_validateCut(obj_selected, obj_localHome){
 
       let bln_debug=false;
       
-      if(!obj_item){        
+      if(!obj_selected){        
           return false;
       }
-      if(obj_item===obj_projectTarget){            
+      if(obj_selected===obj_projectTarget){            
           if(bln_debug){console.log("VALIDATE CUT: CANNOT CUT PROJECT INSTANCE")};
           return false;
       }
 
-      if(obj_item.obj_design.bln_dynamicPin){
+      let obj_container=obj_selected.fn_getParentComponent();
+        if(!obj_container){
+            if(bln_debug){console.log("VALIDATE CUT: NO VALID CONTAINER")};   
+        return false;
+        }
+
+        obj_container=obj_project.fn_getInsertContainer(obj_container, obj_localHome, obj_container.obj_design.int_idRecord);        
+        if(!obj_container){
+            if(bln_debug){console.log("VALIDATE CUT: NO VALID CONTAINER")};   
+            return false;
+        }
+
+      if(obj_selected.obj_design.bln_dynamicPin){
         if(bln_debug){console.log("VALIDATE CUT: CANNOT CUT DYNMAIC PIN")};
         return false;
       }
 
       let bln_locked=obj_localHome.fn_getLocked();
       if(bln_locked){//cannot manipulate locked component
-      //if(bln_locked && obj_localHome!==obj_item){//cannot manipulate locked component
-          if(bln_debug){console.log("VALIDATE CUT: LOCALHOME IS LOCKED")};
-          return false;
+      //if(bln_locked && obj_localHome!==obj_selected){//cannot manipulate locked component
+          //if(bln_debug){console.log("VALIDATE CUT: LOCALHOME IS LOCKED")};
+          //return false;
       //}
       }
 
@@ -236,25 +257,37 @@ class clipboard extends component{
 
   }    
 
-  fn_validateDelete(obj_item, obj_localHome){
+  fn_validateDelete(obj_selected, obj_localHome){
 
       let bln_debug=false;      
 
-      if(!obj_item){        
+      if(!obj_selected){        
           return false;
       }
-      if(obj_item===obj_projectTarget){            
+      if(obj_selected===obj_projectTarget){            
           if(bln_debug){console.log("VALIDATE DELETE: CANNOT DELETE PROJECT INSTANCE")};
           return false;
       }
 
-      if(obj_item.obj_design.bln_dynamicPin){
+      let obj_container=obj_selected.fn_getParentComponent();
+        if(!obj_container){
+            if(bln_debug){console.log("VALIDATE DELETE: NO VALID CONTAINER")};   
+        return false;
+        }
+
+        obj_container=obj_project.fn_getInsertContainer(obj_container, obj_localHome, obj_container.obj_design.int_idRecord);        
+        if(!obj_container){
+            if(bln_debug){console.log("VALIDATE DELETE: NO VALID CONTAINER")};   
+            return false;
+        }
+
+      if(obj_selected.obj_design.bln_dynamicPin){
         if(bln_debug){console.log("VALIDATE DELETE: CANNOT DELETE DYNMAIC PIN")};
         return false;
     }
 
       let bln_locked=obj_localHome.fn_getLocked();
-      if(bln_locked && obj_localHome!==obj_item){//cannot delete locked part of component, except if localhome
+      if(bln_locked && obj_localHome!==obj_selected){//cannot delete locked part of component, except if localhome
           if(bln_debug){console.log("VALIDATE DELETE: LOCALHOME IS LOCKED")};
           return false;
       }

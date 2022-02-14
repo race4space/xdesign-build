@@ -12,7 +12,7 @@ class loginpanel extends panel{
     this.fn_extends("panel");                  
     this.obj_holder.UserDaysAuthorize=5;
     this.int_count=0;
-    this.obj_holder.bln_debugServer=true;    
+    this.obj_holder.bln_debugServer=false;    
     
     if(this.obj_design.bln_useExternalButton===undefined){this.obj_design.bln_useExternalButton=false;}    
   }

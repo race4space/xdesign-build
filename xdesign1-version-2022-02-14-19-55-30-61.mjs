@@ -1,7 +1,7 @@
 
 
 /*START COMPONENT//*/
-/*id: 309329//*/
+/*id: 313954//*/
 /*type: RunTimeCode//*/
 
 //START UserSettings.js
@@ -604,7 +604,8 @@ class BaseObject extends LevelObject{
         
         //this.fn_setIsContainer(false);               
 
-        if(this.obj_design.str_idXDesign==undefined){this.fn_setIDXDesign();}
+        if(this.obj_design.str_idXDesign===undefined){this.fn_setIDXDesign();}
+        if(this.obj_design.str_idXDesign===""){this.fn_setIDXDesign();}
         if(obj_project){
             let str_idProject, str_idXDesign;
             str_idProject=this.obj_design.str_idProject;
@@ -730,7 +731,7 @@ class BaseObject extends LevelObject{
 
     fn_checkIni(obj_ini){
 
-        let str_type, int_idRecord, bln_removeId;        
+        let str_type, int_idRecord;        
 
         //PLACE NUMBER 1 WHEN OBJ INI CAN GET KNOCKED OFF
 
@@ -751,7 +752,7 @@ class BaseObject extends LevelObject{
 
     fn_createChildObject(obj_ini){
 
-        let str_type, int_idRecord, obj_item, bln_removeId;        
+        let str_type, int_idRecord, obj_item;        
 
         //PLACE NUMBER 2 WHEN OBJ INI CAN GET KNOCKED OFF
 
@@ -2923,7 +2924,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 //END Main.js
 
 
-/*id: 309329//*/
+/*id: 313954//*/
 /*type: RunTimeCode//*/
 /*END COMPONENT//*/
 
@@ -2935,7 +2936,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 //START XTRA CLASSES
 
 /*START COMPONENT//*/
-/*id: 309338//*/
+/*id: 313878//*/
 /*type: button//*/
 class button extends component {
     constructor(obj_ini) {      
@@ -2983,13 +2984,13 @@ class button extends component {
 }//END CLS
 //END BUTTON
 
-/*id: 309338//*/
+/*id: 313878//*/
 /*type: button//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309374//*/
+/*id: 313914//*/
 /*type: tablerow//*/
 class tablerow extends component{
     constructor(obj_ini) {            
@@ -3040,13 +3041,13 @@ class tablerow extends component{
 }//END CLS
 
 
-/*id: 309374//*/
+/*id: 313914//*/
 /*type: tablerow//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309372//*/
+/*id: 313912//*/
 /*type: tablecell//*/
 class tablecell extends component {
     constructor(obj_ini) {      
@@ -3097,13 +3098,13 @@ class tablecell extends component {
 }//END CLS
 //END tablecell
 
-/*id: 309372//*/
+/*id: 313912//*/
 /*type: tablecell//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309373//*/
+/*id: 313913//*/
 /*type: tableheader//*/
 class tableheader extends tablecell {
     constructor(obj_ini) {      
@@ -3127,13 +3128,13 @@ class tableheader extends tablecell {
   }   
     
 }//END CLS
-/*id: 309373//*/
+/*id: 313913//*/
 /*type: tableheader//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309355//*/
+/*id: 313895//*/
 /*type: input//*/
 class input extends component {
     constructor(obj_ini) {      
@@ -3176,13 +3177,13 @@ class input extends component {
 }//END CLS
 //END INPUT
 
-/*id: 309355//*/
+/*id: 313895//*/
 /*type: input//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309371//*/
+/*id: 313911//*/
 /*type: table//*/
 class table extends component {
     constructor(obj_ini) {      
@@ -3240,13 +3241,13 @@ class table extends component {
 }//END CLS
 //END IMG
 
-/*id: 309371//*/
+/*id: 313911//*/
 /*type: table//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309407//*/
+/*id: 313947//*/
 /*type: xdesign1_propertysheet//*/
 
       //XSTART component/xdesign1_propertysheet
@@ -3508,13 +3509,13 @@ class table extends component {
         }//END CLS
         //END TAG
         //END component/xdesign1_propertysheet
-/*id: 309407//*/
+/*id: 313947//*/
 /*type: xdesign1_propertysheet//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309402//*/
+/*id: 313942//*/
 /*type: xdesign1_propertydesign//*/
 
       //XSTART component/xdesign1_propertydesign
@@ -3779,13 +3780,13 @@ class table extends component {
         }//END CLS
         //END TAG
         //END component/xdesign1_propertydesign
-/*id: 309402//*/
+/*id: 313942//*/
 /*type: xdesign1_propertydesign//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309364//*/
+/*id: 313904//*/
 /*type: navelement//*/
 class navelement extends component {
     constructor(obj_ini) {      
@@ -3829,13 +3830,13 @@ class navelement extends component {
 }//END CLS
 //END BUTTON
 
-/*id: 309364//*/
+/*id: 313904//*/
 /*type: navelement//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309343//*/
+/*id: 313883//*/
 /*type: designfile//*/
 class designfile extends AJAX {
     constructor(obj_ini) {        
@@ -3947,8 +3948,8 @@ class designfile extends AJAX {
                         
                     }                    
                 }             
-                if(bln_debug){obj_instance.fn_debug("COMPLETE XDESIGN1 onSaveComponent");}   
-                this.obj_holder.obj_container.onSaveComponent(obj_iniSave); //XDESIGN Program CallBack Function                                 
+                if(bln_debug){obj_instance.fn_debug("COMPLETE XDESIGN1 on Save Component");}   
+                this.obj_holder.obj_container.onServerManagerCompleteSave(obj_iniSave); //XDESIGN Program CallBack Function                                 
             }           
         }
         //*/
@@ -4068,7 +4069,7 @@ class designfile extends AJAX {
         let obj_instance=obj_ini.obj_instance;
         
         if(obj_instance){            
-            obj_post.DesignId=obj_instance.obj_design.str_idXDesign;                                
+            obj_post.DesignId=obj_instance.obj_design.str_idXDesign;            
             obj_post.RecordName=obj_instance.obj_design.str_name;
             obj_post.RecordShortName=obj_instance.obj_design.str_variableName;
             
@@ -4342,13 +4343,13 @@ class designfile extends AJAX {
 //END DATA
 
 
-/*id: 309343//*/
+/*id: 313883//*/
 /*type: designfile//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309368//*/
+/*id: 313908//*/
 /*type: recordset//*/
 
 //XSTART component/recordset
@@ -4442,13 +4443,13 @@ class recordset extends AJAX{
 }//END CLS
 //END TAG
 //END component/recordset
-/*id: 309368//*/
+/*id: 313908//*/
 /*type: recordset//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309391//*/
+/*id: 313931//*/
 /*type: xdesign1_managermenu//*/
       //XSTART component/xdesign1_managermenu
       class xdesign1_managermenu extends recordset{
@@ -4608,13 +4609,13 @@ class recordset extends AJAX{
 
 
 
-/*id: 309391//*/
+/*id: 313931//*/
 /*type: xdesign1_managermenu//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309400//*/
+/*id: 313940//*/
 /*type: xdesign1_objectmap//*/
 
       //XSTART component/xdesign1_objectmap
@@ -5045,13 +5046,13 @@ class recordset extends AJAX{
         //END TAG
         //END component/xdesign1_objectmap
         
-/*id: 309400//*/
+/*id: 313940//*/
 /*type: xdesign1_objectmap//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309399//*/
+/*id: 313939//*/
 /*type: xdesign1_objectaction//*/
 
       //XSTART component/xdesign1_objectaction
@@ -5326,7 +5327,7 @@ class recordset extends AJAX{
             //obj_ini.obj_theme=this.obj_theme;
             obj_ini.obj_design.str_linkId=obj_selected.obj_design.str_idXDesign;                  
             obj_ini.obj_design.str_nameEventClick=obj_project.obj_holder.str_prefix + "myDesignerButtonClick";
-            obj_ini.obj_design.str_valueEventClick="fn_saveAsComponent";
+            obj_ini.obj_design.str_valueEventClick="fn_saveAsProject";
             if(!obj_project.LocationMatchInstance){bln_disabled=true;}//CHECK SERVER LOCKED                        
             obj_ini.obj_domProperty.disabled=bln_disabled;         
             if(!bln_disabled){obj_item=obj_container.fn_addItem(obj_ini);}            
@@ -5466,13 +5467,13 @@ class recordset extends AJAX{
         //END CLS
         //END TAG
         //END component/xdesign1_objectaction
-/*id: 309399//*/
+/*id: 313939//*/
 /*type: xdesign1_objectaction//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309403//*/
+/*id: 313943//*/
 /*type: xdesign1_propertydesignui//*/
 
       //XSTART component/xdesign1_propertydesignui
@@ -5582,13 +5583,13 @@ class recordset extends AJAX{
         }//END CLS
         //END TAG
         //END component/xdesign1_propertydesignui
-/*id: 309403//*/
+/*id: 313943//*/
 /*type: xdesign1_propertydesignui//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309406//*/
+/*id: 313946//*/
 /*type: xdesign1_propertydomstyle//*/
 
       //XSTART component/xdesign1_propertydomstyle
@@ -5739,13 +5740,13 @@ class recordset extends AJAX{
         }//END CLS
         //END TAG
         //END component/xdesign1_propertydomstyle
-/*id: 309406//*/
+/*id: 313946//*/
 /*type: xdesign1_propertydomstyle//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309405//*/
+/*id: 313945//*/
 /*type: xdesign1_propertydomproperty//*/
 
       //XSTART component/xdesign1_propertydomproperty
@@ -5872,13 +5873,13 @@ class recordset extends AJAX{
         }//END CLS
         //END TAG
         //END component/xdesign1_propertydomproperty
-/*id: 309405//*/
+/*id: 313945//*/
 /*type: xdesign1_propertydomproperty//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309404//*/
+/*id: 313944//*/
 /*type: xdesign1_propertydomattribute//*/
 
       //XSTART component/xdesign1_propertydomattribute
@@ -6017,13 +6018,13 @@ class recordset extends AJAX{
         }//END CLS
         //END TAG
         //END component/xdesign1_propertydomattribute
-/*id: 309404//*/
+/*id: 313944//*/
 /*type: xdesign1_propertydomattribute//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309351//*/
+/*id: 313891//*/
 /*type: flex//*/
   class flex extends component {
     constructor(obj_ini) {
@@ -6050,13 +6051,13 @@ class recordset extends AJAX{
 }//END CLS
 //END FLEX
 
-/*id: 309351//*/
+/*id: 313891//*/
 /*type: flex//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309361//*/
+/*id: 313901//*/
 /*type: menubutton//*/
 class menubutton extends component {
     constructor(obj_ini) {
@@ -6211,7 +6212,7 @@ class menubutton extends component {
     }    
     fn_toggle(bln_isOpen=false){                
         if(bln_isOpen){            
-            this.obj_design.bln_pin=false;
+            //this.obj_design.bln_pin=false;
             this.fn_closeContent();
         }
         else{            
@@ -6234,13 +6235,13 @@ class menubutton extends component {
 }//END CLS
 //END MENUBUTTON
 
-/*id: 309361//*/
+/*id: 313901//*/
 /*type: menubutton//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309356//*/
+/*id: 313896//*/
 /*type: inputandbutton//*/
 class inputandbutton extends component {
     constructor(obj_ini) {
@@ -6327,13 +6328,13 @@ class inputandbutton extends component {
 }//END CLS
 //END MENUBUTTON
 
-/*id: 309356//*/
+/*id: 313896//*/
 /*type: inputandbutton//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309381//*/
+/*id: 313921//*/
 /*type: xdesign1_addtag//*/
 
             //XSTART component/xdesign1_addtag
@@ -6388,13 +6389,13 @@ class inputandbutton extends component {
               }//END CLS
               //END TAG
               //END component/xdesign1_addtag
-/*id: 309381//*/
+/*id: 313921//*/
 /*type: xdesign1_addtag//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309383//*/
+/*id: 313923//*/
 /*type: xdesign1_addtaginput//*/
 
             //XSTART component/xdesign1_addtaginput
@@ -6418,13 +6419,13 @@ class inputandbutton extends component {
               }//END CLS
               //END TAG
               //END component/xdesign1_addtaginput
-/*id: 309383//*/
+/*id: 313923//*/
 /*type: xdesign1_addtaginput//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309382//*/
+/*id: 313922//*/
 /*type: xdesign1_addtagbutton//*/
 
             //XSTART component/xdesign1_addtagbutton
@@ -6450,13 +6451,13 @@ class inputandbutton extends component {
               }//END CLS
               //END TAG
               //END component/xdesign1_addtagbutton
-/*id: 309382//*/
+/*id: 313922//*/
 /*type: xdesign1_addtagbutton//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309386//*/
+/*id: 313926//*/
 /*type: xdesign1_managercategory//*/
 
       //XSTART component/xdesign1_managercategory
@@ -6502,13 +6503,13 @@ class inputandbutton extends component {
       }//END CLS
       //END TAG
       //END component/xdesign1_managerprojectcategory
-/*id: 309386//*/
+/*id: 313926//*/
 /*type: xdesign1_managercategory//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309388//*/
+/*id: 313928//*/
 /*type: xdesign1_managercategoryproject//*/
 
             //XSTART component/xdesign1_managercategoryproject
@@ -6554,13 +6555,13 @@ class inputandbutton extends component {
               }//END CLS
               //END TAG
               //END component/xdesign1_managercategoryproject
-/*id: 309388//*/
+/*id: 313928//*/
 /*type: xdesign1_managercategoryproject//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309387//*/
+/*id: 313927//*/
 /*type: xdesign1_managercategorypalette//*/
 
             //XSTART component/xdesign1_managercategorypalette
@@ -6578,7 +6579,7 @@ class inputandbutton extends component {
                 this.obj_design.bln_isGenericTag=true;                  
 
                 this.obj_design.str_urlServer="server.php";
-                this.obj_holder.bln_debugServer=true;
+                this.obj_holder.bln_debugServer=false;
               }
 
               fn_onStateChange(){                          
@@ -6609,13 +6610,13 @@ class inputandbutton extends component {
             }//END CLS
             //END TAG
             //END component/xdesign1_managercategoryproject
-/*id: 309387//*/
+/*id: 313927//*/
 /*type: xdesign1_managercategorypalette//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309362//*/
+/*id: 313902//*/
 /*type: menubuttonpalettepinned//*/
 
             //XSTART component/menubuttonpalettepinned
@@ -6651,13 +6652,13 @@ class inputandbutton extends component {
               }//END CLS
               //END TAG
               //END component/menubuttonpalettepinned
-/*id: 309362//*/
+/*id: 313902//*/
 /*type: menubuttonpalettepinned//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309352//*/
+/*id: 313892//*/
 /*type: form//*/
 class form extends component {
     constructor(obj_ini) {      
@@ -6683,13 +6684,13 @@ class form extends component {
 }//END CLS
 //END IMG
 
-/*id: 309352//*/
+/*id: 313892//*/
 /*type: form//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309366//*/
+/*id: 313906//*/
 /*type: panel//*/
 class panel extends component {
   constructor(obj_ini) {
@@ -6717,13 +6718,13 @@ class panel extends component {
 }//END CLS
 //END PANEL
 
-/*id: 309366//*/
+/*id: 313906//*/
 /*type: panel//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309370//*/
+/*id: 313910//*/
 /*type: svgblock//*/
 //XSTART component/svgblock
 class svgblock extends component{
@@ -6805,13 +6806,13 @@ class svgblock extends component{
       this.dom_obj.append(dom_obj);              
   }
   }//END CLS
-/*id: 309370//*/
+/*id: 313910//*/
 /*type: svgblock//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309336//*/
+/*id: 313876//*/
 /*type: accordion//*/
 class accordion extends component {
     constructor(obj_ini) {        
@@ -6879,13 +6880,13 @@ class accordion extends component {
 
 }//END CLS
 //END ACCORDION
-/*id: 309336//*/
+/*id: 313876//*/
 /*type: accordion//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309337//*/
+/*id: 313877//*/
 /*type: block//*/
 
       //XSTART component/block
@@ -6909,13 +6910,13 @@ class accordion extends component {
         //END TAG
         //END component/block
         
-/*id: 309337//*/
+/*id: 313877//*/
 /*type: block//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309340//*/
+/*id: 313880//*/
 /*type: clipboard//*/
 
 //XSTART component/clipboard
@@ -6970,8 +6971,10 @@ class clipboard extends component{
       let bln_locked=obj_localHome.fn_getLocked();        
       if(bln_locked){//cannot manipulate locked component
       //if(bln_locked && obj_localHome!==obj_item){//cannot manipulate locked component
-          if(bln_debug){console.log("VALIDATE COPY: LOCALHOME IS LOCKED")};
-          return false;
+
+          //if(bln_debug){console.log("VALIDATE COPY: LOCALHOME IS LOCKED")};
+          //return false;
+
       //}        
       }
 
@@ -7081,7 +7084,14 @@ class clipboard extends component{
 
     if(bln_debug){console.log("VALIDATE INSERT: GET CONTAINER")};   
 
-    let obj_container=obj_insertNextTo.obj_holder.obj_container;
+
+    let obj_container=obj_insertNextTo.fn_getParentComponent();
+    if(!obj_container){
+        if(bln_debug){console.log("VALIDATE INSERT: NO VALID CONTAINER")};   
+        return false;
+    }
+
+    obj_container=obj_project.fn_getInsertContainer(obj_container, obj_localHome, obj_container.obj_design.int_idRecord);        
     if(!obj_container){
         if(bln_debug){console.log("VALIDATE INSERT: NO VALID CONTAINER")};   
         return false;
@@ -7110,7 +7120,7 @@ class clipboard extends component{
         if(!obj_container){
             console.log("CLIPBOARD INSERT ERROR: CONTAINER IS FALSE");
             return false;
-        }
+        }     
 
         this.fn_copy(obj_item);
         obj_item=this.fn_get();                        
@@ -7124,28 +7134,40 @@ class clipboard extends component{
     }
 
 
-  fn_validateCut(obj_item, obj_localHome){
+  fn_validateCut(obj_selected, obj_localHome){
 
       let bln_debug=false;
       
-      if(!obj_item){        
+      if(!obj_selected){        
           return false;
       }
-      if(obj_item===obj_projectTarget){            
+      if(obj_selected===obj_projectTarget){            
           if(bln_debug){console.log("VALIDATE CUT: CANNOT CUT PROJECT INSTANCE")};
           return false;
       }
 
-      if(obj_item.obj_design.bln_dynamicPin){
+      let obj_container=obj_selected.fn_getParentComponent();
+        if(!obj_container){
+            if(bln_debug){console.log("VALIDATE CUT: NO VALID CONTAINER")};   
+        return false;
+        }
+
+        obj_container=obj_project.fn_getInsertContainer(obj_container, obj_localHome, obj_container.obj_design.int_idRecord);        
+        if(!obj_container){
+            if(bln_debug){console.log("VALIDATE CUT: NO VALID CONTAINER")};   
+            return false;
+        }
+
+      if(obj_selected.obj_design.bln_dynamicPin){
         if(bln_debug){console.log("VALIDATE CUT: CANNOT CUT DYNMAIC PIN")};
         return false;
       }
 
       let bln_locked=obj_localHome.fn_getLocked();
       if(bln_locked){//cannot manipulate locked component
-      //if(bln_locked && obj_localHome!==obj_item){//cannot manipulate locked component
-          if(bln_debug){console.log("VALIDATE CUT: LOCALHOME IS LOCKED")};
-          return false;
+      //if(bln_locked && obj_localHome!==obj_selected){//cannot manipulate locked component
+          //if(bln_debug){console.log("VALIDATE CUT: LOCALHOME IS LOCKED")};
+          //return false;
       //}
       }
 
@@ -7155,25 +7177,37 @@ class clipboard extends component{
 
   }    
 
-  fn_validateDelete(obj_item, obj_localHome){
+  fn_validateDelete(obj_selected, obj_localHome){
 
       let bln_debug=false;      
 
-      if(!obj_item){        
+      if(!obj_selected){        
           return false;
       }
-      if(obj_item===obj_projectTarget){            
+      if(obj_selected===obj_projectTarget){            
           if(bln_debug){console.log("VALIDATE DELETE: CANNOT DELETE PROJECT INSTANCE")};
           return false;
       }
 
-      if(obj_item.obj_design.bln_dynamicPin){
+      let obj_container=obj_selected.fn_getParentComponent();
+        if(!obj_container){
+            if(bln_debug){console.log("VALIDATE DELETE: NO VALID CONTAINER")};   
+        return false;
+        }
+
+        obj_container=obj_project.fn_getInsertContainer(obj_container, obj_localHome, obj_container.obj_design.int_idRecord);        
+        if(!obj_container){
+            if(bln_debug){console.log("VALIDATE DELETE: NO VALID CONTAINER")};   
+            return false;
+        }
+
+      if(obj_selected.obj_design.bln_dynamicPin){
         if(bln_debug){console.log("VALIDATE DELETE: CANNOT DELETE DYNMAIC PIN")};
         return false;
     }
 
       let bln_locked=obj_localHome.fn_getLocked();
-      if(bln_locked && obj_localHome!==obj_item){//cannot delete locked part of component, except if localhome
+      if(bln_locked && obj_localHome!==obj_selected){//cannot delete locked part of component, except if localhome
           if(bln_debug){console.log("VALIDATE DELETE: LOCALHOME IS LOCKED")};
           return false;
       }
@@ -7230,13 +7264,13 @@ class clipboard extends component{
         //END component/clipboard
   //START CLIPBOARD FUNCTION
         
-/*id: 309340//*/
+/*id: 313880//*/
 /*type: clipboard//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309346//*/
+/*id: 313886//*/
 /*type: desktopnavigationbutton//*/
 
             //XSTART component/desktopnavigationbutton
@@ -7289,13 +7323,13 @@ class clipboard extends component{
               }//END CLS
               //END TAG
               //END component/desktopnavigationbutton
-/*id: 309346//*/
+/*id: 313886//*/
 /*type: desktopnavigationbutton//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309348//*/
+/*id: 313888//*/
 /*type: dynamiccontent//*/
 
       //XSTART component/dynamiccontent
@@ -7335,13 +7369,13 @@ class clipboard extends component{
         }//END CLS
         //END TAG
         //END component/dynamiccontent
-/*id: 309348//*/
+/*id: 313888//*/
 /*type: dynamiccontent//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309353//*/
+/*id: 313893//*/
 /*type: grid//*/
 class grid extends component {
     constructor(obj_ini) {            
@@ -7390,13 +7424,13 @@ class grid extends component {
     }
 }//END CLS
 //END grid
-/*id: 309353//*/
+/*id: 313893//*/
 /*type: grid//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309358//*/
+/*id: 313898//*/
 /*type: loginbutton//*/
 
             //XSTART component/loginbutton
@@ -7452,13 +7486,13 @@ class grid extends component {
               }//END CLS
               //END TAG
               //END component/loginbutton
-/*id: 309358//*/
+/*id: 313898//*/
 /*type: loginbutton//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309359//*/
+/*id: 313899//*/
 /*type: loginpanel//*/
 //START component/loginpanel
 class loginpanel extends panel{
@@ -7474,7 +7508,7 @@ class loginpanel extends panel{
     this.fn_extends("panel");                  
     this.obj_holder.UserDaysAuthorize=5;
     this.int_count=0;
-    this.obj_holder.bln_debugServer=true;    
+    this.obj_holder.bln_debugServer=false;    
     
     if(this.obj_design.bln_useExternalButton===undefined){this.obj_design.bln_useExternalButton=false;}    
   }
@@ -7801,13 +7835,13 @@ class loginpanel extends panel{
   //*/
 }//END CLS
 //END component/loginpanel
-/*id: 309359//*/
+/*id: 313899//*/
 /*type: loginpanel//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309360//*/
+/*id: 313900//*/
 /*type: loginpanelform//*/
 
             //XSTART component/loginpanelform
@@ -7843,13 +7877,13 @@ class loginpanel extends panel{
               }//END CLS
               //END TAG
               //END component/loginpanelform
-/*id: 309360//*/
+/*id: 313900//*/
 /*type: loginpanelform//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309376//*/
+/*id: 313916//*/
 /*type: texteditor//*/
 class texteditor extends component {
     constructor(obj_ini) {      
@@ -8049,13 +8083,13 @@ class texteditor extends component {
     
 }//END CLS
 //END TAG
-/*id: 309376//*/
+/*id: 313916//*/
 /*type: texteditor//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309378//*/
+/*id: 313918//*/
 /*type: theme//*/
 
       //XSTART component/theme
@@ -8079,13 +8113,13 @@ class texteditor extends component {
         }//END CLS
         //END TAG
         //END component/theme
-/*id: 309378//*/
+/*id: 313918//*/
 /*type: theme//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309380//*/
+/*id: 313920//*/
 /*type: xdesign1//*/
   //XSTART component/xdesign1
   class xdesign1 extends component{
@@ -8231,9 +8265,13 @@ class texteditor extends component {
       //*/
     }    
     fn_removeId(obj_item){      
-      
-      this.obj_designDelegate.fn_removeId(obj_item);
-      //this.obj_holder.obj_xdesign1_managerpalette.fn_removeId(obj_item);
+      if(this!==obj_projectTarget){
+        obj_projectTarget.obj_designDelegate.fn_removeIdFromItem(obj_item);
+        return;        
+      }
+      else{
+        this.obj_designDelegate.fn_removeIdFromItem(obj_item);
+      }
     }      
     fn_getGlass(){
       return this.obj_holder.obj_xdesign1_padiframe.dom_obj.contentWindow;
@@ -8324,12 +8362,11 @@ class texteditor extends component {
       //console.log("XDESIGN1 fn_saveComponent click button")
       this.obj_holder.obj_xdesign1_managerproject.fn_saveComponent(this.obj_palettSelected);
     }
-    fn_saveAsComponent(){        
-      this.obj_holder.obj_xdesign1_managerproject.fn_saveasProject();
+    fn_saveAsProject(){        
+      this.obj_holder.obj_xdesign1_managerproject.fn_saveAsProject();
     }
-    onSaveComponent(obj_post){//callback function from save function
-      //console.log("XDESIGN1 onSaveComponent call back function")
-      this.obj_holder.obj_xdesign1_managerproject.fn_onSaveComponent(obj_post);        
+    onServerManagerCompleteSave(obj_post){//callback function from save function      
+      this.obj_holder.obj_xdesign1_managerproject.onServerManagerCompleteSave(obj_post);        
 
       /*
       if(obj_project){
@@ -8570,13 +8607,13 @@ class texteditor extends component {
     /////////////////////        
   }//END CLS  
   //END component/xdesign1
-/*id: 309380//*/
+/*id: 313920//*/
 /*type: xdesign1//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309384//*/
+/*id: 313924//*/
 /*type: xdesign1_deleteproject//*/
 
       //XSTART component/xdesign1_deleteproject
@@ -8599,13 +8636,13 @@ class texteditor extends component {
         }//END CLS
         //END TAG
         //END component/xdesign1_deleteproject
-/*id: 309384//*/
+/*id: 313924//*/
 /*type: xdesign1_deleteproject//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309385//*/
+/*id: 313925//*/
 /*type: xdesign1_import//*/
 
       //XSTART component/xdesign1_import
@@ -8629,13 +8666,13 @@ class texteditor extends component {
         }//END CLS
         //END TAG
         //END component/xdesign1_import
-/*id: 309385//*/
+/*id: 313925//*/
 /*type: xdesign1_import//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309389//*/
+/*id: 313929//*/
 /*type: xdesign1_managercomponent//*/
 
       //XSTART component/xdesign1_managercomponent
@@ -8802,13 +8839,13 @@ class texteditor extends component {
         }//END CLS
         //END TAG
         //END component/xdesign1_managercomponent
-/*id: 309389//*/
+/*id: 313929//*/
 /*type: xdesign1_managercomponent//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309390//*/
+/*id: 313930//*/
 /*type: xdesign1_manageriframe//*/
 
       //XSTART component/xdesign1_manageriframe
@@ -8849,13 +8886,13 @@ class texteditor extends component {
         }//END CLS
         //END TAG
         //END component/xdesign1_manageriframe
-/*id: 309390//*/
+/*id: 313930//*/
 /*type: xdesign1_manageriframe//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309392//*/
+/*id: 313932//*/
 /*type: xdesign1_managermessenger//*/
 
       //XSTART component/xdesign1_managermessenger
@@ -9040,13 +9077,13 @@ class texteditor extends component {
         }//END CLS
         //END TAG
         //END component/xdesign1_managermessenger
-/*id: 309392//*/
+/*id: 313932//*/
 /*type: xdesign1_managermessenger//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309393//*/
+/*id: 313933//*/
 /*type: xdesign1_managerpalette//*/
 
 //XSTART component/xdesign1_managerpalette
@@ -9574,44 +9611,16 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
     return bln_value;
   }  
 
-deprecate_fn_removeId(obj_item){      
-    
-
-    let bln_locked=obj_item.obj_design.bln_lockComponent;              
-    bln_locked=obj_shared.fn_parseBool(bln_locked);
-    if(bln_locked){        
-      console.log("bln_locked");
-      return;
-    } 
-
-    obj_item.obj_design.int_idRecord=0;
-    obj_item.obj_design.bln_palettePin=false;        
-    obj_item.obj_design.bln_projectPin=false;              
-    obj_item.obj_design.str_cateogryList="";              
-               
-    obj_item.fn_setIDXDesign();
-    obj_item.obj_design.int_modeExecute=obj_holder.int_modeEdit;              
-
-    var arr_item=obj_item.obj_design.arr_item;
-    console.log("arr_item: " +  arr_item.length);
-    
-    for(var i=0;i<arr_item.length;i++){            
-        obj_item=arr_item[i];
-        console.log("i: " +  i);
-        console.log("int_idRecord: " +  obj_item.obj_design.int_idRecord);        
-        this.fn_removeId(obj_item);
-    }
-  }
 }//END CLS
 //END TAG
 //END component/xdesign1_managerpalette
-/*id: 309393//*/
+/*id: 313933//*/
 /*type: xdesign1_managerpalette//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309394//*/
+/*id: 313934//*/
 /*type: xdesign1_managerproject//*/
 
       //XSTART component/xdesign1_managerproject
@@ -9642,7 +9651,8 @@ deprecate_fn_removeId(obj_item){
             bln_value=false;                        
             if(obj_projectTarget){              
               if(obj_projectTarget.obj_design.int_idRecord){
-                bln_value=true;               
+                bln_value=true;                               
+            
               }
             }                                    
 
@@ -9660,6 +9670,12 @@ deprecate_fn_removeId(obj_item){
             if(obj_item){obj_item.fn_setEnabled(bln_value)};            
             obj_item=this.obj_holder.obj_xdesign1_releaseproject;       
             if(obj_item){obj_item.fn_setEnabled(bln_value)}; 
+            obj_item=this.obj_holder.obj_xdesign1_saveproject;       
+            if(obj_item){obj_item.fn_setEnabled(bln_value)};
+            if(obj_projectTarget){              
+              if(obj_item){obj_item.fn_setEnabled(true)};
+            }
+
             
             this.obj_holder.obj_container.fn_setEnabled();                    
           }
@@ -9873,15 +9889,31 @@ deprecate_fn_removeId(obj_item){
           }
           fn_onToggleProjectPin(){                  
             obj_project.fn_onStateChange();
-          }  
-          fn_saveasProject(){//This relates to saving a component within the Project Isntance ie from the aciton button                       
+          } 
+          fn_saveProject(){//This relates to saving a component via the Global Save Button
+      
+            obj_project.fn_close();
+            
+            let obj_serverManager=obj_project.fn_getComponent("xdesign1_designfile");      
+            let obj_ini=new Object;
+            obj_ini.ObjectInstance=obj_projectTarget;                   
+            this.obj_holder.ObjectSaveInstance=obj_projectTarget;                          
+            obj_serverManager.fn_saveComponent(obj_ini);
+          }
+
+          fn_saveAsProject(){//This relates to saving a component within the Project Isntance ie from the aciton button                       
     
             let obj_item, str_name;
       
             obj_item=obj_project.obj_palettSelected;
             
-            obj_item.fn_setLocked(false);      
-            obj_project.fn_removeId(obj_item);
+            obj_item.fn_setLocked(false);    
+            obj_item.bln_removeId=true;
+            let str_categoryList=obj_item.obj_design.str_categoryList;
+            obj_project.fn_removeId(obj_item);            
+            obj_item.fn_setIDXDesign();      
+            obj_item.obj_design.str_categoryList=str_categoryList;      
+            
             obj_item.fn_setLocked(true);                  
       
             let str_addon=" Copy";      
@@ -9897,18 +9929,7 @@ deprecate_fn_removeId(obj_item){
             str_new=str_orig.replace(str_addon, "");
             str_new+=str_addon;
             return str_new;
-          }      
-          fn_saveProject(){
-            //globabl save utility, not currently in use, due to the save hole
-            //requires to "look" for non saved areas
-      
-            obj_project.fn_close();
-            
-            let obj_serverManager=obj_project.fn_getComponent("xdesign1_designfile");      
-            let obj_ini=new Object;
-            obj_ini.ObjectInstance=obj_projectTarget;                   
-            obj_serverManager.fn_saveComponent(obj_ini);
-          }
+          }                
           fn_saveComponent(obj_item){//This relates to saving a component within the Project Isntance ie from the action button      
 
             //console.log("fn_saveComponent");
@@ -9917,29 +9938,29 @@ deprecate_fn_removeId(obj_item){
             let obj_serverManager=obj_project.fn_getComponent("xdesign1_designfile");      
             let obj_ini=new Object;
             obj_ini.ObjectInstance=obj_item;                                         
-            this.obj_holder.ObjectInstance=obj_item;              
+            this.obj_holder.ObjectSaveInstance=obj_item;              
             obj_serverManager.fn_saveComponent(obj_ini);                    
           }
           //*
-          fn_onSaveComponent(){//CallBack Function from designfile            
+          onServerManagerCompleteSave(){//CallBack Function from designfile            
             this.obj_holder.obj_container.fn_setText(obj_projectTarget.obj_design.str_name);            
             obj_projectTarget.obj_design.str_lastVersionDate="notset";
             this.fn_onStateChange();           
-            console.log("Saved: " + obj_project.obj_palettSelected.obj_design.str_name);   
-            this.obj_holder.ObjectInstance.obj_designDelegate.fn_setPaletteSelected();            
+            console.log("Saved: " + this.obj_holder.ObjectSaveInstance.obj_design.str_name);             
+            this.obj_holder.ObjectSaveInstance.obj_designDelegate.fn_setPaletteSelected();            
           } 
           //*/                       
 
         }//END CLS
         //END TAG
         //END component/xdesign1_managerproject
-/*id: 309394//*/
+/*id: 313934//*/
 /*type: xdesign1_managerproject//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309395//*/
+/*id: 313935//*/
 /*type: xdesign1_managersettings//*/
 
       //XSTART component/xdesign1_managersettings
@@ -10064,13 +10085,13 @@ deprecate_fn_removeId(obj_item){
         }//END CLS
         //END TAG
         //END component/xdesign1_managersettings
-/*id: 309395//*/
+/*id: 313935//*/
 /*type: xdesign1_managersettings//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309396//*/
+/*id: 313936//*/
 /*type: xdesign1_managertag//*/
 
   //XSTART component/xdesign1_managertag
@@ -10108,7 +10129,7 @@ deprecate_fn_removeId(obj_item){
       //console.log("TAG fn_getContent: " + obj_project.obj_palettSelected);          
 
       let obj_container=this.fn_getParentComponent();
-        console.log("obj_container.obj_design.bln_pin: " + obj_container.obj_design.bln_pin);
+        //console.log("obj_container.obj_design.bln_pin: " + obj_container.obj_design.bln_pin);
         if(obj_container.obj_design.bln_pin===undefined){
           obj_container.obj_design.bln_pin=true;
           //console.log("turn pin on");
@@ -10260,35 +10281,16 @@ deprecate_fn_removeId(obj_item){
       
       obj_clipboard.fn_copy(obj_item);
       let obj_copy=obj_clipboard.fn_get();     
-      
-      obj_project.fn_removeId(obj_copy);            
+
+      obj_copy.bln_removeId=true;     
+      let str_categoryList=obj_copy.obj_design.str_categoryList;       
+      obj_project.fn_removeId(obj_copy);  
+      obj_copy.obj_design.str_idXDesign="";      
+      obj_copy.obj_design.str_categoryList=str_categoryList;      
 
       obj_item.obj_designDelegate.fn_setPaletteSelected();       
     }
-    deprecate_fn_removeId(obj_item){   
-
-      let bln_locked=obj_item.obj_design.bln_lockComponent;              
-      bln_locked=obj_shared.fn_parseBool(bln_locked);
-      if(bln_locked){        
-        return;
-      }       
-      
-      obj_item.obj_design.int_idRecord=0;      
-      obj_item.obj_design.bln_palettePin=false;        
-      obj_item.obj_design.bln_projectPin=false;              
-      obj_item.obj_design.str_categoryList="";              
-      
-      let str_method="fn_setIDXDesign";        
-      if(obj_item && obj_item[str_method]){
-        obj_item[str_method]();
-      }                  
-      obj_item.obj_design.int_modeExecute=obj_holder.int_modeEdit;              
-
-      let arr=obj_item.obj_design.arr_item;
-      for(let i=0;i<arr.length;i++){            
-          this.fn_removeId(arr[i]);
-      }
-    } 
+    
     fn_pasteTag(){      
       let obj_item=obj_project.obj_palettSelected;            
       let obj_localHome=obj_item.fn_getLocalHome();
@@ -10296,7 +10298,9 @@ deprecate_fn_removeId(obj_item){
       if(!obj_container){return;}
 
       obj_item=obj_clipboard.fn_paste(obj_container);             
-      obj_item.obj_design.int_modeExecute=obj_holder.int_modeEdit;      
+      obj_item.obj_design.int_modeExecute=obj_holder.int_modeEdit;   
+      obj_item.fn_setIDXDesign();      
+   
       obj_item.obj_designDelegate.fn_setPaletteSelected();          
     }
     fn_insertTag(){      
@@ -10306,6 +10310,7 @@ deprecate_fn_removeId(obj_item){
       if(!obj_insertNextTo){return;}
       
       obj_item=obj_clipboard.fn_insert(obj_insertNextTo);                         
+      obj_item.fn_setIDXDesign();      
       obj_item.obj_designDelegate.fn_setPaletteSelected();          
     }
     fn_cutTag(){
@@ -10337,6 +10342,7 @@ deprecate_fn_removeId(obj_item){
       let obj_item=obj_project.obj_palettSelected;            
       obj_item.obj_design.int_modeExecute=obj_holder.int_modeEdit;      
       obj_item.obj_designDelegate.fn_setChildrenModeExecute(obj_holder.int_modeEdit);//new change to also set children to editable
+      obj_item.obj_designDelegate.fn_setParentModeExecute(obj_holder.int_modeEdit);//new change to also set aéé parent to editable
       obj_item.obj_designDelegate.fn_setPaletteSelected();       
     }    
     fn_setEazyGridSwitch  (){
@@ -10387,13 +10393,13 @@ deprecate_fn_removeId(obj_item){
   }//END CLS
   //END TAG
   //END component/xdesign1_managertag
-/*id: 309396//*/
+/*id: 313936//*/
 /*type: xdesign1_managertag//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309397//*/
+/*id: 313937//*/
 /*type: xdesign1_move//*/
 
             //XSTART component/xdesign1_move
@@ -10416,13 +10422,13 @@ deprecate_fn_removeId(obj_item){
               }//END CLS
               //END TAG
               //END component/xdesign1_move
-/*id: 309397//*/
+/*id: 313937//*/
 /*type: xdesign1_move//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309398//*/
+/*id: 313938//*/
 /*type: xdesign1_newproject//*/
 
       //XSTART component/xdesign1_newproject
@@ -10447,13 +10453,13 @@ deprecate_fn_removeId(obj_item){
         }//END CLS
         //END TAG
         //END component/xdesign1_newproject
-/*id: 309398//*/
+/*id: 313938//*/
 /*type: xdesign1_newproject//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309401//*/
+/*id: 313941//*/
 /*type: xdesign1_pinproject//*/
 
       //XSTART component/xdesign1_pinproject
@@ -10476,13 +10482,13 @@ deprecate_fn_removeId(obj_item){
         }//END CLS
         //END TAG
         //END component/xdesign1_pinproject
-/*id: 309401//*/
+/*id: 313941//*/
 /*type: xdesign1_pinproject//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309408//*/
+/*id: 313948//*/
 /*type: xdesign1_publishproject//*/
 
       //XSTART component/xdesign1_publishproject
@@ -10506,13 +10512,13 @@ deprecate_fn_removeId(obj_item){
         }//END CLS
         //END TAG
         //END component/xdesign1_publishproject
-/*id: 309408//*/
+/*id: 313948//*/
 /*type: xdesign1_publishproject//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309409//*/
+/*id: 313949//*/
 /*type: xdesign1_release//*/
 
             //XSTART component/xdesign1_release
@@ -10535,13 +10541,42 @@ deprecate_fn_removeId(obj_item){
               }//END CLS
               //END TAG
               //END component/xdesign1_release
-/*id: 309409//*/
+/*id: 313949//*/
 /*type: xdesign1_release//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309410//*/
+/*id: 313950//*/
+/*type: xdesign1_saveproject//*/
+
+            //XSTART component/xdesign1_saveproject
+              class xdesign1_saveproject extends button{
+                constructor(obj_ini) {      
+                  super(obj_ini);        
+                } 
+                fn_initialize(obj_ini){
+                  super.fn_initialize(obj_ini);                
+                  
+                  
+                  this.fn_setType("xdesign1_saveproject");      
+                  this.fn_setTag("xdesign1_saveproject");            
+                  this.obj_design.bln_isGenericTag=true;
+                   this.fn_extends("button");            
+                }
+                fn_onClick(){  
+                  obj_project.fn_saveProject();
+                }
+              }//END CLS
+              //END TAG
+              //END component/xdesign1_saveproject
+/*id: 313950//*/
+/*type: xdesign1_saveproject//*/
+/*END COMPONENT//*/
+
+
+/*START COMPONENT//*/
+/*id: 313951//*/
 /*type: xdesign1_xcompile//*/
 
       //XSTART component/xdesign1_xcompile
@@ -10564,13 +10599,13 @@ deprecate_fn_removeId(obj_item){
         }//END CLS
         //END TAG
         //END component/xdesign1_xcompile
-/*id: 309410//*/
+/*id: 313951//*/
 /*type: xdesign1_xcompile//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309411//*/
+/*id: 313952//*/
 /*type: xdesign1_xcreatebackup//*/
 
       //XSTART component/xdesign1_xcreatebackup
@@ -10593,13 +10628,13 @@ deprecate_fn_removeId(obj_item){
         }//END CLS
         //END TAG
         //END component/xdesign1_xcreatebackup
-/*id: 309411//*/
+/*id: 313952//*/
 /*type: xdesign1_xcreatebackup//*/
 /*END COMPONENT//*/
 
 
 /*START COMPONENT//*/
-/*id: 309412//*/
+/*id: 313953//*/
 /*type: xdesign1_xmaintain//*/
 
             //XSTART component/xdesign1_xmaintain
@@ -10622,7 +10657,7 @@ deprecate_fn_removeId(obj_item){
               }//END CLS
               //END TAG
               //END component/xdesign1_xmaintain
-/*id: 309412//*/
+/*id: 313953//*/
 /*type: xdesign1_xmaintain//*/
 /*END COMPONENT//*/
 
@@ -10632,14 +10667,14 @@ deprecate_fn_removeId(obj_item){
 
 
 //START AUTO GENERATED COMPONENT MAP
-const obj_ComponentMap = new Map([['button', button],['tablerow', tablerow],['tablecell', tablecell],['tableheader', tableheader],['input', input],['table', table],['xdesign1_propertysheet', xdesign1_propertysheet],['xdesign1_propertydesign', xdesign1_propertydesign],['navelement', navelement],['designfile', designfile],['recordset', recordset],['xdesign1_managermenu', xdesign1_managermenu],['xdesign1_objectmap', xdesign1_objectmap],['xdesign1_objectaction', xdesign1_objectaction],['xdesign1_propertydesignui', xdesign1_propertydesignui],['xdesign1_propertydomstyle', xdesign1_propertydomstyle],['xdesign1_propertydomproperty', xdesign1_propertydomproperty],['xdesign1_propertydomattribute', xdesign1_propertydomattribute],['flex', flex],['menubutton', menubutton],['inputandbutton', inputandbutton],['xdesign1_addtag', xdesign1_addtag],['xdesign1_addtaginput', xdesign1_addtaginput],['xdesign1_addtagbutton', xdesign1_addtagbutton],['xdesign1_managercategory', xdesign1_managercategory],['xdesign1_managercategoryproject', xdesign1_managercategoryproject],['xdesign1_managercategorypalette', xdesign1_managercategorypalette],['menubuttonpalettepinned', menubuttonpalettepinned],['form', form],['panel', panel],['svgblock', svgblock],['accordion', accordion],['block', block],['clipboard', clipboard],['desktopnavigationbutton', desktopnavigationbutton],['dynamiccontent', dynamiccontent],['grid', grid],['loginbutton', loginbutton],['loginpanel', loginpanel],['loginpanelform', loginpanelform],['texteditor', texteditor],['theme', theme],['xdesign1', xdesign1],['xdesign1_deleteproject', xdesign1_deleteproject],['xdesign1_import', xdesign1_import],['xdesign1_managercomponent', xdesign1_managercomponent],['xdesign1_manageriframe', xdesign1_manageriframe],['xdesign1_managermessenger', xdesign1_managermessenger],['xdesign1_managerpalette', xdesign1_managerpalette],['xdesign1_managerproject', xdesign1_managerproject],['xdesign1_managersettings', xdesign1_managersettings],['xdesign1_managertag', xdesign1_managertag],['xdesign1_move', xdesign1_move],['xdesign1_newproject', xdesign1_newproject],['xdesign1_pinproject', xdesign1_pinproject],['xdesign1_publishproject', xdesign1_publishproject],['xdesign1_release', xdesign1_release],['xdesign1_xcompile', xdesign1_xcompile],['xdesign1_xcreatebackup', xdesign1_xcreatebackup],['xdesign1_xmaintain', xdesign1_xmaintain]]);
+const obj_ComponentMap = new Map([['button', button],['tablerow', tablerow],['tablecell', tablecell],['tableheader', tableheader],['input', input],['table', table],['xdesign1_propertysheet', xdesign1_propertysheet],['xdesign1_propertydesign', xdesign1_propertydesign],['navelement', navelement],['designfile', designfile],['recordset', recordset],['xdesign1_managermenu', xdesign1_managermenu],['xdesign1_objectmap', xdesign1_objectmap],['xdesign1_objectaction', xdesign1_objectaction],['xdesign1_propertydesignui', xdesign1_propertydesignui],['xdesign1_propertydomstyle', xdesign1_propertydomstyle],['xdesign1_propertydomproperty', xdesign1_propertydomproperty],['xdesign1_propertydomattribute', xdesign1_propertydomattribute],['flex', flex],['menubutton', menubutton],['inputandbutton', inputandbutton],['xdesign1_addtag', xdesign1_addtag],['xdesign1_addtaginput', xdesign1_addtaginput],['xdesign1_addtagbutton', xdesign1_addtagbutton],['xdesign1_managercategory', xdesign1_managercategory],['xdesign1_managercategoryproject', xdesign1_managercategoryproject],['xdesign1_managercategorypalette', xdesign1_managercategorypalette],['menubuttonpalettepinned', menubuttonpalettepinned],['form', form],['panel', panel],['svgblock', svgblock],['accordion', accordion],['block', block],['clipboard', clipboard],['desktopnavigationbutton', desktopnavigationbutton],['dynamiccontent', dynamiccontent],['grid', grid],['loginbutton', loginbutton],['loginpanel', loginpanel],['loginpanelform', loginpanelform],['texteditor', texteditor],['theme', theme],['xdesign1', xdesign1],['xdesign1_deleteproject', xdesign1_deleteproject],['xdesign1_import', xdesign1_import],['xdesign1_managercomponent', xdesign1_managercomponent],['xdesign1_manageriframe', xdesign1_manageriframe],['xdesign1_managermessenger', xdesign1_managermessenger],['xdesign1_managerpalette', xdesign1_managerpalette],['xdesign1_managerproject', xdesign1_managerproject],['xdesign1_managersettings', xdesign1_managersettings],['xdesign1_managertag', xdesign1_managertag],['xdesign1_move', xdesign1_move],['xdesign1_newproject', xdesign1_newproject],['xdesign1_pinproject', xdesign1_pinproject],['xdesign1_publishproject', xdesign1_publishproject],['xdesign1_release', xdesign1_release],['xdesign1_saveproject', xdesign1_saveproject],['xdesign1_xcompile', xdesign1_xcompile],['xdesign1_xcreatebackup', xdesign1_xcreatebackup],['xdesign1_xmaintain', xdesign1_xmaintain]]);
 //END AUTO GENERATED MAP
 
 
 
 
 /*START COMPONENT//*/
-/*id: 309331//*/
+/*id: 313956//*/
 /*type: TemplateCode//*/
 
 //START Project.js
@@ -10797,7 +10832,7 @@ obj_boot.obj_design.int_idRecord=2406;
 //END Project.js
 
 
-/*id: 309331//*/
+/*id: 313956//*/
 /*type: TemplateCode//*/
 /*END COMPONENT//*/
 
@@ -10819,8 +10854,8 @@ var obj_InstanceJSONMap = new Map([
 [2435, {"obj_design":{"arr_item":[{"obj_design":{"int_idRecord":"3227","str_type":"block"}},{"obj_design":{"int_idRecord":"3228","str_type":"block"}}],"int_idRecord":2435,"str_name":"xdesign1_managersettings","str_type":"xdesign1_managersettings","str_tag":"xdesign1_managersettings","bln_registerAtProject":true,"str_classExtend":"xdesign1_managermenu","bln_palettePin":true,"bln_isLocalHome":true,"str_idXDesign":"myId_38639474","str_idProject":"myId_11188187","position":"relative","str_createdDate":"2021-11-18 13:2:26","str_modifiedDate":"2021-11-18 13:2:26"},"obj_domStyle":{"flex-wrap":"wrap","position":"relative","flex-direction":"column","display":"flex","flex-flow":"column wrap","width":"100%","overflow":"auto","cursor":"default"}}],
 [2443, {"obj_design":{"str_type":"xdesign1_xcreatebackup","str_name":"xdesign1_xcreatebackup","int_idRecord":2443,"str_tag":"button","str_content":"My button","str_classExtend":"button","str_text":"XCreate Backup","bln_isLocalHome":true,"str_idXDesign":"myId_38873086","str_idProject":"myId_11188187","str_nameRegistrator":"xdesign1_managersettings","str_variableName":"xdesign1_xcreatebackup","str_createdDate":"2022-0-22 14:57:1","str_modifiedDate":"2022-0-22 14:57:1","bln_typeable":true,"str_urlServer":"server.php","bln_createRelease":"false"},"obj_domProperty":{"innerText":"XCreate Backup"},"obj_domStyle":{"height":"40px","padding":"3px 12px","border":"0px solid black","cursor":"pointer","margin-right":"1px","margin-bottom":"1px","background-color":"rgb(65, 65, 65)","color":"white","display":"block"}}],
 [2445, {"obj_design":{"str_type":"xdesign1_import","str_name":"xdesign1_import","int_idRecord":2445,"str_tag":"button","str_content":"My button","str_classExtend":"button","str_text":"Import","bln_isLocalHome":true,"str_idXDesign":"myId_67783374","str_idProject":"myId_11188187","bln_registerAtContainer":true,"str_nameRegistrator":"xdesign1_managersettings"},"obj_domProperty":{"innerText":"Import"},"obj_domStyle":{"height":"40px","padding":"3px 12px","border":"0px solid black","cursor":"pointer","margin-right":"1px","margin-bottom":"1px","background-color":"rgb(65, 65, 65)","color":"white"}}],
-[2456, {"obj_design":{"arr_item":[{"obj_design":{"int_idRecord":2457,"str_type":"xdesign1_newproject"}},{"obj_design":{"int_idRecord":2465,"str_type":"xdesign1_pinproject"}},{"obj_design":{"int_idRecord":2501,"str_type":"xdesign1_deleteproject"}},{"obj_design":{"int_idRecord":2503,"str_type":"xdesign1_publishproject"}},{"obj_design":{"int_idRecord":2610,"str_type":"dynamiccontent"}},{"obj_design":{"int_idRecord":"4413","str_type":"dynamiccontent"}},{"obj_design":{"int_idRecord":"4423","str_type":"dynamiccontent"}}],"str_type":"xdesign1_managerproject","str_name":"xdesign1_managerproject","int_idRecord":2456,"str_tag":"xdesign1_managerproject","bln_registerAtProject":true,"str_classExtend":"xdesign1_managermenu","bln_isLocalHome":true,"str_idXDesign":"myId_66613684","str_idProject":"myId_11188187","str_createdDate":"2021-11-17 10:24:14","str_modifiedDate":"2021-11-17 10:24:14","bln_createRelease":"false","str_variableName":"xdesign1_managerproject","str_categoryList":"XDesign","str_classList":"xdesign1_managermenucategory","str_urlServer":"server.php"},"obj_domStyle":{"display":"flex","flex-wrap":"wrap","height":"100%","width":"100%","overflow":"auto","cursor":"default"},"int_offset":0,"int_limit":0}],
-[2457, {"obj_design":{"str_type":"xdesign1_newproject","str_name":"xdesign1_newproject","int_idRecord":2457,"str_tag":"button","str_content":"My button","str_classExtend":"button","str_text":"New","bln_isLocalHome":true,"bln_registerAtContainer":true,"str_idXDesign":"myId_80466641","str_idProject":"myId_11188187","str_variableName":"xdesign1_newproject","str_createdDate":"2022-0-30 18:44:19","str_modifiedDate":"2022-0-30 18:44:19","bln_typeable":true,"str_urlServer":"server.php","bln_createRelease":"false"},"obj_domProperty":{"innerText":"New"},"obj_domStyle":{"height":"40px","padding":"3px 12px","border":"0px solid black","cursor":"pointer","margin-right":"1px","margin-bottom":"1px","background-color":"rgb(65, 65, 65)","color":"white","border-radius":"4px"}}],
+[2456, {"obj_design":{"arr_item":[{"obj_design":{"int_idRecord":2457,"str_type":"xdesign1_newproject"}},{"obj_design":{"int_idRecord":2465,"str_type":"xdesign1_pinproject"}},{"obj_design":{"int_idRecord":2501,"str_type":"xdesign1_deleteproject"}},{"obj_design":{"int_idRecord":"4611","str_type":"xdesign1_saveproject"}},{"obj_design":{"int_idRecord":2503,"str_type":"xdesign1_publishproject"}},{"obj_design":{"int_idRecord":2610,"str_type":"dynamiccontent"}},{"obj_design":{"int_idRecord":"4413","str_type":"dynamiccontent"}},{"obj_design":{"int_idRecord":"4423","str_type":"dynamiccontent"}}],"str_type":"xdesign1_managerproject","str_name":"xdesign1_managerproject","int_idRecord":2456,"str_tag":"xdesign1_managerproject","bln_registerAtProject":true,"str_classExtend":"xdesign1_managermenu","bln_isLocalHome":true,"str_idXDesign":"myId_66613684","str_idProject":"myId_11188187","str_createdDate":"2021-11-17 10:24:14","str_modifiedDate":"2021-11-17 10:24:14","bln_createRelease":"false","str_variableName":"xdesign1_managerproject","str_categoryList":"XDesign","str_classList":"xdesign1_managermenucategory,xdesign1_managercategoryproject","str_urlServer":"server.php"},"obj_domStyle":{"display":"flex","flex-wrap":"wrap","height":"100%","width":"100%","overflow":"auto","cursor":"default"},"int_offset":0,"int_limit":0}],
+[2457, {"obj_design":{"str_type":"xdesign1_newproject","str_name":"xdesign1_newproject","int_idRecord":2457,"str_tag":"button","str_content":"My button","str_classExtend":"button","str_text":"New","bln_isLocalHome":true,"bln_registerAtContainer":true,"str_idXDesign":"myId_80466641","str_idProject":"myId_11188187","str_variableName":"xdesign1_newproject","str_createdDate":"2022-0-30 18:44:19","str_modifiedDate":"2022-0-30 18:44:19","bln_typeable":true,"str_urlServer":"server.php","bln_createRelease":"false","str_categoryList":"XDesign","bln_lockComponent":true,"bln_palettePin":true},"obj_domProperty":{"innerText":"New"},"obj_domStyle":{"height":"40px","padding":"3px 12px","border":"0px solid black","cursor":"pointer","margin-right":"1px","margin-bottom":"1px","background-color":"rgb(65, 65, 65)","color":"white","border-radius":"4px"}}],
 [2461, {"obj_design":{"str_type":"clipboard","str_name":"xdesign1_clipboard","int_idRecord":2461,"str_tag":"clipboard","bln_registerAtProject":true,"str_idXDesign":"myId_64136103","str_idProject":"myId_11188187","bln_isLocalHome":true,"str_variableName":"xdesign1_clipboard","str_createdDate":"2022-0-22 15:19:43","str_modifiedDate":"2022-0-22 15:19:43","str_urlServer":"server.php","bln_createRelease":"false"}}],
 [2465, {"obj_design":{"int_idRecord":2465,"str_name":"xdesign1_pinproject","str_type":"xdesign1_pinproject","str_tag":"button","str_content":"xdesign_pinproject","bln_registerAtContainer":true,"str_classExtend":"button","bln_isLocalHome":true,"str_text":"Pin","str_idXDesign":"myId_28661440","str_idProject":"myId_11188187","str_variableName":"xdesign1_pinproject","str_createdDate":"2022-0-30 18:44:19","str_modifiedDate":"2022-0-30 18:44:19","bln_typeable":true,"str_urlServer":"server.php","bln_createRelease":"false"},"obj_domProperty":{"innerText":"Pin"},"obj_domStyle":{"height":"40px","padding":"3px 12px","border":"0px solid black","cursor":"pointer","margin-right":"1px","margin-bottom":"1px","background-color":"rgb(65, 65, 65)","color":"white","border-radius":"4px"}}],
 [2501, {"obj_design":{"int_idRecord":2501,"str_name":"xdesign1_deleteproject","str_type":"xdesign1_deleteproject","str_tag":"button","str_content":"Delete","bln_registerAtContainer":true,"str_classExtend":"button","str_text":"Delete","bln_isLocalHome":true,"str_idXDesign":"myId_66646482","str_idProject":"myId_11188187","str_createdDate":"2021-11-17 10:24:14","str_modifiedDate":"2021-11-17 10:24:14","bln_typeable":true,"str_variableName":"xdesign1_deleteproject","str_urlServer":"server.php","bln_createRelease":"false","obj_enabled":{"pointerEvents":"auto","cursor":"pointer","color":"white"}},"obj_domProperty":{"innerText":"Delete","disabled":true},"obj_domStyle":{"height":"40px","padding":"3px 12px","border":"0px solid black","margin-right":"1px","margin-bottom":"1px","background-color":"rgb(65, 65, 65)","pointer-events":"none","cursor":"default","color":"gray","border-radius":"4px"}}],
@@ -10880,7 +10915,8 @@ var obj_InstanceJSONMap = new Map([
 [3688, {"obj_design":{"str_type":"loginpanel","str_name":"loginPanel","int_idRecord":"3688","str_idXDesign":"myId_87716375","str_idProject":"myId_11188187","str_tag":"loginpanel","str_classExtend":"panel","bln_isLocalHome":true,"arr_item":[{"obj_design":{"int_idRecord":"3685","str_type":"loginpanelform"}},{"obj_design":{"int_idRecord":"3686","str_type":"designfile"}},{"obj_design":{"int_idRecord":"3687","str_type":"loginbutton"}}],"bln_registerAtProject":true,"str_variableName":"loginpanel","str_createdDate":"2021-11-28 11:5:55","str_modifiedDate":"2021-11-28 11:5:55","bln_createRelease":true,"str_urlServer":"server.php","bln_useExternalButton":true},"obj_domStyle":{"overflow":"auto","zindex":"10","left":"0px","top":"0px","height":"100%","width":"100%","padding":"10px","flex-direction":"column","align-items":"center","background-color":"rgb(43, 44, 52)","font-family":"helvetica","visibility":"visible","display":"none"},"int_count":0}],
 [4276, {"obj_design":{"int_idRecord":"4276","str_idXDesign":"myId_88432288","str_name":"DesktopNavigationButton","str_variableName":"desktopnavigationbutton","str_type":"desktopnavigationbutton","str_tag":"desktopnavigationbutton","bln_registerAtProject":true,"str_classExtend":"svgblock","str_createdDate":"2022-0-24 8:28:4","str_modifiedDate":"2022-0-24 8:28:4","str_urlServer":"server.php","bln_createRelease":"false","bln_isLocalHome":true,"pointerEventSVG":"none","typeSVG":"image\/svg+xml","dataSVG":"\/app\/shared\/asset\/exit-button.svg","str_urlNavigate":"https:\/\/www.mycode.buzz","str_idProject":"myId_11188187"},"obj_domStyle":{"padding":"0px","align-self":"center","display":"block","data":"this.obj_design.dataSVG=obj_path.fn_getURLAssetFile(this.obj_design.str_type, \"default.svg\")","filter":"invert(69%) sepia(62%) saturate(5763%) hue-rotate(191deg) brightness(105%) contrast(101%)","width":"25px","height":"25px","margin-right":"30px","margin-left":"auto"}}],
 [4413, {"obj_design":{"str_type":"dynamiccontent","str_idXDesign":"myId_07401100","str_idProject":"myId_11188187","str_name":"My dynamiccontent","str_variableName":"mydynamiccontent","str_tag":"dynamiccontent","int_idRecord":"4413","bln_registerAtContainer":true,"str_classExtend":"flex","str_createdDate":"2022-02-09 14:51:40","str_modifiedDate":"2022-02-09 14:51:40"},"obj_domStyle":{"cursor":"default","display":"flex","flex-wrap":"wrap","height":"100%","width":"100%","overflow":"auto"}}],
-[4423, {"obj_design":{"str_type":"dynamiccontent","str_idXDesign":"myId_01643443","str_idProject":"myId_11188187","str_name":"My dynamiccontent","str_variableName":"mydynamiccontent","str_tag":"dynamiccontent","int_idRecord":"4423","bln_registerAtContainer":true,"str_classExtend":"flex","str_createdDate":"2022-02-09 14:52:43","str_modifiedDate":"2022-02-09 14:52:43"},"obj_domStyle":{"cursor":"default","display":"flex","flex-wrap":"wrap","height":"100%","width":"100%","overflow":"auto"}}]
+[4423, {"obj_design":{"str_type":"dynamiccontent","str_idXDesign":"myId_01643443","str_idProject":"myId_11188187","str_name":"My dynamiccontent","str_variableName":"mydynamiccontent","str_tag":"dynamiccontent","int_idRecord":"4423","bln_registerAtContainer":true,"str_classExtend":"flex","str_createdDate":"2022-02-09 14:52:43","str_modifiedDate":"2022-02-09 14:52:43"},"obj_domStyle":{"cursor":"default","display":"flex","flex-wrap":"wrap","height":"100%","width":"100%","overflow":"auto"}}],
+[4611, {"obj_design":{"str_type":"xdesign1_saveproject","str_name":"xdesign1_saveproject","int_idRecord":4611,"str_tag":"button","str_content":"My button","str_classExtend":"button","str_text":"Save","bln_isLocalHome":true,"bln_registerAtContainer":true,"str_idXDesign":"myId_69116086","str_idProject":"myId_11188187","str_variableName":"xdesign1_saveproject","str_createdDate":"2022-0-30 18:44:19","str_modifiedDate":"2022-0-30 18:44:19","bln_typeable":true,"str_urlServer":"server.php","bln_createRelease":"false","str_categoryList":"XDesign","bln_palettePin":true},"obj_domProperty":{"innerText":"Save"},"obj_domStyle":{"height":"40px","padding":"3px 12px","border":"0px solid black","cursor":"pointer","margin-right":"1px","margin-bottom":"1px","background-color":"rgb(65, 65, 65)","color":"white","border-radius":"4px"}}]
 ]);
 /*END INSTANCE JSON MAP//*/
 

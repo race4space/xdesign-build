@@ -48,7 +48,8 @@ class DesignDelegate{
 
         let obj_item;                         
         
-        obj_delegator.bln_removeId=true;        
+        obj_delegator.bln_removeId=true;  
+        obj_ini.bln_removeId=true;          
         obj_item=obj_delegator.fn_addItem(obj_ini);//ServerSideItem                                                
         
         if(!obj_item){            
@@ -74,39 +75,51 @@ class DesignDelegate{
     }
     fn_removeId(){      
 
-        //called by setup
-        
         let obj_delegator=this.obj_delegator;
-        
+        this.fn_removeIdFromItem(obj_delegator);
+    }
+    fn_removeIdFromItem(obj_item){      
 
-        let bln_locked=obj_delegator.obj_design.bln_lockComponent;              
+        //calld from a number of funcitons including setup        
+
+        let bln_locked=obj_item.obj_design.bln_lockComponent;              
         bln_locked=obj_shared.fn_parseBool(bln_locked);
         if(bln_locked){        
-          console.log("bln_locked");
+          //console.log("bln_locked");
           return;
         } 
 
-        let bln_removeId=obj_delegator.bln_removeId;
+        let bln_removeId=obj_item.bln_removeId;
         bln_removeId=obj_shared.fn_parseBool(bln_removeId);                               
         if(!bln_removeId){
+            //console.log("bln_removeId is false");
             return;
         }
+        else{
+            //console.log("bln_removeId is true");
+        }
 
-        obj_delegator.bln_removeId=false;        
+        obj_item.bln_removeId=false;  
 
-        let bln_maintainId=obj_delegator.obj_design.bln_maintainId ;                                
+        let bln_maintainId=obj_item.obj_design.bln_maintainId ;                                
         bln_maintainId=obj_shared.fn_parseBool(bln_maintainId);                               
         if(bln_maintainId){
             return;
         }        
     
-        obj_delegator.obj_design.int_idRecord=0; 
-        obj_delegator.obj_design.bln_palettePin=false;        
-        obj_delegator.obj_design.bln_projectPin=false;              
-        obj_delegator.obj_design.str_categoryList=false;              
+        obj_item.obj_design.int_idRecord=0; 
+        obj_item.obj_design.bln_palettePin=false;        
+        obj_item.obj_design.bln_projectPin=false;              
+        obj_item.obj_design.str_categoryList=false;              
+        obj_item.obj_design.int_modeExecute=obj_holder.int_modeEdit;                            
 
-        obj_delegator.fn_setIDXDesign();
-        obj_delegator.obj_design.int_modeExecute=obj_holder.int_modeEdit;                            
+        
+        let arr=obj_item.obj_design.arr_item;        
+        for(let i=0;i<arr.length;i++){
+            obj_item=arr[i];          
+            obj_item.bln_removeId=true;                            
+            this.fn_removeIdFromItem(obj_item);            
+        }
     }
     fn_listenEventDesign(){
 
@@ -192,7 +205,19 @@ class DesignDelegate{
                 obj_item.obj_designDelegate.fn_setChildrenModeExecute(int_modeExecute);
             }
         }
-    }     
+    }    
+    fn_setParentModeExecute(int_modeExecute){                  
+        
+        let obj_delegator=this.obj_delegator;                  
+        let obj_container=obj_delegator.fn_getParentComponent();
+        if(!obj_container){return;}
+        obj_container.obj_design.int_modeExecute=int_modeExecute;            
+        if(obj_container.obj_designDelegate){
+            obj_container.obj_designDelegate.fn_setParentModeExecute(int_modeExecute);
+        }
+        
+    }    
+    
     fn_setPaletteSelected(bln_maintainMap){                         
 
         //console.log("DESIGN DELEGATE fn_setPaletteSelected");

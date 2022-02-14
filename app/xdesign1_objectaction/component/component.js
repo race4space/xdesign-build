@@ -271,7 +271,7 @@
             //obj_ini.obj_theme=this.obj_theme;
             obj_ini.obj_design.str_linkId=obj_selected.obj_design.str_idXDesign;                  
             obj_ini.obj_design.str_nameEventClick=obj_project.obj_holder.str_prefix + "myDesignerButtonClick";
-            obj_ini.obj_design.str_valueEventClick="fn_saveAsComponent";
+            obj_ini.obj_design.str_valueEventClick="fn_saveAsProject";
             if(!obj_project.LocationMatchInstance){bln_disabled=true;}//CHECK SERVER LOCKED                        
             obj_ini.obj_domProperty.disabled=bln_disabled;         
             if(!bln_disabled){obj_item=obj_container.fn_addItem(obj_ini);}            

@@ -14,7 +14,7 @@
                 this.obj_design.bln_isGenericTag=true;                  
 
                 this.obj_design.str_urlServer="server.php";
-                this.obj_holder.bln_debugServer=true;
+                this.obj_holder.bln_debugServer=false;
               }
 
               fn_onStateChange(){                          

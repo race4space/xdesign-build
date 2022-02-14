@@ -34,7 +34,7 @@
       //console.log("TAG fn_getContent: " + obj_project.obj_palettSelected);          
 
       let obj_container=this.fn_getParentComponent();
-        console.log("obj_container.obj_design.bln_pin: " + obj_container.obj_design.bln_pin);
+        //console.log("obj_container.obj_design.bln_pin: " + obj_container.obj_design.bln_pin);
         if(obj_container.obj_design.bln_pin===undefined){
           obj_container.obj_design.bln_pin=true;
           //console.log("turn pin on");
@@ -186,35 +186,16 @@
       
       obj_clipboard.fn_copy(obj_item);
       let obj_copy=obj_clipboard.fn_get();     
-      
-      obj_project.fn_removeId(obj_copy);            
+
+      obj_copy.bln_removeId=true;     
+      let str_categoryList=obj_copy.obj_design.str_categoryList;       
+      obj_project.fn_removeId(obj_copy);  
+      obj_copy.obj_design.str_idXDesign="";      
+      obj_copy.obj_design.str_categoryList=str_categoryList;      
 
       obj_item.obj_designDelegate.fn_setPaletteSelected();       
     }
-    deprecate_fn_removeId(obj_item){   
-
-      let bln_locked=obj_item.obj_design.bln_lockComponent;              
-      bln_locked=obj_shared.fn_parseBool(bln_locked);
-      if(bln_locked){        
-        return;
-      }       
-      
-      obj_item.obj_design.int_idRecord=0;      
-      obj_item.obj_design.bln_palettePin=false;        
-      obj_item.obj_design.bln_projectPin=false;              
-      obj_item.obj_design.str_categoryList="";              
-      
-      let str_method="fn_setIDXDesign";        
-      if(obj_item && obj_item[str_method]){
-        obj_item[str_method]();
-      }                  
-      obj_item.obj_design.int_modeExecute=obj_holder.int_modeEdit;              
-
-      let arr=obj_item.obj_design.arr_item;
-      for(let i=0;i<arr.length;i++){            
-          this.fn_removeId(arr[i]);
-      }
-    } 
+    
     fn_pasteTag(){      
       let obj_item=obj_project.obj_palettSelected;            
       let obj_localHome=obj_item.fn_getLocalHome();
@@ -222,7 +203,9 @@
       if(!obj_container){return;}
 
       obj_item=obj_clipboard.fn_paste(obj_container);             
-      obj_item.obj_design.int_modeExecute=obj_holder.int_modeEdit;      
+      obj_item.obj_design.int_modeExecute=obj_holder.int_modeEdit;   
+      obj_item.fn_setIDXDesign();      
+   
       obj_item.obj_designDelegate.fn_setPaletteSelected();          
     }
     fn_insertTag(){      
@@ -232,6 +215,7 @@
       if(!obj_insertNextTo){return;}
       
       obj_item=obj_clipboard.fn_insert(obj_insertNextTo);                         
+      obj_item.fn_setIDXDesign();      
       obj_item.obj_designDelegate.fn_setPaletteSelected();          
     }
     fn_cutTag(){
@@ -263,6 +247,7 @@
       let obj_item=obj_project.obj_palettSelected;            
       obj_item.obj_design.int_modeExecute=obj_holder.int_modeEdit;      
       obj_item.obj_designDelegate.fn_setChildrenModeExecute(obj_holder.int_modeEdit);//new change to also set children to editable
+      obj_item.obj_designDelegate.fn_setParentModeExecute(obj_holder.int_modeEdit);//new change to also set aéé parent to editable
       obj_item.obj_designDelegate.fn_setPaletteSelected();       
     }    
     fn_setEazyGridSwitch  (){

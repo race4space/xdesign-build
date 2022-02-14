@@ -599,7 +599,8 @@ class BaseObject extends LevelObject{
         
         //this.fn_setIsContainer(false);               
 
-        if(this.obj_design.str_idXDesign==undefined){this.fn_setIDXDesign();}
+        if(this.obj_design.str_idXDesign===undefined){this.fn_setIDXDesign();}
+        if(this.obj_design.str_idXDesign===""){this.fn_setIDXDesign();}
         if(obj_project){
             let str_idProject, str_idXDesign;
             str_idProject=this.obj_design.str_idProject;
@@ -725,7 +726,7 @@ class BaseObject extends LevelObject{
 
     fn_checkIni(obj_ini){
 
-        let str_type, int_idRecord, bln_removeId;        
+        let str_type, int_idRecord;        
 
         //PLACE NUMBER 1 WHEN OBJ INI CAN GET KNOCKED OFF
 
@@ -746,7 +747,7 @@ class BaseObject extends LevelObject{
 
     fn_createChildObject(obj_ini){
 
-        let str_type, int_idRecord, obj_item, bln_removeId;        
+        let str_type, int_idRecord, obj_item;        
 
         //PLACE NUMBER 2 WHEN OBJ INI CAN GET KNOCKED OFF
 

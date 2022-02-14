@@ -142,9 +142,13 @@
       //*/
     }    
     fn_removeId(obj_item){      
-      
-      this.obj_designDelegate.fn_removeId(obj_item);
-      //this.obj_holder.obj_xdesign1_managerpalette.fn_removeId(obj_item);
+      if(this!==obj_projectTarget){
+        obj_projectTarget.obj_designDelegate.fn_removeIdFromItem(obj_item);
+        return;        
+      }
+      else{
+        this.obj_designDelegate.fn_removeIdFromItem(obj_item);
+      }
     }      
     fn_getGlass(){
       return this.obj_holder.obj_xdesign1_padiframe.dom_obj.contentWindow;
@@ -235,12 +239,11 @@
       //console.log("XDESIGN1 fn_saveComponent click button")
       this.obj_holder.obj_xdesign1_managerproject.fn_saveComponent(this.obj_palettSelected);
     }
-    fn_saveAsComponent(){        
-      this.obj_holder.obj_xdesign1_managerproject.fn_saveasProject();
+    fn_saveAsProject(){        
+      this.obj_holder.obj_xdesign1_managerproject.fn_saveAsProject();
     }
-    onSaveComponent(obj_post){//callback function from save function
-      //console.log("XDESIGN1 onSaveComponent call back function")
-      this.obj_holder.obj_xdesign1_managerproject.fn_onSaveComponent(obj_post);        
+    onServerManagerCompleteSave(obj_post){//callback function from save function      
+      this.obj_holder.obj_xdesign1_managerproject.onServerManagerCompleteSave(obj_post);        
 
       /*
       if(obj_project){

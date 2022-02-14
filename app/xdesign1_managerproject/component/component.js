@@ -27,7 +27,8 @@
             bln_value=false;                        
             if(obj_projectTarget){              
               if(obj_projectTarget.obj_design.int_idRecord){
-                bln_value=true;               
+                bln_value=true;                               
+            
               }
             }                                    
 
@@ -45,6 +46,12 @@
             if(obj_item){obj_item.fn_setEnabled(bln_value)};            
             obj_item=this.obj_holder.obj_xdesign1_releaseproject;       
             if(obj_item){obj_item.fn_setEnabled(bln_value)}; 
+            obj_item=this.obj_holder.obj_xdesign1_saveproject;       
+            if(obj_item){obj_item.fn_setEnabled(bln_value)};
+            if(obj_projectTarget){              
+              if(obj_item){obj_item.fn_setEnabled(true)};
+            }
+
             
             this.obj_holder.obj_container.fn_setEnabled();                    
           }
@@ -258,15 +265,31 @@
           }
           fn_onToggleProjectPin(){                  
             obj_project.fn_onStateChange();
-          }  
-          fn_saveasProject(){//This relates to saving a component within the Project Isntance ie from the aciton button                       
+          } 
+          fn_saveProject(){//This relates to saving a component via the Global Save Button
+      
+            obj_project.fn_close();
+            
+            let obj_serverManager=obj_project.fn_getComponent("xdesign1_designfile");      
+            let obj_ini=new Object;
+            obj_ini.ObjectInstance=obj_projectTarget;                   
+            this.obj_holder.ObjectSaveInstance=obj_projectTarget;                          
+            obj_serverManager.fn_saveComponent(obj_ini);
+          }
+
+          fn_saveAsProject(){//This relates to saving a component within the Project Isntance ie from the aciton button                       
     
             let obj_item, str_name;
       
             obj_item=obj_project.obj_palettSelected;
             
-            obj_item.fn_setLocked(false);      
-            obj_project.fn_removeId(obj_item);
+            obj_item.fn_setLocked(false);    
+            obj_item.bln_removeId=true;
+            let str_categoryList=obj_item.obj_design.str_categoryList;
+            obj_project.fn_removeId(obj_item);            
+            obj_item.fn_setIDXDesign();      
+            obj_item.obj_design.str_categoryList=str_categoryList;      
+            
             obj_item.fn_setLocked(true);                  
       
             let str_addon=" Copy";      
@@ -282,18 +305,7 @@
             str_new=str_orig.replace(str_addon, "");
             str_new+=str_addon;
             return str_new;
-          }      
-          fn_saveProject(){
-            //globabl save utility, not currently in use, due to the save hole
-            //requires to "look" for non saved areas
-      
-            obj_project.fn_close();
-            
-            let obj_serverManager=obj_project.fn_getComponent("xdesign1_designfile");      
-            let obj_ini=new Object;
-            obj_ini.ObjectInstance=obj_projectTarget;                   
-            obj_serverManager.fn_saveComponent(obj_ini);
-          }
+          }                
           fn_saveComponent(obj_item){//This relates to saving a component within the Project Isntance ie from the action button      
 
             //console.log("fn_saveComponent");
@@ -302,16 +314,16 @@
             let obj_serverManager=obj_project.fn_getComponent("xdesign1_designfile");      
             let obj_ini=new Object;
             obj_ini.ObjectInstance=obj_item;                                         
-            this.obj_holder.ObjectInstance=obj_item;              
+            this.obj_holder.ObjectSaveInstance=obj_item;              
             obj_serverManager.fn_saveComponent(obj_ini);                    
           }
           //*
-          fn_onSaveComponent(){//CallBack Function from designfile            
+          onServerManagerCompleteSave(){//CallBack Function from designfile            
             this.obj_holder.obj_container.fn_setText(obj_projectTarget.obj_design.str_name);            
             obj_projectTarget.obj_design.str_lastVersionDate="notset";
             this.fn_onStateChange();           
-            console.log("Saved: " + obj_project.obj_palettSelected.obj_design.str_name);   
-            this.obj_holder.ObjectInstance.obj_designDelegate.fn_setPaletteSelected();            
+            console.log("Saved: " + this.obj_holder.ObjectSaveInstance.obj_design.str_name);             
+            this.obj_holder.ObjectSaveInstance.obj_designDelegate.fn_setPaletteSelected();            
           } 
           //*/                       
 

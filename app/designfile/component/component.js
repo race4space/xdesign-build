@@ -108,8 +108,8 @@ class designfile extends AJAX {
                         
                     }                    
                 }             
-                if(bln_debug){obj_instance.fn_debug("COMPLETE XDESIGN1 onSaveComponent");}   
-                this.obj_holder.obj_container.onSaveComponent(obj_iniSave); //XDESIGN Program CallBack Function                                 
+                if(bln_debug){obj_instance.fn_debug("COMPLETE XDESIGN1 on Save Component");}   
+                this.obj_holder.obj_container.onServerManagerCompleteSave(obj_iniSave); //XDESIGN Program CallBack Function                                 
             }           
         }
         //*/
@@ -229,7 +229,7 @@ class designfile extends AJAX {
         let obj_instance=obj_ini.obj_instance;
         
         if(obj_instance){            
-            obj_post.DesignId=obj_instance.obj_design.str_idXDesign;                                
+            obj_post.DesignId=obj_instance.obj_design.str_idXDesign;            
             obj_post.RecordName=obj_instance.obj_design.str_name;
             obj_post.RecordShortName=obj_instance.obj_design.str_variableName;
             

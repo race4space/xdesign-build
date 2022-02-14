@@ -524,34 +524,6 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
     return bln_value;
   }  
 
-deprecate_fn_removeId(obj_item){      
-    
-
-    let bln_locked=obj_item.obj_design.bln_lockComponent;              
-    bln_locked=obj_shared.fn_parseBool(bln_locked);
-    if(bln_locked){        
-      console.log("bln_locked");
-      return;
-    } 
-
-    obj_item.obj_design.int_idRecord=0;
-    obj_item.obj_design.bln_palettePin=false;        
-    obj_item.obj_design.bln_projectPin=false;              
-    obj_item.obj_design.str_cateogryList="";              
-               
-    obj_item.fn_setIDXDesign();
-    obj_item.obj_design.int_modeExecute=obj_holder.int_modeEdit;              
-
-    var arr_item=obj_item.obj_design.arr_item;
-    console.log("arr_item: " +  arr_item.length);
-    
-    for(var i=0;i<arr_item.length;i++){            
-        obj_item=arr_item[i];
-        console.log("i: " +  i);
-        console.log("int_idRecord: " +  obj_item.obj_design.int_idRecord);        
-        this.fn_removeId(obj_item);
-    }
-  }
 }//END CLS
 //END TAG
 //END component/xdesign1_managerpalette

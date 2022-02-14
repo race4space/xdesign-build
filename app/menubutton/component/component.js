@@ -151,7 +151,7 @@ class menubutton extends component {
     }    
     fn_toggle(bln_isOpen=false){                
         if(bln_isOpen){            
-            this.obj_design.bln_pin=false;
+            //this.obj_design.bln_pin=false;
             this.fn_closeContent();
         }
         else{            

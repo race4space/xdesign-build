@@ -62,7 +62,7 @@ class eazygrid extends component {
     }
     
     fn_addItem(obj_ini){
-      console.log("fn_addItem");
+      //console.log("fn_addItem");
       let obj_item;        
       if(obj_ini.obj_design.str_type==undefined){
         obj_ini.obj_design.str_type="eazygriditem";
