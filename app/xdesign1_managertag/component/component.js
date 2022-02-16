@@ -178,35 +178,26 @@
       this.obj_holder.obj_xdesign1_objectmap.fn_linkCompassItem(obj_target);
     }
     fn_copyTag(){
-
       let obj_item=obj_project.obj_palettSelected;      
-      let obj_localHome=obj_item.fn_getLocalHome();
-
-      if(!obj_clipboard.fn_validateCopy(obj_item, obj_localHome)){return;}
-      
-      obj_clipboard.fn_copy(obj_item);
-      let obj_copy=obj_clipboard.fn_get();     
-
-      obj_copy.bln_removeId=true;     
-      let str_categoryList=obj_copy.obj_design.str_categoryList;       
-      obj_project.fn_removeId(obj_copy);  
-      obj_copy.obj_design.str_idXDesign="";      
-      obj_copy.obj_design.str_categoryList=str_categoryList;      
-
+      obj_clipboard.fn_copy(obj_item);      
       obj_item.obj_designDelegate.fn_setPaletteSelected();       
     }
     
     fn_pasteTag(){      
       let obj_item=obj_project.obj_palettSelected;            
       let obj_localHome=obj_item.fn_getLocalHome();
-      let obj_container=obj_clipboard.fn_validatePaste(obj_item, obj_localHome);
+      let obj_container=obj_clipboard.fn_validatePaste(obj_item);
       if(!obj_container){return;}
 
       obj_item=obj_clipboard.fn_paste(obj_container);             
-      obj_item.obj_design.int_modeExecute=obj_holder.int_modeEdit;   
-      obj_item.fn_setIDXDesign();      
+      obj_item.obj_design.int_modeExecute=obj_holder.int_modeEdit;         
    
-      obj_item.obj_designDelegate.fn_setPaletteSelected();          
+      if(obj_item.obj_designDelegate){
+        obj_item.obj_designDelegate.fn_setPaletteSelected();          
+      }
+      else{
+        obj_item.fn_debug("PASTE Design Delegate is false");
+      }
     }
     fn_insertTag(){      
       let obj_item=obj_project.obj_palettSelected;            
@@ -215,29 +206,28 @@
       if(!obj_insertNextTo){return;}
       
       obj_item=obj_clipboard.fn_insert(obj_insertNextTo);                         
-      obj_item.fn_setIDXDesign();      
       obj_item.obj_designDelegate.fn_setPaletteSelected();          
     }
     fn_cutTag(){
-      let obj_item=obj_project.obj_palettSelected;      
-      let obj_localHome=obj_item.fn_getLocalHome();
-
-      if(!obj_clipboard.fn_validateCut(obj_item, obj_localHome)){return;}
+      let obj_item=obj_project.obj_palettSelected;            
       obj_clipboard.fn_copy(obj_item);
       this.fn_deleteTag();
     }
     fn_deleteTag(){
       let obj_item=obj_project.obj_palettSelected;            
       let obj_localHome=obj_item.fn_getLocalHome();
-      let bln_status=obj_clipboard.fn_validateDelete(obj_item, obj_localHome);
+      let bln_status=obj_clipboard.fn_validateDelete(obj_item);
       if(!bln_status){return;}
 
       let obj_container=obj_item.obj_holder.obj_container;
       obj_item.obj_designDelegate.fn_setPaletteDeSelected();                      
-      obj_container.fn_removeItem(obj_item);
-
+      let int_index=obj_container.fn_removeItem(obj_item);      
       obj_container.obj_design.int_modeExecute=obj_holder.int_modeEdit;      
       obj_container.obj_designDelegate.fn_setPaletteSelected();      
+    }        
+    fn_selectHome(){            
+      obj_clipboard.fn_clear();
+      obj_projectTarget.obj_designDelegate.fn_setPaletteSelected();
     }    
     fn_selectLocalHome(){      
       let obj_localHome=obj_project.obj_palettSelected.fn_getNextLocalHome();      

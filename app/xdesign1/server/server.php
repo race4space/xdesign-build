@@ -20,7 +20,7 @@ class xdesign1{
         $obj_post->RecordId=$row["id"];
         $obj_post->RecordName=$row["Name"];        
         $obj_post->RecordType=$row["Type"];        
-        $obj_post->ObjectData=$row["Serialize"];        
+        $obj_post->ObjectData=$row["Serialize"];                
         $this->fn_setLocationMatchInstance();       
       }
     }
@@ -109,7 +109,7 @@ class xdesign1{
         $obj_post->LastVersionDate="1101-01-01 00:00:00";
       }
       
-
+      $this->bln_sendBackObjectDate=true;
       
       if(empty($obj_post->IsRoot)){
         $obj_post->IsRoot=false;
@@ -463,9 +463,10 @@ class xdesign1{
       
       $this->fn_saveComponent();      
       //Save id record direct into the object data
-      //*/      
+      //*/            
       
-      $obj_post->ObjectData="{}";
+      
+      //$obj_post->ObjectData="{}";
     }               
 
     function fn_existInstance($int_idRecord){
@@ -541,6 +542,7 @@ class xdesign1{
       $obj_post->ModifiedDate=$str_modifiedDate;         
       //*/
 
+      
       if($int_dynamicPin){
         return;
       }      
@@ -551,7 +553,10 @@ class xdesign1{
       
       //UPDATE DATABASE FROM SOFTWARE        
       $this->fn_updateInstanceToDatabase($str_nameRecord, $str_nameShortRecord, $str_typeRecord, $int_toggleProjectPin, $int_protectedProjectPin, $int_projectPin, $int_palettePin, $str_lastVersionDate, $str_categoryList,  $str_dependentId, $str_objectData, $str_locationID, $str_createdDate, $str_modifiedDate, $int_idRecord);
-      $obj_post->ObjectData="{}";            
+      if(empty($this->bln_sendBackObjectDate)){
+        $obj_post->ObjectData="{}";
+      }      
+
 
       $this->fn_exportInstanceToFile($str_nameRecord, $str_nameShortRecord, $str_typeRecord, $int_toggleProjectPin, $int_protectedProjectPin, $int_projectPin, $int_palettePin, $str_lastVersionDate, $str_categoryList, $str_dependentId, $str_objectData, $str_locationID, $str_createdDate, $str_modifiedDate, $int_idRecord);                
             
@@ -2297,7 +2302,7 @@ function fn_XDesigner_maintain(){
     $stmt = $this->pdo_user->prepare($str_sql);
     $stmt->execute();           
 
-    $str_sql="UPDATE `instance` SET MaintainStatus=1 WHERE (ProjectPin OR ProtectedProjectPin OR PalettePin OR CategoryList<>'') OR `Type`='category' ";            
+    $str_sql="UPDATE `instance` SET MaintainStatus=1 WHERE (ProjectPin OR ProtectedProjectPin OR PalettePin OR (CategoryList IS NOT NULL AND CategoryList<>'notset' AND CategoryList<>'')) OR `Type`='category' ";            
     $stmt = $this->pdo_user->prepare($str_sql);
     $stmt->execute();
     

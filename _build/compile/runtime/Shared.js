@@ -232,7 +232,12 @@ class Shared{
       return 'rgb(' + this.fn_getRandom(255) + ',' + this.fn_getRandom(255) + ',' + this.fn_getRandom(255) + ')';
     }
 
+    fn_flipAxis(int_axis){
+      if(int_axis==obj_const.int_axisHorizontal){return obj_const.int_axisVertical;}
+      if(int_axis==obj_const.int_axisVertical){return obj_const.int_axisHorizontal;}
+      return int_axis;
 
+    }
     fn_flipBool(bln_val){
       if(bln_val){return false;}
       else{return true;}
@@ -298,18 +303,30 @@ class Shared{
       return arrOfArrays;
   }
 
+  
+
     fn_setMapItem(obj_map, foo_key, foo_value){
+      //console.log("fn_setMapItem foo_key: " + foo_key);
+      //*
+      //console.log(foo_key);
+      //console.log(foo_value);      
       obj_map.set(foo_key, foo_value);
+      //*/
     }
     fn_getMapItem(obj_map, foo_key){
       return obj_map.get(foo_key);
     }   
-    fn_loopmap(myMap){   
-      console.log("START fn_loopmap");
+    fn_deletetMapItem(obj_map, foo_key){
+      //console.log("fn_deletetMapItem foo_key: " + foo_key);
+      return obj_map.delete(foo_key);
+    }   
+    
+    fn_debugMap(myMap){   
+      console.log("START fn_debugMap");
       for (const [key, value] of myMap.entries()) {
           console.log(key, value);
         }
-        console.log("END fn_loopmap");
+        console.log("END fn_debugMap");
 
     }   
 

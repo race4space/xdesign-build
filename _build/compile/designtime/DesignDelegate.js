@@ -89,8 +89,10 @@ class DesignDelegate{
 
         let bln_removeId=obj_item.bln_removeId;
         bln_removeId=obj_shared.fn_parseBool(bln_removeId);                               
+
         if(!bln_removeId){
             //console.log("bln_removeId is false");
+            //obj_item.fn_debug("bln_removeId is false");
             return;
         }
         else{
@@ -104,13 +106,21 @@ class DesignDelegate{
         if(bln_maintainId){
             return;
         }        
+
+        
+        
     
         obj_item.obj_design.int_idRecord=0; 
         obj_item.obj_design.bln_palettePin=false;        
         obj_item.obj_design.bln_projectPin=false;              
         obj_item.obj_design.str_categoryList=false;              
         obj_item.obj_design.int_modeExecute=obj_holder.int_modeEdit;                            
-
+        
+        obj_item.obj_design.str_idXDesign="";
+        let str_method="fn_setIDXDesign";
+        if(obj_item && obj_item[str_method]){
+            obj_item[str_method]();
+        }
         
         let arr=obj_item.obj_design.arr_item;        
         for(let i=0;i<arr.length;i++){
@@ -118,6 +128,32 @@ class DesignDelegate{
             obj_item.bln_removeId=true;                            
             this.fn_removeIdFromItem(obj_item);            
         }
+    }
+    
+    fn_debugMap(){
+        obj_shared.fn_debugMap(obj_InstanceJSONMap);
+    }
+    fn_updateMap(ObjectData){
+
+        //console.log("fn_updateMap");
+
+        
+        let obj_delegator=this.obj_delegator;        
+        let int_idRecord=parseInt(obj_delegator.obj_design.int_idRecord);                
+        let obj_test;
+
+        obj_test=obj_shared.fn_getMapItem(obj_InstanceJSONMap, int_idRecord);        
+        //console.log("1 obj_test: " + obj_test);
+        //console.log(obj_test);
+
+        obj_shared.fn_setMapItem(obj_InstanceJSONMap, int_idRecord, ObjectData);                        
+        
+        obj_test=obj_shared.fn_getMapItem(obj_InstanceJSONMap, int_idRecord);        
+        //console.log("2 obj_test: " + obj_test);
+        //console.log(obj_test);
+        
+        //obj_shared.fn_debugMap(obj_InstanceJSONMap);
+
     }
     fn_listenEventDesign(){
 
@@ -243,8 +279,12 @@ class DesignDelegate{
         
         if(obj_delegator.obj_design.bln_dynamicPin){
             //obj_delegator.obj_design.int_modeExecute=obj_holder.int_modeReadOnly;
-        }        
-        
+        }  
+
+        obj_delegator.obj_design.int_modeExecute=obj_holder.int_modeEdit;                      
+        this.fn_setChildrenModeExecute(obj_holder.int_modeEdit);//new change to also set children to editable
+        this.fn_setParentModeExecute(obj_holder.int_modeEdit);//new change to also set aéé parent to editable
+
         obj_projectParent.fn_onPaletteItemSelected();//update environment, property sheets etc                
     } 
     

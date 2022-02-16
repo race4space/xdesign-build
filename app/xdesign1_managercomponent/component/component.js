@@ -20,12 +20,24 @@
             let bln_value=true;
             if(!obj_project.LocationMatchInstance){bln_value=false;}                 
             this.obj_holder.obj_container.fn_setEnabled(bln_value);                    
-
-            this.fn_createTextEditor();      
           } 
-          fn_onPaletteItemSelected(){    
+          fn_getContent(){ 
             
-            //console.log("fn_onPaletteItemSelected");
+            this.fn_createTextEditor();      
+            
+            
+            let obj_selected=obj_project.obj_palettSelected;            
+            let str_componentCode=obj_selected.obj_holder.str_componentCode;                  
+            if(!str_componentCode){
+              this.fn_openComponentCode();
+              return;
+            }
+      
+            this.fn_displayComponentCode();
+          }           
+          fn_onPaletteItemSelected(){    
+
+            console.log("fn_onPaletteItemSelected");
             
             
             let str_text;       
@@ -40,15 +52,8 @@
             if(!obj_project.LocationMatchInstance){bln_value=false;}                 
             this.obj_holder.obj_container.fn_setEnabled(bln_value);                    
             
-            
-            let str_componentCode=obj_selected.obj_holder.str_componentCode;                  
-            if(!str_componentCode){
-              this.fn_openComponentCode();
-              return;
-            }
-      
-            this.fn_displayComponentCode();
-          }    
+          }
+          
       
           fn_openComponentCode(){
 
@@ -111,18 +116,20 @@
           }
           fn_displayComponentCode(){    
             
-            //console.log("fn_displayComponentCode");
+            console.log("fn_displayComponentCode");
       
             let obj_ini;         
             let str_content; 
             let obj_selected=obj_projectTarget;
             str_content=obj_selected.obj_holder.str_componentCode;      
-
-            let obj_texteditor=this.fn_getComponent("xdesign1_componenttexteditor");
-      
-            if(!obj_texteditor){                        
-              //yikes add text editr
+            
+            let obj_texteditor=this.fn_getComponent("xdesign1_componenttexteditor");                                    
+            
+            //console.log("obj_texteditor: " + obj_texteditor);
+            if(!obj_texteditor){                           
+              return;
             }      
+            
       
             let bln_useHTML=true;
             obj_texteditor.obj_design.bln_useHTML=bln_useHTML;
@@ -131,6 +138,7 @@
       
             obj_texteditor.fn_clearText();
       
+            
             if(str_content){      
               obj_texteditor.fn_putText(str_content);                
             }      
@@ -142,9 +150,14 @@
           } 
           fn_createTextEditor(){
       
-            let obj_item;
-            let obj_dynamicContentHolder=this.fn_getComponent("ComposerDynamicContent");            
-            obj_dynamicContentHolder.fn_prepare();  
+            let obj_item;            
+            let obj_dynamiccontent=this.fn_getComponent("dynamiccontent");                                    
+            //console.log("obj_dynamiccontent: " + obj_dynamiccontent);
+            if(!obj_dynamiccontent){
+              return;
+            }
+
+            obj_dynamiccontent.fn_prepare();  
       
             let obj_ini=new Holder;    
             obj_ini.obj_design.bln_showToolbar=false;             
@@ -156,8 +169,10 @@
             obj_ini.obj_domStyle.height="300px";                            
             obj_ini.obj_domStyle.width="100%";
             obj_ini.obj_domStyle.width="100%";                                  
-            obj_item=obj_dynamicContentHolder.fn_addItem(obj_ini);
+            obj_item=obj_dynamiccontent.fn_addItem(obj_ini);
             this.fn_register(obj_item);      
+            //let obj_texteditor=this.fn_getComponent("xdesign1_componenttexteditor");                                    
+            //console.log("fn_createTextEditor obj_texteditor: " + obj_texteditor);
       
           }   
         }//END CLS

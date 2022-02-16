@@ -12,8 +12,8 @@ class eazygrid extends component {
       
       this.fn_setIsContainer(true);      
 
-      if(this.obj_design.bln_split===undefined){      
-        //this.obj_design.bln_split= false;
+      if(this.obj_design.int_axis===undefined){      
+        //this.obj_design.int_axis= 0;
       }
       
       
@@ -42,14 +42,16 @@ class eazygrid extends component {
     
     fn_beforeAddChildren(){      
       
-      if(this.obj_design.bln_split===undefined){        
+      
+      if(this.obj_design.int_axis===undefined){        
+        this.obj_design.int_axis=obj_const.int_axisHorizontal;
+        
         let obj_parent=this.fn_getParentComponent();
         if(obj_parent){
-          let obj_container=obj_parent.fn_getParentComponent();
-          this.obj_design.bln_split=false;
-          if(obj_container){              
-              let bln_value=obj_container.obj_design.bln_split;                        
-              this.obj_design.bln_split=obj_shared.fn_flipBool(bln_value);                            
+          let obj_container=obj_parent.fn_getParentComponent();          
+          if(obj_container && obj_container.obj_design.str_type==="eazygrid"){              
+              let int_value=obj_container.obj_design.int_axis;                        
+              this.obj_design.int_axis=obj_shared.fn_flipAxis(int_value);                            
           }
         }
       }            
@@ -124,7 +126,7 @@ class eazygrid extends component {
       this.obj_domStyle.gridTemplateRows=this.obj_design.str_gridTemplateDefault;
       this.obj_domStyle.gridTemplateColumns=this.obj_design.str_gridTemplateDefault;     
 
-      if(this.obj_design.bln_split===undefined){        
+      if(this.obj_design.int_axis===undefined){        
         return;
       }
       
@@ -144,11 +146,11 @@ class eazygrid extends component {
 
       //console.log(" eazygrid s: " + s);      
 
-      switch(this.obj_design.bln_split){
-            case(true):            
+      switch(this.obj_design.int_axis){
+            case(obj_const.int_axisVertical):            
               this.obj_domStyle.gridTemplateColumns=s;              
             break;
-            case(false):            
+            case(obj_const.int_axisHorizontal):            
               this.obj_domStyle.gridTemplateRows=s;
             break;
             default:              

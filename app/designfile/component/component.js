@@ -120,6 +120,7 @@ class designfile extends AJAX {
     fn_save(obj_ini){         
 
         let bln_debug=false;
+        let int_idRecord;
         
         
         let obj_instance=obj_ini.obj_instance;
@@ -130,6 +131,7 @@ class designfile extends AJAX {
         }        
 
         obj_instance=obj_ini.obj_instance;
+        int_idRecord=parseInt(obj_instance.obj_design.int_idRecord);                
         obj_instance.fn_onBeforeSave();        
 
         if(bln_debug){obj_instance.fn_debug("ENTER SAVE");}
@@ -150,6 +152,11 @@ class designfile extends AJAX {
         let obj_post=this.fn_formatPost(obj_ini);                       
 
         obj_post.ObjectData=this.fn_actionSerialize(obj_instance);//obj_post.ObjectData is now a JSON String        
+
+        
+        //obj_instance.obj_designDelegate.fn_updateMap(JSON.parse(obj_post.ObjectData));//update map        
+        
+
         if(bln_debug){obj_instance.fn_debug("BEFORE PUT POST");}
         this.fn_putPost(obj_post);
 
@@ -157,13 +164,31 @@ class designfile extends AJAX {
         
         //Very Important - do not fuck about with this
         obj_instance.obj_design.int_modeExecute=int_modeExecuteCopy;//put back in original mode
-        //Very Important - do not fuck about with this
+        //Very Important - do not fuck about with this       
+        
     }
     save(obj_post){ //native callback generally overidden                
+        //console.log("Design File Save Existing Record Id Native Call Back")        
+        //*
+        //console.log("save obj_post.Objectdata: " + obj_post.ObjectData);
+        //console.log(obj_post.ObjectData);
+        obj_post.ObjectInstance.obj_designDelegate.fn_updateMap(obj_post.ObjectData);//update map        
+        //*/
     }
     
     saveAs(obj_post){//native callback
-        obj_post.ObjectInstance.obj_design.int_idRecord=obj_post.RecordId;        
+        //console.log("Design File SaveAs New  Record Id Native Call Back")
+        
+        //*
+        //START REQUIRED DO NOT REMOVE
+        let int_idRecord=parseInt(obj_post.RecordId);        
+        obj_post.ObjectInstance.obj_design.int_idRecord=int_idRecord;
+        //END REQUIRED DO NOT REMOVE
+        //*/
+        //console.log("saveAs obj_post.Objectdata: " + obj_post.ObjectData);
+        //console.log(obj_post.ObjectData);
+        obj_post.ObjectInstance.obj_designDelegate.fn_updateMap(obj_post.ObjectData);//update map        
+        
     }
     openComponentCode(obj_post){//native callback
         //console.log("openComponentCode");        

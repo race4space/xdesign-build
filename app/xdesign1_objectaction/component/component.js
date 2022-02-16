@@ -19,12 +19,12 @@
           }    
           fn_onPaletteItemSelected(obj_arg){   
               
-              let obj_container, obj_item, obj_ini, arr;
+              let obj_container, obj_item, obj_ini, arr, int_modeExecute;
             let obj_table, obj_row, obj_cell;
             let str_text;
             let bln_locked, bln_disabled, bln_dynamicPin;
             
-            let obj_selected=obj_arg.obj_selected;
+            let obj_selected=obj_arg.obj_selected;                        
             let obj_parent;
             bln_dynamicPin=obj_selected.obj_design.bln_dynamicPin;
             
@@ -69,7 +69,7 @@
             obj_container=obj_cell;          
             
             bln_disabled=false;      
-            if(!obj_clipboard.fn_validateCopy(obj_selected, obj_localHome)){  
+            if(!obj_clipboard.fn_validateCopy(obj_selected)){  
               bln_disabled=true;    
             }            
       
@@ -87,7 +87,7 @@
             //ADD BUTTON TO VALUE CELL
       
             bln_disabled=false;      
-            if(!obj_clipboard.fn_validatePaste(obj_selected, obj_localHome)){  
+            if(!obj_clipboard.fn_validatePaste(obj_selected)){  
               bln_disabled=true;    
             }            
             
@@ -106,7 +106,7 @@
             //ADD BUTTON TO VALUE CELL
       
             bln_disabled=false;      
-            if(!obj_clipboard.fn_validateCut(obj_selected, obj_localHome)){  
+            if(!obj_clipboard.fn_validateCopy(obj_selected)){  
               bln_disabled=true;    
             }
             
@@ -121,56 +121,6 @@
             if(!obj_project.LocationMatchInstance){bln_disabled=true;}//CHECK SERVER LOCKED            
             obj_ini.obj_domProperty.disabled=bln_disabled;    
             obj_item=obj_container.fn_addItem(obj_ini);//BootItem            
-            //ADD BUTTON TO VALUE CELL
-      
-            bln_disabled=false;      
-            if(!obj_clipboard.fn_validateDelete(obj_selected, obj_localHome)){  
-              bln_disabled=true;    
-            }
-            
-            //ADD BUTTON TO VALUE CELL
-            obj_ini=new Holder;
-            obj_ini.obj_design.str_type="button";
-            obj_ini.obj_design.str_name="Delete";          
-            //obj_ini.obj_theme=this.obj_theme;
-            obj_ini.obj_design.str_linkId=obj_selected.obj_design.str_idXDesign;              
-            obj_ini.obj_design.str_nameEventClick=obj_project.obj_holder.str_prefix + "myDesignerButtonClick";
-            obj_ini.obj_design.str_valueEventClick="fn_deleteTag";  
-            if(!obj_project.LocationMatchInstance){bln_disabled=true;}//CHECK SERVER LOCKED
-            obj_ini.obj_domProperty.disabled=bln_disabled;    
-            obj_item=obj_container.fn_addItem(obj_ini);//BootItem               
-            //ADD BUTTON TO VALUE CELL
-            
-      
-            //*
-            switch(obj_selected.obj_design.str_type.toLowerCase()){
-              case "eazygrid":
-                this.fn_getEazyGridSwitch(obj_selected, obj_container);
-                break;
-            }
-            //*/
-      
-            //ADD ROW
-            obj_row=obj_table.fn_addItem();//BootItem      
-            obj_ini=new Holder;  
-            //obj_ini.obj_theme=this.obj_theme;
-            obj_cell=obj_row.fn_addItem(obj_ini);//BootItem          
-            //obj_cell.fn_setStyleProperty("background-color", this.obj_theme.backgroundColor);          
-            obj_container=obj_cell;  
-
-            bln_disabled=false;                  
-      
-            //ADD BUTTON TO VALUE CELL
-            obj_ini=new Holder;
-            obj_ini.obj_design.str_type="button";
-            obj_ini.obj_design.str_name="Local Home";          
-            //obj_ini.obj_theme=this.obj_theme;            
-            obj_ini.obj_design.str_linkId=obj_selected.obj_design.str_idXDesign;                      
-            obj_ini.obj_design.str_nameEventClick=obj_project.obj_holder.str_prefix + "myDesignerButtonClick";
-            obj_ini.obj_design.str_valueEventClick="fn_selectLocalHome";  
-            if(!obj_project.LocationMatchInstance){bln_disabled=true;}//CHECK SERVER LOCKED
-            obj_ini.obj_domProperty.disabled=bln_disabled;    
-            obj_container.fn_addItem(obj_ini);//BootItem      
             //ADD BUTTON TO VALUE CELL
 
             bln_disabled=false;      
@@ -191,6 +141,27 @@
             obj_item=obj_container.fn_addItem(obj_ini);//BootItem            
             //ADD BUTTON TO VALUE CELL
       
+            //*
+            switch(obj_selected.obj_design.str_type.toLowerCase()){
+              case "eazygrid":
+                let obj_ini;
+                //ADD BUTTON TO VALUE CELL
+                bln_disabled=false;      
+                if(!obj_clipboard.fn_validateDelete(obj_selected)){  
+                  bln_disabled=true;    
+                }
+                obj_ini=new Holder;
+                obj_ini.obj_design.str_type="button";                                  
+                obj_ini.obj_design.str_name="ROTATE";    
+                obj_ini.obj_design.str_linkId=obj_selected.obj_design.str_idXDesign;          
+                obj_ini.obj_design.str_nameEventClick=obj_project.obj_holder.str_prefix + "myDesignerButtonClick";
+                obj_ini.obj_design.str_valueEventClick="fn_setEazyGridSwitch";
+                obj_container.fn_addItem(obj_ini);//BootItem      
+                //ADD BUTTON TO VALUE CELL
+                break;
+            }
+            //*/
+      
             //ADD ROW
             obj_row=obj_table.fn_addItem();//BootItem      
             obj_ini=new Holder;  
@@ -198,13 +169,69 @@
             obj_cell=obj_row.fn_addItem(obj_ini);//BootItem          
             //obj_cell.fn_setStyleProperty("background-color", this.obj_theme.backgroundColor);          
             obj_container=obj_cell;  
+
+            bln_disabled=false;                  
       
+            //ADD BUTTON TO VALUE CELL
+            obj_ini=new Holder;
+            obj_ini.obj_design.str_type="button";
+            obj_ini.obj_design.str_name="Home";          
+            //obj_ini.obj_theme=this.obj_theme;            
+            obj_ini.obj_design.str_linkId=obj_selected.obj_design.str_idXDesign;                      
+            obj_ini.obj_design.str_nameEventClick=obj_project.obj_holder.str_prefix + "myDesignerButtonClick";
+            //obj_ini.obj_design.str_valueEventClick="fn_selectLocalHome";  
+            obj_ini.obj_design.str_valueEventClick="fn_selectHome";  
+            if(!obj_project.LocationMatchInstance){bln_disabled=true;}//CHECK SERVER LOCKED
+            obj_ini.obj_domProperty.disabled=bln_disabled;    
+            obj_container.fn_addItem(obj_ini);//BootItem      
+            //ADD BUTTON TO VALUE CELL
+
+            bln_disabled=false;      
+            if(!this.fn_validateOpen(obj_selected, obj_localHome)){  
+              bln_disabled=true;    
+            }                  
             
-      
+            obj_ini=new Holder;
+            obj_ini.obj_design.str_type="button";
+            obj_ini.obj_design.str_name="Open";
+            //obj_ini.obj_theme=this.obj_theme;
+            obj_ini.obj_design.str_linkId=obj_selected.obj_design.str_idXDesign;                  
+            obj_ini.obj_design.str_nameEventClick=obj_project.obj_holder.str_prefix + "myDesignerButtonClick";
+            obj_ini.obj_design.str_valueEventClick="fn_openComponent";
+            if(!obj_project.LocationMatchInstance){bln_disabled=true;}//CHECK SERVER LOCKED                        
+            obj_ini.obj_domProperty.disabled=bln_disabled;         
+            obj_item=obj_container.fn_addItem(obj_ini);//BootItem                     
+            //ADD BUTTON TO VALUE CELL
+
+            //ADD ROW
+            obj_row=obj_table.fn_addItem();//BootItem      
+            obj_ini=new Holder;  
+            //obj_ini.obj_theme=this.obj_theme;
+            obj_cell=obj_row.fn_addItem(obj_ini);//BootItem          
+            //obj_cell.fn_setStyleProperty("background-color", this.obj_theme.backgroundColor);          
+            obj_container=obj_cell;  
+
+
+            /*            
+            bln_disabled=false;      
+            if(!obj_clipboard.fn_validateDelete(obj_selected)){  
+              bln_disabled=true;    
+            }
+
+
+            //ADD BUTTON TO VALUE CELL
+            obj_ini=new Holder;
+            obj_ini.obj_design.str_type="button";
+            obj_ini.obj_design.str_name="Delete";          
+            //obj_ini.obj_theme=this.obj_theme;
+            obj_ini.obj_design.str_linkId=obj_selected.obj_design.str_idXDesign;              
+            obj_ini.obj_design.str_nameEventClick=obj_project.obj_holder.str_prefix + "myDesignerButtonClick";
+            obj_ini.obj_design.str_valueEventClick="fn_deleteTag";  
+            if(!obj_project.LocationMatchInstance){bln_disabled=true;}//CHECK SERVER LOCKED
+            obj_ini.obj_domProperty.disabled=bln_disabled;    
+            obj_item=obj_container.fn_addItem(obj_ini);//BootItem               
+            //ADD BUTTON TO VALUE CELL
             
-            //ADD BUTTON TO VALUE CELL      
-            
-            //*
             
             if((obj_selected.obj_design.int_modeExecute==obj_holder.int_modeEdit || obj_selected.obj_design.int_idRecord===0)){      
               
@@ -244,22 +271,7 @@
               obj_item=obj_container.fn_addItem(obj_ini);//BootItem   
             }
       
-            bln_disabled=false;      
-            if(!this.fn_validateOpen(obj_selected, obj_localHome)){  
-              bln_disabled=true;    
-            }                  
             
-            obj_ini=new Holder;
-            obj_ini.obj_design.str_type="button";
-            obj_ini.obj_design.str_name="Open";
-            //obj_ini.obj_theme=this.obj_theme;
-            obj_ini.obj_design.str_linkId=obj_selected.obj_design.str_idXDesign;                  
-            obj_ini.obj_design.str_nameEventClick=obj_project.obj_holder.str_prefix + "myDesignerButtonClick";
-            obj_ini.obj_design.str_valueEventClick="fn_openComponent";
-            if(!obj_project.LocationMatchInstance){bln_disabled=true;}//CHECK SERVER LOCKED                        
-            obj_ini.obj_domProperty.disabled=bln_disabled;         
-            obj_item=obj_container.fn_addItem(obj_ini);//BootItem               
-      
             //*      
             bln_disabled=false;      
             if(!this.fn_validateSaveAs(obj_selected, obj_localHome)){  
@@ -286,22 +298,10 @@
             console.log("fn_setEazyGridSwitch");
             
               let obj_eazygrid=obj_project.obj_palettSelected;            
-              obj_eazygrid.obj_design.bln_split=obj_shared.fn_flipBool(obj_eazygrid.obj_design.bln_split);    
+              obj_eazygrid.obj_design.int_axis=obj_shared.fn_flipAxis(obj_eazygrid.obj_design.int_axis);    
               obj_eazygrid.fn_compileTemplate();                              
               obj_eazygrid.fn_applyFeatures();//required , or must go in base object additem                             
-            }
-            
-            fn_getEazyGridSwitch(obj_selected, obj_container){
-              let obj_ini;
-              //ADD BUTTON TO VALUE CELL
-              obj_ini=new Holder;
-              obj_ini.obj_design.str_type="button";                                  
-              obj_ini.obj_design.str_name="ROTATE";    
-              obj_ini.obj_design.str_linkId=obj_selected.obj_design.str_idXDesign;          
-              obj_ini.obj_design.str_nameEventClick=obj_project.obj_holder.str_prefix + "myDesignerButtonClick";
-              obj_ini.obj_design.str_valueEventClick="fn_setEazyGridSwitch";
-              obj_container.fn_addItem(obj_ini);//BootItem      
-              //ADD BUTTON TO VALUE CELL
+              obj_eazygrid.obj_designDelegate.fn_setPaletteSelected();      
             }
       
             fn_validateSave(obj_item, obj_localHome){

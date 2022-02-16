@@ -266,7 +266,12 @@ class Shared{
       return 'rgb(' + this.fn_getRandom(255) + ',' + this.fn_getRandom(255) + ',' + this.fn_getRandom(255) + ')';
     }
 
+    fn_flipAxis(int_axis){
+      if(int_axis==obj_const.int_axisHorizontal){return obj_const.int_axisVertical;}
+      if(int_axis==obj_const.int_axisVertical){return obj_const.int_axisHorizontal;}
+      return int_axis;
 
+    }
     fn_flipBool(bln_val){
       if(bln_val){return false;}
       else{return true;}
@@ -332,18 +337,30 @@ class Shared{
       return arrOfArrays;
   }
 
+  
+
     fn_setMapItem(obj_map, foo_key, foo_value){
+      //console.log("fn_setMapItem foo_key: " + foo_key);
+      //*
+      //console.log(foo_key);
+      //console.log(foo_value);      
       obj_map.set(foo_key, foo_value);
+      //*/
     }
     fn_getMapItem(obj_map, foo_key){
       return obj_map.get(foo_key);
     }   
-    fn_loopmap(myMap){   
-      console.log("START fn_loopmap");
+    fn_deletetMapItem(obj_map, foo_key){
+      //console.log("fn_deletetMapItem foo_key: " + foo_key);
+      return obj_map.delete(foo_key);
+    }   
+    
+    fn_debugMap(myMap){   
+      console.log("START fn_debugMap");
       for (const [key, value] of myMap.entries()) {
           console.log(key, value);
         }
-        console.log("END fn_loopmap");
+        console.log("END fn_debugMap");
 
     }   
 
@@ -565,6 +582,9 @@ class Constant extends LevelObject{
     this.int_trimCommas=41;   
 
     this.int_dateNow=10;   
+
+    this.int_axisHorizontal=1;
+    this.int_axisVertical=2;
   }   
 }
 //END Holder.js
@@ -701,7 +721,8 @@ class BaseObject extends LevelObject{
     }
 
     //START CONTAINER FUNCTION
-    fn_addItem(obj_ini){
+    fn_addItem(obj_ini){        
+        
         
         if(obj_ini==undefined){
             return;
@@ -720,13 +741,20 @@ class BaseObject extends LevelObject{
         
         //END CREATE DOM ELEMENT        
         obj_item.fn_execute();
+
+        if(obj_item.obj_design.int_idRecord==="4757"){
+            console.log("START DEBUG PANEL")
+            obj_item.fn_debug("xxxx");
+            console.log("arr_item: " + obj_item.obj_design.arr_item.length);
+            console.log("ENDDEBUG PANEL")
+        }
                     
         return obj_item;
     }
 
     fn_checkIni(obj_ini){
 
-        let str_type, int_idRecord;        
+        let str_type, int_idRecord, bln_removeId;        
 
         //PLACE NUMBER 1 WHEN OBJ INI CAN GET KNOCKED OFF
 
@@ -734,10 +762,12 @@ class BaseObject extends LevelObject{
         str_type=obj_ini.obj_design.str_type;                                   
         
         
-        if(!obj_ini.obj_design.arr_item){            
+        if(!obj_ini.obj_design.arr_item){ 
+            //console.log("obj_ini.obj_design.arr_item is false");           
             obj_ini=new Holder;            
             obj_ini.obj_design.int_idRecord=int_idRecord;           
             obj_ini.obj_design.str_type=str_type;                                   
+            obj_ini.bln_removeId=bln_removeId;            
         }        
 
         //PLACE NUMBER 1 WHEN OBJ INI CAN GET KNOCKED OFF
@@ -747,7 +777,7 @@ class BaseObject extends LevelObject{
 
     fn_createChildObject(obj_ini){
 
-        let str_type, int_idRecord, obj_item;        
+        let str_type, int_idRecord, obj_item, bln_removeId;         
 
         //PLACE NUMBER 2 WHEN OBJ INI CAN GET KNOCKED OFF
 
@@ -755,15 +785,19 @@ class BaseObject extends LevelObject{
         
         int_idRecord=obj_ini.obj_design.int_idRecord;           
         str_type=obj_ini.obj_design.str_type;                        
-        
+        bln_removeId=obj_ini.bln_removeId;
+
         if(obj_ini){//see fi we can get the correct ini object, partucuarly to ensure the type is correct.
             if(obj_ini.obj_design){
                 int_idRecord=parseInt(obj_ini.obj_design.int_idRecord);        
-                let ObjectData=obj_shared.fn_getMapItem(obj_InstanceJSONMap,  int_idRecord);//get a reference to the the object that has been published from the db                        
-                if(ObjectData){
-                    var NewObjectData=JSON.parse(JSON.stringify(ObjectData));        
-                    if(NewObjectData.obj_design){
-                        obj_ini=NewObjectData;
+                if(int_idRecord){
+                    let ObjectData=obj_shared.fn_getMapItem(obj_InstanceJSONMap,  int_idRecord);//get a reference to the the object that has been published from the db                                            
+                    if(ObjectData){
+                        //console.log(ObjectData);
+                        var NewObjectData=JSON.parse(JSON.stringify(ObjectData));        
+                        if(NewObjectData.obj_design){
+                            obj_ini=NewObjectData;
+                        }
                     }
                 }
             }
@@ -771,8 +805,8 @@ class BaseObject extends LevelObject{
 
         //PLACE NUMBER 2 WHEN OBJ INI CAN GET KNOCKED OFF
         
-
-        str_type=obj_ini.obj_design.str_type;                          
+        obj_ini.bln_removeId=bln_removeId;
+        //obj_ini.obj_design.str_type=str_type;
 
         //console.log("str_type: " + str_type);
         if(str_type==="theme"){//hide any theme                                 
@@ -1109,7 +1143,7 @@ class BaseObject extends LevelObject{
         console.log("str_name: " + obj_design.str_name);        
         console.log("str_type: " + obj_design.str_type);        
         console.log("str_tag: " + obj_design.str_tag);        
-        console.log("bln_split: " + obj_design.bln_split);        
+        console.log("int_axis: " + obj_design.int_axis);        
         console.log("str_classList: " + obj_design.str_classList);        
         console.log("str_nameEventClick: " + obj_design.str_nameEventClick);        
         console.log("str_valueEventClick: " + obj_design.str_valueEventClick);                              
@@ -1154,6 +1188,7 @@ class BaseObject extends LevelObject{
         let arr, obj_item
         arr=this.obj_design.arr_item;        
         //this.fn_debug("DEBUG: " + this.obj_design.str_type);
+        console.log("begin debug arr_item");                
         for(let i=0;i<arr.length;i++){
             obj_item=this.obj_design.arr_item[i];
             if(obj_item.fn_debug){
@@ -1346,7 +1381,7 @@ class BaseObject extends LevelObject{
         int_index=0;
         if(arr.length){
             int_index=this.obj_design.arr_item.indexOf(obj_item);            
-            if (int_index!==(-1)) {
+            if (int_index!==(-1)) {                
                 arr.splice(int_index, 1);                        
             }
             else{
@@ -2096,7 +2131,7 @@ class component extends BaseObject {
     
     fn_execute(){        
 
-        if(!this.obj_design.int_idRecord){
+        if(!this.obj_design.int_idRecord){            
             this.fn_stepEnd();
             return;
         }       
@@ -2145,12 +2180,11 @@ class component extends BaseObject {
         this.fn_stepEnd();
     }    
     fn_addToClientMap(int_id_record, ObjectData){                        
-        obj_shared.fn_setMapItem(obj_InstanceJSONMap, int_id_record, ObjectData);                
-        //obj_shared.fn_loopmap(obj_InstanceJSONMap);        
+        obj_shared.fn_setMapItem(obj_InstanceJSONMap, int_id_record, ObjectData);                        
     }    
     fn_loadJSONInstanceFromClient(){
-        let int_id_record=parseInt(this.obj_design.int_idRecord);                
-        let ObjectData=obj_shared.fn_getMapItem(obj_InstanceJSONMap,  int_id_record);//get a reference to the the object that has been published from the db        
+        let int_id_record=parseInt(this.obj_design.int_idRecord);                                        
+        let ObjectData=obj_shared.fn_getMapItem(obj_InstanceJSONMap,  int_id_record);//get a reference to the the object that has been published from the db                
         return this.fn_loadJSONInstance(ObjectData);
     }
     fn_loadJSONInstance(ObjectData){ 
@@ -2169,28 +2203,7 @@ class component extends BaseObject {
     fn_stepEnd(){        
         this.fn_createSelf();//create self                
         this.fn_onOpenInstance();//run  baseobvject onopeninstance
-    } 
-
-    //orig execute - deprecated
-    fn_executeorgi(){//overides base object execute                
-        if(this.obj_design.int_idRecord){
-            this.fn_openInstance();}
-        //grab instance first and intiialize                
-        this.fn_createSelf();//create self                
-        this.fn_onOpenInstance();//run  baseobvject onopeninstance
-    }      
-    deprecate_fn_openInstanceorig(){//wont run on boot as will not have a record id        
-        if(!this.fn_validIdHistory()){return;}
-        let ObjectData=obj_InstanceJSONMap.get(parseInt(this.obj_design.int_idRecord));//get a reference to the the object that has been published from the db
-        if(!ObjectData || (ObjectData && !ObjectData.obj_design)){return;}//dont intialize with blank object                
-        let NewObjectData=JSON.parse(JSON.stringify(ObjectData));//create a copy of the object that has been published from the db
-        NewObjectData.obj_design.int_modeExecute=this.obj_design.int_modeExecute;//Continuity of Mode                                                
-        this.fn_initialize(NewObjectData);//initialize with self from db                                
-    }    
-    //orig execute - deprecated
-    
-    
-    
+    }     
     //START COMPONENT OPERATION FUNCTIONS  
     
     
@@ -2682,6 +2695,7 @@ class AJAX extends component {
         if(obj_post.RowData===undefined){            
             //obj_post.RowData="[]";
         }
+        obj_post.StringObjectData=obj_post.ObjectData;
         obj_post.ObjectData=obj_myJson.fn_deserialize(obj_post.ObjectData, "ObjectData");          
         obj_post.RowData=obj_myJson.fn_deserialize(obj_post.RowData, "RowData");//Array of  Recordset Rows          
         //if(!obj_post.DesignId){obj_post.DesignId="";}

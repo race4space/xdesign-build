@@ -72,109 +72,15 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
     obj_container.fn_addItem(obj_ini);                      
 
   }
-
   
-  /*
-  fn_onGetListPalettePinnedComponentInCategory(obj_post){                  
-    
-    let obj_dynamicContentHolder, obj_container;
-    let obj_ini;
-
-    
-    obj_dynamicContentHolder=this.fn_getComponent("ListPaletteDynamicContent");                        
-    if(!obj_dynamicContentHolder){
-      return;
-    }    
-    obj_dynamicContentHolder.fn_prepare();                          
-
-
-    obj_container=obj_dynamicContentHolder;
-    obj_ini=new Holder;                                    
-    obj_ini.obj_design.str_type="xdesign1_addtag";                              
-    obj_ini.obj_design.str_nameRegistrator=this.obj_design.str_name;                        
-    obj_container.fn_addItem(obj_ini);    
-    
-
-
-
-    obj_ini=new Holder;                                    
-    obj_ini.obj_design.str_type="accordion";    
-    this.obj_holder.obj_accordionCat=obj_dynamicContentHolder.fn_addItem(obj_ini);    
-
-    
-    this.fn_listPinnedComponentInCategory(obj_post);    
-    obj_post.bln_ListAll=obj_project.bln_ListAll;            
-    if(obj_post.bln_ListAll){
-      this.fn_listPinnedComponentInCategory(obj_post);    
-    }
-    
-    if(obj_projectTarget){
-      obj_projectTarget.obj_designDelegate.fn_setPaletteSelected();        
-    }
-  }
-  
-
-  
-  fn_listPinnedComponentInCategory(obj_post){
-
-    let obj_ini, obj_item, obj_container, obj_row, arr_row;           
-    let bln_disabled=false;        
-    let str_CategoryName, str_CategoryCurrent;
-
-    str_CategoryCurrent="";
-    arr_row=obj_post.RowData;          
-    if(obj_post.bln_ListAll){      
-      arr_row.sort((a, b) => (a.InstanceName.toLowerCase() > b.InstanceName.toLowerCase()) ? 1 : -1)                    
-    }
-    
-    for(var i=0;i<arr_row.length;i++){
-      
-      obj_row=arr_row[i];      
-
-      if(obj_shared.fn_isObjectEmpty(obj_row)){continue;}//RowData Can contain a single empty object      
-      
-      if(obj_post.bln_ListAll){        
-        str_CategoryName="All";
-      }
-      else{
-        str_CategoryName=obj_row.CategoryName;
-        if(str_CategoryName===null){
-          continue;
-        }                
-      }
-
-      if(str_CategoryName.toLowerCase()!==str_CategoryCurrent.toLowerCase()){
-        str_CategoryCurrent=str_CategoryName;
-        obj_ini=new Holder;                                    
-        obj_ini.obj_design.str_type="menubutton";                    
-        obj_ini.obj_design.str_name=str_CategoryName;                
-        obj_container=this.obj_holder.obj_accordionCat.fn_addItem(obj_ini);                      
-
-        if(obj_post.bln_ListAll){}  
-      }      
-      
-      obj_ini=new Holder;        
-      //obj_ini.obj_design.str_name="xdesign1 " + obj_row.InstanceName;
-      obj_ini.obj_design.str_name="xdesign1_buttonAddPaletteItem" + obj_row.InstanceName;
-      obj_ini.obj_design.str_text=obj_row.InstanceName;
-      obj_ini.obj_design.str_type="button";
-      obj_ini.obj_design.int_idRecordTarget=obj_row.InstanceId;        
-      obj_ini.obj_design.str_typeRecordTarget=obj_row.InstanceType;
-      obj_ini.obj_design.str_nameEventClick=obj_project.obj_holder.str_prefix + "myDesignerButtonClick";
-      obj_ini.obj_design.str_valueEventClick="fn_addComponentItem";                    
-      obj_ini.obj_domProperty.disabled=bln_disabled;         
-      obj_item=obj_container.fn_addItem(obj_ini);
-    }
-  }  
-  //*/
   
   fn_onPaletteItemSelected(){                                             
-    let obj_container=obj_project.obj_palettSelected;
-    let bln_valid=this.fn_validateContainer(obj_container);   
+    
+    let obj_container=this.fn_validateContainer(obj_project.obj_palettSelected);   
 
-    if(!obj_project.LocationMatchInstance){bln_valid=false;}                 
+    if(!obj_project.LocationMatchInstance){obj_container=false;}                 
                              
-    if(!bln_valid){              
+    if(!obj_container){              
       this.obj_holder.obj_container.fn_close();                    
       this.obj_holder.obj_container.fn_setDisabled();        
     }
@@ -184,9 +90,9 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
     
     this.fn_setPaletteEnabled(obj_container);
   }
+
+
   fn_validateContainer(obj_container, int_idRecordSearch=0){
-
-
 
     let bln_debug_error=false;      
     let bln_debug_valid=false;      
@@ -221,11 +127,11 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
 
     if(int_idRecordSearch===0){//new component
       if(bln_debug_valid){console.log("VALIDATE CONTAINER: VALIDATED (ID SEARCH IS 0)");}      
-      return true;
+      return obj_container;
     }      
     if(obj_container.obj_design.int_idRecord===0){//new component        
       if(bln_debug_valid){console.log("VALIDATE CONTAINER: VALIDATED (ID RECORD IS 0)");}      
-      return true;
+      return obj_container;
     }            
     
     let bln_inHistory=obj_container.fn_searchIdHistory(obj_container, int_idRecordSearch);
@@ -235,7 +141,7 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
     }
 
     if(bln_debug_valid){console.log("VALIDATE CONTAINER: THIS CONTAINER IS VALIDATED");}
-    return true;
+    return obj_container;
   }          
   fn_addComponentItem(){//component Item 
 
@@ -257,10 +163,9 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
     let str_type, str_type_container, bln_canInsert;      
     
     obj_container=obj_project.obj_palettSelected;
-    if(!obj_container){return;}//e.g if no project thas been started
-    let obj_localHome=obj_container.fn_getLocalHome();
+    if(!obj_container){return;}//e.g if no project thas been started    
 
-    obj_container=this.fn_getInsertContainer(obj_container, obj_localHome, obj_ini.obj_design.int_idRecord);
+    obj_container=this.fn_validateContainer(obj_container, obj_ini.obj_design.int_idRecord);
     if(!obj_container){return;}
 
     str_type=obj_ini.obj_design.str_type.toLowerCase();
@@ -281,19 +186,14 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
       default:
     }
     //ADD ITEM
-    //This will need to have obj_ini.obj_design.int_idRecord, if adding an saved instance component
-    obj_item=obj_container.obj_designDelegate.fn_addPaletteItem(obj_ini);
-    
+    //This will need to have obj_ini.obj_design.int_idRecord, if adding an saved instance component    
+    obj_item=obj_container.obj_designDelegate.fn_addPaletteItem(obj_ini);        
+
     if(!obj_item){
       console.log("obj_item is false, check dynamic content")
       return;
     }
-    if(this.fn_validateContainer(obj_item, obj_ini.obj_design.int_idRecord)){
-      //obj_item.obj_designDelegate.fn_setPaletteSelected();      
-    }
-    else{
-      //obj_container.obj_designDelegate.fn_setPaletteSelected();  //set eithe ritem or parent as selected    
-    } 
+    
     obj_item.obj_designDelegate.fn_setPaletteSelected();      
     //ADD ITEM      
 
@@ -363,35 +263,8 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
 
     obj_tag=this.fn_addPaletteItem(obj_ini);    
     return obj_tag;
-  }
+  }  
   
-  fn_getInsertContainer(obj_container, obj_localHome, int_idRecord){                  
-
-    let bln_valid=this.fn_validateContainer(obj_container, int_idRecord);            
-
-    if(!bln_valid){        
-      return false;
-    }
-    return obj_container;
-    
-    /*
-    if(!bln_valid){        
-      if(!obj_container){        
-        return false;
-      }            
-      obj_container=obj_container.fn_getParentComponent();//parent or false                
-      if(!obj_container){        
-        return false;
-      }        
-      if(obj_container==obj_localHome && obj_localHome.fn_getLocked()){//dont go past local lockled home
-        return false;
-      }
-        //dont go up past localhome
-      obj_container=this.fn_getInsertContainer(obj_container, obj_localHome, int_idRecord);
-    }
-    return obj_container;
-    //*/
-  }
   fn_setPaletteEnabled(obj_container){    
 
     let arr, obj_item;

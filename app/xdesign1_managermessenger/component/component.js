@@ -127,6 +127,7 @@
 
           }
           fn_createTextEditor(){  
+
             
             let obj_item;
             let obj_dynamicContentHolder=this.fn_getComponent("MessengerDynamicContent");            

@@ -31,5 +31,8 @@ class Constant extends LevelObject{
     this.int_trimCommas=41;   
 
     this.int_dateNow=10;   
+
+    this.int_axisHorizontal=1;
+    this.int_axisVertical=2;
   }   
 }

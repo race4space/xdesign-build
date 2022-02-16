@@ -20,6 +20,9 @@ class panel extends component {
     if(this.obj_domStyle.overflow==undefined){this.obj_domStyle.overflow="auto";}             
     //END INITIALIZE STYLE      
   }
+  fn_bootChildren(){
+    console.log("panel fn_bootChildren");
+  }
 
 }//END CLS
 //END PANEL

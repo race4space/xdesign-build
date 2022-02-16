@@ -60,7 +60,7 @@ class component extends BaseObject {
     
     fn_execute(){        
 
-        if(!this.obj_design.int_idRecord){
+        if(!this.obj_design.int_idRecord){            
             this.fn_stepEnd();
             return;
         }       
@@ -109,12 +109,11 @@ class component extends BaseObject {
         this.fn_stepEnd();
     }    
     fn_addToClientMap(int_id_record, ObjectData){                        
-        obj_shared.fn_setMapItem(obj_InstanceJSONMap, int_id_record, ObjectData);                
-        //obj_shared.fn_loopmap(obj_InstanceJSONMap);        
+        obj_shared.fn_setMapItem(obj_InstanceJSONMap, int_id_record, ObjectData);                        
     }    
     fn_loadJSONInstanceFromClient(){
-        let int_id_record=parseInt(this.obj_design.int_idRecord);                
-        let ObjectData=obj_shared.fn_getMapItem(obj_InstanceJSONMap,  int_id_record);//get a reference to the the object that has been published from the db        
+        let int_id_record=parseInt(this.obj_design.int_idRecord);                                        
+        let ObjectData=obj_shared.fn_getMapItem(obj_InstanceJSONMap,  int_id_record);//get a reference to the the object that has been published from the db                
         return this.fn_loadJSONInstance(ObjectData);
     }
     fn_loadJSONInstance(ObjectData){ 
@@ -133,28 +132,7 @@ class component extends BaseObject {
     fn_stepEnd(){        
         this.fn_createSelf();//create self                
         this.fn_onOpenInstance();//run  baseobvject onopeninstance
-    } 
-
-    //orig execute - deprecated
-    fn_executeorgi(){//overides base object execute                
-        if(this.obj_design.int_idRecord){
-            this.fn_openInstance();}
-        //grab instance first and intiialize                
-        this.fn_createSelf();//create self                
-        this.fn_onOpenInstance();//run  baseobvject onopeninstance
-    }      
-    deprecate_fn_openInstanceorig(){//wont run on boot as will not have a record id        
-        if(!this.fn_validIdHistory()){return;}
-        let ObjectData=obj_InstanceJSONMap.get(parseInt(this.obj_design.int_idRecord));//get a reference to the the object that has been published from the db
-        if(!ObjectData || (ObjectData && !ObjectData.obj_design)){return;}//dont intialize with blank object                
-        let NewObjectData=JSON.parse(JSON.stringify(ObjectData));//create a copy of the object that has been published from the db
-        NewObjectData.obj_design.int_modeExecute=this.obj_design.int_modeExecute;//Continuity of Mode                                                
-        this.fn_initialize(NewObjectData);//initialize with self from db                                
-    }    
-    //orig execute - deprecated
-    
-    
-    
+    }     
     //START COMPONENT OPERATION FUNCTIONS  
     
     

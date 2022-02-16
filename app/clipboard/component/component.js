@@ -16,65 +16,67 @@ class clipboard extends component{
 
   }
 
-  fn_set(obj_item){//required   
-    if(!obj_item){
+  fn_set(obj_copy, obj_template){//required   
+    if(!obj_copy){
         this.fn_clear();
         return;            
     }     
+
+    let str_categoryList=obj_copy.obj_design.str_categoryList;       
+    obj_copy.bln_removeId=true;     
+    obj_project.fn_removeId(obj_copy);        
+    obj_copy.obj_design.str_categoryList=str_categoryList;      
+
     this.bln_hasContent=true;        
-    this.obj_item=obj_item;        
+    this.obj_item=obj_copy;        
+    this.obj_template=obj_template;  
   }
   fn_clear(){//required           
       this.bln_hasContent=false;        
       this.obj_item=false;        
+      this.obj_template=false;            
   }
   fn_get(){//required        
       return this.obj_item;
   }    
-  fn_validateCopy(obj_item, obj_localHome){        
+  fn_validateCopy(obj_item){        
 
-      let bln_debug=false;      
+    let bln_debug=false;      
 
-      if(!obj_item){        
-          return false;
-      }
-      if(obj_item===obj_projectTarget){                        
-          //if(bln_debug){console.log("VALIDATE COPY: CANNOT COPY PROJECT INSTANCE")};
-          return false;
-      }      
-      
-      if(obj_item.obj_design.bln_dynamicPin){
-        if(bln_debug){console.log("VALIDATE COPY: CANNOT COPY DYNMAIC PIN")};
+    if(!obj_item){        
         return false;
-      }
-      
-      let bln_locked=obj_localHome.fn_getLocked();        
-      if(bln_locked){//cannot manipulate locked component
-      //if(bln_locked && obj_localHome!==obj_item){//cannot manipulate locked component
+    }
 
-          //if(bln_debug){console.log("VALIDATE COPY: LOCALHOME IS LOCKED")};
-          //return false;
+    //Item must be in editmode
+    if((obj_item.obj_design.int_modeExecute!==obj_holder.int_modeEdit)){        
+        return false;
+    }    
+        
+    if(obj_item===obj_projectTarget){                        
+        if(bln_debug){console.log("VALIDATE COPY: CANNOT MANIPULATE PROJECT INSTANCE")};
+        return false;
+    }      
 
-      //}        
-      }
-
-      if(bln_debug){console.log("VALIDATE COPY: XVALIDATED")};   
-      return true;
+    if(bln_debug){console.log("VALIDATE COPY: VALIDATED")};   
+    return true;
   }
 
-  fn_copy(obj_item){//required        
-      let obj_copy=this.fn_getCopy(obj_item);        
-      this.fn_set(obj_copy);         
+  fn_copy(obj_item){//required  
+    
+    if(!this.fn_validateCopy(obj_item)){return;}            
+    let obj_copy=this.fn_getCopy(obj_item);        
+    this.fn_set(obj_copy, obj_item);         
   }
   fn_getCopy(obj_item){//required        
       let obj_copy;
       let str_json=JSON.stringify(obj_item, this.fn_cloneReplacer());        
+      //console.log("str_json: " + str_json);
       obj_copy=JSON.parse(str_json);
-      obj_copy.obj_holder=new Holder;                        
+      obj_copy.obj_holder=new Holder;                              
       return obj_copy;
   }  
 
-  fn_validatePaste(obj_selected, obj_localHome){        
+  fn_validatePaste(obj_selected){        
 
     let bln_debug=false;
 
@@ -83,30 +85,18 @@ class clipboard extends component{
       if(!obj_item){     
           if(bln_debug){console.log("VALIDATE PASTE: CLIPBOARD IS BLANK")};   
           return false;
-      }  
-
-      if(obj_item.obj_design.bln_dynamicPin){
-        if(bln_debug){console.log("VALIDATE PASTE: CANNOT PASTE DYNMAIC PIN")};
-        return false;
-      }
-      
-      //console.log(obj_item);
-
-      if(obj_selected===obj_projectTarget){                        
-          //CAN PASTE INTO PROJECT INSTANCE
-          if(bln_debug){console.log("VALIDATE PASTE: CANNOT PASTE PROJECT INSTANCE")};
-          //return false;
       }        
               
       if(bln_debug){console.log("VALIDATE PASTE: GET CONTAINER")};   
-
-      let obj_container=obj_project.fn_getInsertContainer(obj_selected, obj_localHome, obj_item.obj_design.int_idRecord);        
+    
+      let obj_container=obj_project.fn_validateContainer(obj_selected, obj_item.obj_design.int_idRecord);                      
       if(!obj_container){
           if(bln_debug){console.log("VALIDATE PASTE: NO VALID CONTAINER")};   
           return false;
       }
 
       if(obj_container.obj_design.bln_dynamicPin){            
+        if(bln_debug){console.log("VALIDATE PASTE: CANOT PASTE INTO DYNAMIC PIN")};   
           return false;
       }
 
@@ -124,31 +114,44 @@ class clipboard extends component{
           console.log("CLIPBOARD PASTE ERROR: CLIPBOARD IS BLANK");
           return;
       }        
-      this.fn_copy(obj_item);
-      obj_item=this.fn_get();                        
+
+      //why is it necessary to destroy the orginal copy ?
+      //this.fn_copy(obj_item);
+      //obj_item=this.fn_get();                        
       
       if(!obj_container){
           console.log("CLIPBOARD PASTE ERROR: CONTAINER IS FALSE");
           return false;
-      }
-      
-      this.fn_clear();
+      }      
 
-      let obj_copy=obj_container.fn_addItem(obj_item);//ClientSideItem      
+      //*
+      let obj_template=this.obj_template;
+      this.fn_clear();      
+      this.fn_copy(obj_template);//not sure why we cannot re-use the template   
+      //*/
+      
+
+      
+      let obj_copy=obj_container.fn_addItem(obj_item);//ClientSideItem            
       return obj_copy;        
   }
 
-  fn_validateInsert(obj_insertNextTo, obj_localHome){        
+  fn_validateInsert(obj_insertNextTo){        
 
     let bln_debug=false;
 
-    let obj_item=this.fn_get();                
-
+    let obj_item=this.fn_get();    
 
     if(!obj_item){     
         if(bln_debug){console.log("VALIDATE INSERT: CLIPBOARD IS BLANK")};   
         return false;
     }  
+
+    //Item must be in editmode
+    if((obj_item.obj_design.int_modeExecute!==obj_holder.int_modeEdit)){        
+        return false;
+    }
+
 
     if(obj_item.obj_design.bln_dynamicPin){
       if(bln_debug){console.log("VALIDATE INSERT: CANNOT INSERT DYNMAIC PIN")};
@@ -171,7 +174,7 @@ class clipboard extends component{
         return false;
     }
 
-    obj_container=obj_project.fn_getInsertContainer(obj_container, obj_localHome, obj_container.obj_design.int_idRecord);        
+    obj_container=obj_project.fn_validateContainer(obj_container, obj_container.obj_design.int_idRecord);                          
     if(!obj_container){
         if(bln_debug){console.log("VALIDATE INSERT: NO VALID CONTAINER")};   
         return false;
@@ -213,85 +216,24 @@ class clipboard extends component{
         return obj_copy;        
     }
 
-
-  fn_validateCut(obj_selected, obj_localHome){
-
-      let bln_debug=false;
-      
-      if(!obj_selected){        
-          return false;
-      }
-      if(obj_selected===obj_projectTarget){            
-          if(bln_debug){console.log("VALIDATE CUT: CANNOT CUT PROJECT INSTANCE")};
-          return false;
-      }
-
-      let obj_container=obj_selected.fn_getParentComponent();
-        if(!obj_container){
-            if(bln_debug){console.log("VALIDATE CUT: NO VALID CONTAINER")};   
-        return false;
-        }
-
-        obj_container=obj_project.fn_getInsertContainer(obj_container, obj_localHome, obj_container.obj_design.int_idRecord);        
-        if(!obj_container){
-            if(bln_debug){console.log("VALIDATE CUT: NO VALID CONTAINER")};   
-            return false;
-        }
-
-      if(obj_selected.obj_design.bln_dynamicPin){
-        if(bln_debug){console.log("VALIDATE CUT: CANNOT CUT DYNMAIC PIN")};
-        return false;
-      }
-
-      let bln_locked=obj_localHome.fn_getLocked();
-      if(bln_locked){//cannot manipulate locked component
-      //if(bln_locked && obj_localHome!==obj_selected){//cannot manipulate locked component
-          //if(bln_debug){console.log("VALIDATE CUT: LOCALHOME IS LOCKED")};
-          //return false;
-      //}
-      }
-
-      if(bln_debug){console.log("VALIDATE CUT: VALIDATED")};   
-
-      return true;
-
-  }    
-
-  fn_validateDelete(obj_selected, obj_localHome){
+  fn_validateDelete(obj_selected){
 
       let bln_debug=false;      
 
       if(!obj_selected){        
           return false;
       }
-      if(obj_selected===obj_projectTarget){            
-          if(bln_debug){console.log("VALIDATE DELETE: CANNOT DELETE PROJECT INSTANCE")};
-          return false;
-      }
 
-      let obj_container=obj_selected.fn_getParentComponent();
-        if(!obj_container){
-            if(bln_debug){console.log("VALIDATE DELETE: NO VALID CONTAINER")};   
-        return false;
-        }
-
-        obj_container=obj_project.fn_getInsertContainer(obj_container, obj_localHome, obj_container.obj_design.int_idRecord);        
-        if(!obj_container){
-            if(bln_debug){console.log("VALIDATE DELETE: NO VALID CONTAINER")};   
-            return false;
-        }
-
-      if(obj_selected.obj_design.bln_dynamicPin){
-        if(bln_debug){console.log("VALIDATE DELETE: CANNOT DELETE DYNMAIC PIN")};
+      //Item must be in editmode
+      if((obj_selected.obj_design.int_modeExecute!==obj_holder.int_modeEdit)){        
         return false;
     }
 
-      let bln_locked=obj_localHome.fn_getLocked();
-      if(bln_locked && obj_localHome!==obj_selected){//cannot delete locked part of component, except if localhome
-          if(bln_debug){console.log("VALIDATE DELETE: LOCALHOME IS LOCKED")};
+      if(obj_selected===obj_projectTarget){            
+          if(bln_debug){console.log("VALIDATE DELETE: CANNOT DELETE PROJECT INSTANCE")};
           return false;
-      }
-
+      }       
+      
       if(bln_debug){console.log("VALIDATE DELETE: VALIDATED")};   
 
       return true;
@@ -314,8 +256,8 @@ class clipboard extends component{
               //return;        
               break;
           case "str_idXDesign":        
-              if(value.indexOf("myId")==0){
-                  return;
+              if(value.indexOf("myId")===0){//if present
+                  //return;
               }        
           break;
           }

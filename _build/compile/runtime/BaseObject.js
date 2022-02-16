@@ -128,7 +128,8 @@ class BaseObject extends LevelObject{
     }
 
     //START CONTAINER FUNCTION
-    fn_addItem(obj_ini){
+    fn_addItem(obj_ini){        
+        
         
         if(obj_ini==undefined){
             return;
@@ -147,13 +148,20 @@ class BaseObject extends LevelObject{
         
         //END CREATE DOM ELEMENT        
         obj_item.fn_execute();
+
+        if(obj_item.obj_design.int_idRecord==="4757"){
+            console.log("START DEBUG PANEL")
+            obj_item.fn_debug("xxxx");
+            console.log("arr_item: " + obj_item.obj_design.arr_item.length);
+            console.log("ENDDEBUG PANEL")
+        }
                     
         return obj_item;
     }
 
     fn_checkIni(obj_ini){
 
-        let str_type, int_idRecord;        
+        let str_type, int_idRecord, bln_removeId;        
 
         //PLACE NUMBER 1 WHEN OBJ INI CAN GET KNOCKED OFF
 
@@ -161,10 +169,12 @@ class BaseObject extends LevelObject{
         str_type=obj_ini.obj_design.str_type;                                   
         
         
-        if(!obj_ini.obj_design.arr_item){            
+        if(!obj_ini.obj_design.arr_item){ 
+            //console.log("obj_ini.obj_design.arr_item is false");           
             obj_ini=new Holder;            
             obj_ini.obj_design.int_idRecord=int_idRecord;           
             obj_ini.obj_design.str_type=str_type;                                   
+            obj_ini.bln_removeId=bln_removeId;            
         }        
 
         //PLACE NUMBER 1 WHEN OBJ INI CAN GET KNOCKED OFF
@@ -174,7 +184,7 @@ class BaseObject extends LevelObject{
 
     fn_createChildObject(obj_ini){
 
-        let str_type, int_idRecord, obj_item;        
+        let str_type, int_idRecord, obj_item, bln_removeId;         
 
         //PLACE NUMBER 2 WHEN OBJ INI CAN GET KNOCKED OFF
 
@@ -182,15 +192,19 @@ class BaseObject extends LevelObject{
         
         int_idRecord=obj_ini.obj_design.int_idRecord;           
         str_type=obj_ini.obj_design.str_type;                        
-        
+        bln_removeId=obj_ini.bln_removeId;
+
         if(obj_ini){//see fi we can get the correct ini object, partucuarly to ensure the type is correct.
             if(obj_ini.obj_design){
                 int_idRecord=parseInt(obj_ini.obj_design.int_idRecord);        
-                let ObjectData=obj_shared.fn_getMapItem(obj_InstanceJSONMap,  int_idRecord);//get a reference to the the object that has been published from the db                        
-                if(ObjectData){
-                    var NewObjectData=JSON.parse(JSON.stringify(ObjectData));        
-                    if(NewObjectData.obj_design){
-                        obj_ini=NewObjectData;
+                if(int_idRecord){
+                    let ObjectData=obj_shared.fn_getMapItem(obj_InstanceJSONMap,  int_idRecord);//get a reference to the the object that has been published from the db                                            
+                    if(ObjectData){
+                        //console.log(ObjectData);
+                        var NewObjectData=JSON.parse(JSON.stringify(ObjectData));        
+                        if(NewObjectData.obj_design){
+                            obj_ini=NewObjectData;
+                        }
                     }
                 }
             }
@@ -198,8 +212,8 @@ class BaseObject extends LevelObject{
 
         //PLACE NUMBER 2 WHEN OBJ INI CAN GET KNOCKED OFF
         
-
-        str_type=obj_ini.obj_design.str_type;                          
+        obj_ini.bln_removeId=bln_removeId;
+        //obj_ini.obj_design.str_type=str_type;
 
         //console.log("str_type: " + str_type);
         if(str_type==="theme"){//hide any theme                                 
@@ -536,7 +550,7 @@ class BaseObject extends LevelObject{
         console.log("str_name: " + obj_design.str_name);        
         console.log("str_type: " + obj_design.str_type);        
         console.log("str_tag: " + obj_design.str_tag);        
-        console.log("bln_split: " + obj_design.bln_split);        
+        console.log("int_axis: " + obj_design.int_axis);        
         console.log("str_classList: " + obj_design.str_classList);        
         console.log("str_nameEventClick: " + obj_design.str_nameEventClick);        
         console.log("str_valueEventClick: " + obj_design.str_valueEventClick);                              
@@ -581,6 +595,7 @@ class BaseObject extends LevelObject{
         let arr, obj_item
         arr=this.obj_design.arr_item;        
         //this.fn_debug("DEBUG: " + this.obj_design.str_type);
+        console.log("begin debug arr_item");                
         for(let i=0;i<arr.length;i++){
             obj_item=this.obj_design.arr_item[i];
             if(obj_item.fn_debug){
@@ -773,7 +788,7 @@ class BaseObject extends LevelObject{
         int_index=0;
         if(arr.length){
             int_index=this.obj_design.arr_item.indexOf(obj_item);            
-            if (int_index!==(-1)) {
+            if (int_index!==(-1)) {                
                 arr.splice(int_index, 1);                        
             }
             else{

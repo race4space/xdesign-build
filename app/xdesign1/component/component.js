@@ -111,14 +111,21 @@
     
     fn_onStateChange(){    
       
-      //console.log("XDESIGN fn_onStateChange");
+      //console.log("XDESIGN fn_onStateChange");     
+      let obj_item;
+      obj_item=this.obj_holder.obj_xdesign1_managersettings;
+      if(obj_item){obj_item.fn_onStateChange();}
+      obj_item=this.obj_holder.obj_xdesign1_managerproject;
+      if(obj_item){obj_item.fn_onStateChange();}
+      obj_item=this.obj_holder.obj_xdesign1_managermessenger;
+      if(obj_item){obj_item.fn_onStateChange();}
+      obj_item=this.obj_holder.obj_xdesign1_managerpalette;
+      if(obj_item){obj_item.fn_onStateChange();}
+      obj_item=this.obj_holder.obj_xdesign1_managertag;
+      if(obj_item){obj_item.fn_onStateChange();}
+      obj_item=this.obj_holder.obj_xdesign1_managercomponent;
+      if(obj_item){obj_item.fn_onStateChange();}
       
-      this.obj_holder.obj_xdesign1_managersettings.fn_onStateChange();  
-      this.obj_holder.obj_xdesign1_managerproject.fn_onStateChange();
-      this.obj_holder.obj_xdesign1_managermessenger.fn_onStateChange();
-      this.obj_holder.obj_xdesign1_managerpalette.fn_onStateChange();    
-      this.obj_holder.obj_xdesign1_managertag.fn_onStateChange();    
-      this.obj_holder.obj_xdesign1_managercomponent.fn_onStateChange();  
     }          
     fn_onPaletteItemSelected(){             
       
@@ -126,13 +133,18 @@
 
       if(!obj_item){        
         return;
-      }               
+      }                     
       
-      this.obj_holder.obj_xdesign1_managerproject.fn_onPaletteItemSelected();
-      this.obj_holder.obj_xdesign1_managerpalette.fn_onPaletteItemSelected();
-      this.obj_holder.obj_xdesign1_managertag.fn_onPaletteItemSelected();              
-      this.obj_holder.obj_xdesign1_managermessenger.fn_onPaletteItemSelected();
-      this.obj_holder.obj_xdesign1_managercomponent.fn_onPaletteItemSelected();
+      obj_item=this.obj_holder.obj_xdesign1_managerproject;
+      if(obj_item){obj_item.fn_onPaletteItemSelected();}
+      obj_item=this.obj_holder.obj_xdesign1_managerpalette;
+      if(obj_item){obj_item.fn_onPaletteItemSelected();}
+      obj_item=this.obj_holder.obj_xdesign1_managertag;
+      if(obj_item){obj_item.fn_onPaletteItemSelected();}
+      obj_item=this.obj_holder.obj_xdesign1_managermessenger;
+      if(obj_item){obj_item.fn_onPaletteItemSelected();}
+      obj_item=this.obj_holder.obj_xdesign1_managercomponent;
+      if(obj_item){obj_item.fn_onPaletteItemSelected();}
     }  
     fn_onPaletteItemDeSelected(){
       let obj_item=obj_project.obj_palettSelected;   
@@ -179,6 +191,9 @@
     fn_lockPaletteSelected(){    
       this.obj_holder.obj_xdesign1_managertag.fn_lockPaletteSelected();
     }
+    fn_selectHome(){
+      return this.obj_holder.obj_xdesign1_managertag.fn_selectHome();      
+    }
     fn_selectLocalHome(){
       return this.obj_holder.obj_xdesign1_managertag.fn_selectLocalHome();      
     }
@@ -218,8 +233,8 @@
     //END TAG MANAGER EVENTS
     
     //START PALETTE MANAGER EVENTS
-    fn_getInsertContainer(obj_item, int_idRecord){
-      return this.obj_holder.obj_xdesign1_managerpalette.fn_getInsertContainer(obj_item, int_idRecord); 
+    fn_validateContainer(obj_item, int_idRecord){      
+      return this.obj_holder.obj_xdesign1_managerpalette.fn_validateContainer(obj_item, int_idRecord); 
     }
     fn_addPaletteTagFromInput(){           
       return this.obj_holder.obj_xdesign1_managerpalette.fn_addPaletteTagFromInput();          
@@ -237,7 +252,7 @@
     }
     fn_saveComponent(){ //save Selected Item                 
       //console.log("XDESIGN1 fn_saveComponent click button")
-      this.obj_holder.obj_xdesign1_managerproject.fn_saveComponent(this.obj_palettSelected);
+      this.obj_holder.obj_xdesign1_managerproject.fn_saveComponent();
     }
     fn_saveAsProject(){        
       this.obj_holder.obj_xdesign1_managerproject.fn_saveAsProject();

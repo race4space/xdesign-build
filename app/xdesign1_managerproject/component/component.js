@@ -84,41 +84,7 @@
             obj_container.fn_addItem(obj_ini);                      
 
           }
-
           
-
-
-          deprecated_fn_listProject(arr_row){            
-            
-            //console.log("fn_listProject");            
-      
-            let obj_ini, obj_item, obj_dynamicContentHolder;                        
-            let obj_row;
-            
-            obj_dynamicContentHolder=this.fn_getComponent("ListProjectDynamicContent");            
-            if(!obj_dynamicContentHolder){
-              return;
-            }
-            obj_dynamicContentHolder.fn_prepare();            
-      
-            for(var i=0;i<arr_row.length;i++){        
-              obj_row=arr_row[i];
-              
-              if(obj_shared.fn_isObjectEmpty(obj_row)){continue;}//RowData Can contain a single empty object
-              obj_ini=new Holder;
-              obj_ini.obj_design.bln_dynamicPin=true;                            
-              obj_ini.obj_design.str_name="xdesign1_buttonOpenProject" + obj_row.InstanceName;
-              obj_ini.obj_design.str_text=obj_row.InstanceName;
-              obj_ini.obj_design.str_type="button";
-              obj_ini.obj_design.int_idRecordTarget=obj_row.InstanceId;
-              obj_ini.obj_design.str_typeRecord=obj_row.InstanceType;
-              obj_ini.obj_design.str_nameEventClick=obj_project.obj_holder.str_prefix + "myDesignerButtonClick";
-              obj_ini.obj_design.str_valueEventClick="fn_openProject";
-              obj_ini.obj_domProperty.disabled=false;      
-              obj_ini.obj_design.int_idRecordTarget=obj_row.InstanceId;              
-              obj_item=obj_dynamicContentHolder.fn_addItem(obj_ini);//BootItem                                                 
-            }
-          }              
           //Event          
           fn_releaseProject(){
 
@@ -235,7 +201,7 @@
             
             obj_project.fn_setLocationMatchInstance(obj_post);
                   
-            obj_clipboard.fn_clear();                   
+            //obj_clipboard.fn_clear();                   
             obj_project.obj_holder.obj_xdesign1_manageriframe.fn_navigateToProjectInstance(obj_post.URLProjectVersion);            
             this.obj_holder.obj_container.fn_close();              
             
@@ -283,11 +249,10 @@
       
             obj_item=obj_project.obj_palettSelected;
             
-            obj_item.fn_setLocked(false);    
-            obj_item.bln_removeId=true;
+            obj_item.fn_setLocked(false);                
             let str_categoryList=obj_item.obj_design.str_categoryList;
-            obj_project.fn_removeId(obj_item);            
-            obj_item.fn_setIDXDesign();      
+            obj_item.bln_removeId=true;
+            obj_project.fn_removeId(obj_item);                        
             obj_item.obj_design.str_categoryList=str_categoryList;      
             
             obj_item.fn_setLocked(true);                  
@@ -306,11 +271,10 @@
             str_new+=str_addon;
             return str_new;
           }                
-          fn_saveComponent(obj_item){//This relates to saving a component within the Project Isntance ie from the action button      
+          fn_saveComponent(){//This relates to saving a component within the Project Isntance ie from the action button      
 
             //console.log("fn_saveComponent");
-            
-            let obj_parent=obj_item.obj_holder.obj_container;            
+            let obj_item=obj_project.obj_palettSelected;
             let obj_serverManager=obj_project.fn_getComponent("xdesign1_designfile");      
             let obj_ini=new Object;
             obj_ini.ObjectInstance=obj_item;                                         
@@ -320,8 +284,8 @@
           //*
           onServerManagerCompleteSave(){//CallBack Function from designfile            
             this.obj_holder.obj_container.fn_setText(obj_projectTarget.obj_design.str_name);            
-            obj_projectTarget.obj_design.str_lastVersionDate="notset";
-            this.fn_onStateChange();           
+            obj_projectTarget.obj_design.str_lastVersionDate="notset";            
+            obj_project.fn_onStateChange();
             console.log("Saved: " + this.obj_holder.ObjectSaveInstance.obj_design.str_name);             
             this.obj_holder.ObjectSaveInstance.obj_designDelegate.fn_setPaletteSelected();            
           } 

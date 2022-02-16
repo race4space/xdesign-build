@@ -166,6 +166,7 @@ class AJAX extends component {
         if(obj_post.RowData===undefined){            
             //obj_post.RowData="[]";
         }
+        obj_post.StringObjectData=obj_post.ObjectData;
         obj_post.ObjectData=obj_myJson.fn_deserialize(obj_post.ObjectData, "ObjectData");          
         obj_post.RowData=obj_myJson.fn_deserialize(obj_post.RowData, "RowData");//Array of  Recordset Rows          
         //if(!obj_post.DesignId){obj_post.DesignId="";}
