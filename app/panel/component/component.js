@@ -21,7 +21,7 @@ class panel extends component {
     //END INITIALIZE STYLE      
   }
   fn_bootChildren(){
-    console.log("panel fn_bootChildren");
+    //console.log("panel fn_bootChildren");
   }
 
 }//END CLS

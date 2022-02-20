@@ -80,8 +80,7 @@
             //obj_ini.obj_theme=this.obj_theme;
             obj_ini.obj_design.str_linkId=obj_selected.obj_design.str_idXDesign;                      
             obj_ini.obj_design.str_nameEventClick=obj_project.obj_holder.str_prefix + "myDesignerButtonClick";
-            obj_ini.obj_design.str_valueEventClick="fn_copyTag";  
-            if(!obj_project.LocationMatchInstance){bln_disabled=true;}//CHECK SERVER LOCKED                        
+            obj_ini.obj_design.str_valueEventClick="fn_copyTag";              
             obj_ini.obj_domProperty.disabled=bln_disabled;         
             obj_item=obj_container.fn_addItem(obj_ini);//BootItem            
             //ADD BUTTON TO VALUE CELL
@@ -99,8 +98,7 @@
             //obj_ini.obj_theme=this.obj_theme;
             obj_ini.obj_design.str_linkId=obj_selected.obj_design.str_idXDesign;                                  
             obj_ini.obj_design.str_nameEventClick=obj_project.obj_holder.str_prefix + "myDesignerButtonClick";
-            obj_ini.obj_design.str_valueEventClick="fn_pasteTag";  
-            if(!obj_project.LocationMatchInstance){bln_disabled=true;}//CHECK SERVER LOCKED                        
+            obj_ini.obj_design.str_valueEventClick="fn_pasteTag";              
             obj_ini.obj_domProperty.disabled=bln_disabled;         
             obj_item=obj_container.fn_addItem(obj_ini);//BootItem
             //ADD BUTTON TO VALUE CELL
@@ -117,14 +115,13 @@
             //obj_ini.obj_theme=this.obj_theme;
             obj_ini.obj_design.str_linkId=obj_selected.obj_design.str_idXDesign;                
             obj_ini.obj_design.str_nameEventClick=obj_project.obj_holder.str_prefix + "myDesignerButtonClick";
-            obj_ini.obj_design.str_valueEventClick="fn_cutTag";  
-            if(!obj_project.LocationMatchInstance){bln_disabled=true;}//CHECK SERVER LOCKED            
+            obj_ini.obj_design.str_valueEventClick="fn_cutTag";              
             obj_ini.obj_domProperty.disabled=bln_disabled;    
             obj_item=obj_container.fn_addItem(obj_ini);//BootItem            
             //ADD BUTTON TO VALUE CELL
 
             bln_disabled=false;      
-            if(!obj_clipboard.fn_validateInsert(obj_selected, obj_localHome)){  
+            if(!obj_clipboard.fn_validateInsert(obj_selected)){  
               bln_disabled=true;    
             }            
 
@@ -135,8 +132,7 @@
             //obj_ini.obj_theme=this.obj_theme;
             obj_ini.obj_design.str_linkId=obj_selected.obj_design.str_idXDesign;                
             obj_ini.obj_design.str_nameEventClick=obj_project.obj_holder.str_prefix + "myDesignerButtonClick";
-            obj_ini.obj_design.str_valueEventClick="fn_insertTag";  
-            if(!obj_project.LocationMatchInstance){bln_disabled=true;}//CHECK SERVER LOCKED
+            obj_ini.obj_design.str_valueEventClick="fn_insertTag";              
             obj_ini.obj_domProperty.disabled=bln_disabled;    
             obj_item=obj_container.fn_addItem(obj_ini);//BootItem            
             //ADD BUTTON TO VALUE CELL
@@ -180,8 +176,7 @@
             obj_ini.obj_design.str_linkId=obj_selected.obj_design.str_idXDesign;                      
             obj_ini.obj_design.str_nameEventClick=obj_project.obj_holder.str_prefix + "myDesignerButtonClick";
             //obj_ini.obj_design.str_valueEventClick="fn_selectLocalHome";  
-            obj_ini.obj_design.str_valueEventClick="fn_selectHome";  
-            if(!obj_project.LocationMatchInstance){bln_disabled=true;}//CHECK SERVER LOCKED
+            obj_ini.obj_design.str_valueEventClick="fn_selectHome";              
             obj_ini.obj_domProperty.disabled=bln_disabled;    
             obj_container.fn_addItem(obj_ini);//BootItem      
             //ADD BUTTON TO VALUE CELL
@@ -197,8 +192,7 @@
             //obj_ini.obj_theme=this.obj_theme;
             obj_ini.obj_design.str_linkId=obj_selected.obj_design.str_idXDesign;                  
             obj_ini.obj_design.str_nameEventClick=obj_project.obj_holder.str_prefix + "myDesignerButtonClick";
-            obj_ini.obj_design.str_valueEventClick="fn_openComponent";
-            if(!obj_project.LocationMatchInstance){bln_disabled=true;}//CHECK SERVER LOCKED                        
+            obj_ini.obj_design.str_valueEventClick="fn_openComponent";            
             obj_ini.obj_domProperty.disabled=bln_disabled;         
             obj_item=obj_container.fn_addItem(obj_ini);//BootItem                     
             //ADD BUTTON TO VALUE CELL
@@ -226,8 +220,7 @@
             //obj_ini.obj_theme=this.obj_theme;
             obj_ini.obj_design.str_linkId=obj_selected.obj_design.str_idXDesign;              
             obj_ini.obj_design.str_nameEventClick=obj_project.obj_holder.str_prefix + "myDesignerButtonClick";
-            obj_ini.obj_design.str_valueEventClick="fn_deleteTag";  
-            if(!obj_project.LocationMatchInstance){bln_disabled=true;}//CHECK SERVER LOCKED
+            obj_ini.obj_design.str_valueEventClick="fn_deleteTag";              
             obj_ini.obj_domProperty.disabled=bln_disabled;    
             obj_item=obj_container.fn_addItem(obj_ini);//BootItem               
             //ADD BUTTON TO VALUE CELL
@@ -247,8 +240,7 @@
               //obj_ini.obj_theme=this.obj_theme;
               obj_ini.obj_design.str_linkId=obj_selected.obj_design.str_idXDesign;              
               obj_ini.obj_design.str_nameEventClick=obj_project.obj_holder.str_prefix + "myDesignerButtonClick";
-              obj_ini.obj_design.str_valueEventClick="fn_saveComponent";  
-              if(!obj_project.LocationMatchInstance){bln_disabled=true;}//CHECK SERVER LOCKED              
+              obj_ini.obj_design.str_valueEventClick="fn_saveComponent";                
               obj_ini.obj_domProperty.disabled=bln_disabled;    
               obj_item=obj_container.fn_addItem(obj_ini);//BootItem   
             }
@@ -265,8 +257,7 @@
               //obj_ini.obj_theme=this.obj_theme;
               obj_ini.obj_design.str_linkId=obj_selected.obj_design.str_idXDesign;                  
               obj_ini.obj_design.str_nameEventClick=obj_project.obj_holder.str_prefix + "myDesignerButtonClick";
-              obj_ini.obj_design.str_valueEventClick="fn_editTag";  
-              if(!obj_project.LocationMatchInstance){bln_disabled=true;}//CHECK SERVER LOCKED
+              obj_ini.obj_design.str_valueEventClick="fn_editTag";                
               obj_ini.obj_domProperty.disabled=bln_disabled;    
               obj_item=obj_container.fn_addItem(obj_ini);//BootItem   
             }
@@ -283,8 +274,7 @@
             //obj_ini.obj_theme=this.obj_theme;
             obj_ini.obj_design.str_linkId=obj_selected.obj_design.str_idXDesign;                  
             obj_ini.obj_design.str_nameEventClick=obj_project.obj_holder.str_prefix + "myDesignerButtonClick";
-            obj_ini.obj_design.str_valueEventClick="fn_saveAsProject";
-            if(!obj_project.LocationMatchInstance){bln_disabled=true;}//CHECK SERVER LOCKED                        
+            obj_ini.obj_design.str_valueEventClick="fn_saveAsProject";            
             obj_ini.obj_domProperty.disabled=bln_disabled;         
             if(!bln_disabled){obj_item=obj_container.fn_addItem(obj_ini);}            
             //*/
@@ -306,11 +296,7 @@
       
             fn_validateSave(obj_item, obj_localHome){
               let bln_debug=false;
-
-              if(!obj_project.LocationMatchInstance){
-                if(bln_debug){console.log("VALIDATE SAVE: LOCATIONMATCH IS FALSE")};
-                  return false;
-              }
+              
       
               if(!obj_item){        
                   return false;
@@ -400,10 +386,7 @@
                   if(bln_debug){console.log("VALIDATE OPEN: SELECTED IS ALREADY OPEN")};
                   return false;
               }
-              if(!obj_item.obj_design.bln_projectPin){        
-                  if(bln_debug){console.log("VALIDATE OPEN: SELECTED IS NOT PINNED PROJECT")};
-                  //return false;
-              }
+              
               if(bln_debug){console.log("VALIDATE OPEN: VALIDATED")};   
               return true;
           }

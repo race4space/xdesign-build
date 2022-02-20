@@ -112,10 +112,12 @@
               }
         
               switch(str_name){        
-                case "str_type":
-                  if(obj_item===obj_projectTarget){        
+                case "str_type":                  
+                  if(obj_item===obj_projectTarget){                            
                     obj_projectTarget.obj_holder.str_componentCode=false; 
                     obj_item.obj_holder.bln_changeRecordType=true;                            
+                    obj_project.fn_onStateChange();
+                    //obj_project.obj_palettSelected.obj_designDelegate.fn_setPaletteSelected();       
                   }   
                   else{   
                     str_value="error";
@@ -201,18 +203,14 @@
 
               let bln_disabled;
       
-              obj_ini.obj_domProperty.disabled=true; 
-
+              obj_ini.obj_domProperty.disabled=true;              
               
-              if(!obj_project.LocationMatchInstance){                
-                  return obj_ini;
-              }
               
               if(obj_selected.obj_design.int_modeExecute!==obj_holder.int_modeEdit){                
                 return obj_ini;
               }      
 
-              let str_listIn="bln_isContainer,bln_maintainId,bln_registerAtContainer,bln_showToolbar,bln_themeType,bln_toggleProjectPin,bln_typeable,str_nameRegistrator,bln_registerAtProject,bln_palettePin,bln_projectPin,dataSVG,filterSVG,gridTemplate,str_categoryList,str_classList,str_classExtend,str_createdDate,str_locationID,str_idProject,str_modifiedDate,str_name,str_nameTheme,str_subType,str_tag,str_text,str_themeType,str_urlServer,str_urlServer, str_value,";              
+              let str_listIn="bln_isContainer,bln_maintainId,bln_registerAtContainer,bln_showToolbar,bln_themeType,bln_typeable,str_nameRegistrator,bln_registerAtProject,bln_palettePin,dataSVG,filterSVG,gridTemplate,str_categoryList,str_classList,str_classExtend,str_createdDate,str_idProject,str_modifiedDate,str_name,str_nameTheme,str_subType,str_tag,str_text,str_themeType,str_urlServer,str_urlServer, str_value,";              
               let str_listInProjectOnly="bln_lockComponent,str_nameRelease,str_type,str_urlServer";
               str_listIn+=str_listInProjectOnly;
 
@@ -242,12 +240,6 @@
                   if(obj_selected.fn_getTypeable()){
                     bln_disabled=false;
                   }            
-              }
-
-              
-
-              if(!obj_project.LocationMatchInstance){              
-                bln_disabled=true;
               }
 
               obj_ini.obj_domProperty.disabled=bln_disabled;                    

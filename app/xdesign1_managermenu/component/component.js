@@ -14,31 +14,35 @@
           
         }
         
-        fn_bootChildren(){//in boot phase , and often overidden        
+        
+        fn_bootChildren(){//in boot phase , and often overidden                  
 
           let obj_ini=new Holder;                                    
           obj_ini.obj_design.str_type="dynamiccontent";    
+          obj_ini.obj_design.str_name="dynamiccontent";    
           this.obj_holder.obj_dynamiccontent=this.fn_addItem(obj_ini);                    
+          //console.log("fn_bootChildren: " + this.obj_holder.obj_dynamiccontent);
 
         }    
-        fn_onStateChange(bln_disable){                       
-          this.obj_holder.bln_hasContent=false;
+        fn_onStateChange(){                       
+          this.obj_holder.bln_hasContent=false;          
           
-          this.fn_close(bln_disable);
+          this.obj_holder.obj_container.fn_setDisplay(false);
+          this.fn_close();          
+          if(!obj_projectTarget){return false;}                 
+          this.obj_holder.obj_container.fn_setDisplay();
+          this.obj_holder.obj_container.fn_setEnabled();
           return true;
         }
         
         fn_close(bln_disable=true){
-          this.obj_holder.obj_container.fn_close();                        
-          if(bln_disable){
-            this.obj_holder.obj_container.fn_setDisabled();      
-          }
+          this.obj_holder.obj_container.fn_close();                                  
+          this.obj_holder.obj_container.fn_setDisabled(bln_disable);                                            
+
         }
-        fn_open(bln_enable=true){
-          if(bln_enable){
-            this.obj_holder.obj_container.fn_setEnabled();      
-          }
+        fn_open(bln_enable=true){          
           this.obj_holder.obj_container.fn_open();
+          this.obj_holder.obj_container.fn_setEnabled(bln_enable);                                                      
         }
         
         fn_openContent(){
@@ -50,11 +54,9 @@
           this.obj_holder.bln_hasContent=true;
 
           
-          let obj_dynamiccontent=this.fn_getComponent("dynamiccontent");                        
-          obj_dynamiccontent=this.obj_holder.obj_dynamiccontent;
-          
-          
+          let obj_dynamiccontent=this.fn_getComponent("dynamiccontent");                                  
           if(!obj_dynamiccontent){
+            //console.log("obj_dynamiccontent is false");            
             this.fn_bootChildren();            
             obj_dynamiccontent=this.obj_holder.obj_dynamiccontent;
           }    

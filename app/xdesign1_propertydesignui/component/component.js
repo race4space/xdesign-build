@@ -24,12 +24,9 @@
             if(obj_projectTarget.obj_design.str_type==="theme"){
               bln_isThemeProject=true;
             }
-
             
-      
-            
-              let str_listIn="bln_maintainId,bln_palettePin,bln_projectPin,bln_registerAtContainer,bln_registerAtProject,bln_typeable,dataSVG,filterSVG,gridTemplate,int_idRecord,str_categoryList,str_classExtend,str_classList,str_name,str_nameRegistrator,str_nameTheme,str_subType,str_type,str_tag,str_value,";
-              //let str_listInProjectOnly="bln_palettePin,bln_projectPin,";        
+              let str_listIn="bln_maintainId,bln_palettePin,bln_registerAtContainer,bln_registerAtProject,bln_typeable,dataSVG,filterSVG,gridTemplate,int_idRecord,str_categoryList,str_classExtend,str_classList,str_name,str_nameRegistrator,str_nameTheme,str_subType,str_type,str_tag,str_value,";
+              //let str_listInProjectOnly="bln_palettePin,";        
               if(obj_selected.fn_getTypeable()){                    
                 str_listIn+="str_text,";          
               }
@@ -77,7 +74,7 @@
       
               let str_listAllAccess="gridTemplate";
       
-              let str_listInProjectOnly="bln_palettePin,bln_projectPin";
+              let str_listInProjectOnly="bln_palettePin,";
       
         
               if(!bln_isProject){//probably ok to leave disabled global if selected component is not the project
@@ -92,13 +89,6 @@
               if(obj_shared.fn_inStr(","+obj_ini.obj_design.str_name+",", ","+str_listReadOnly+",")){
                 obj_ini.obj_domProperty.disabled=true;    
               }  
-
-              
-              if(!obj_project.LocationMatchInstance){                                            
-                obj_ini.obj_domProperty.disabled=true;    
-              }
-              
-              
         
               return obj_ini;
             }

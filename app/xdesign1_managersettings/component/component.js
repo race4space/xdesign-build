@@ -45,7 +45,8 @@
             //this runs onload
             //this run when the state of the applicationa as a whole changes                        
             
-            if(!super.fn_onStateChange()){}                        
+            super.fn_onStateChange();
+            this.obj_holder.obj_container.fn_setDisplay();
             this.obj_holder.obj_container.fn_setEnabled();
             
           }            

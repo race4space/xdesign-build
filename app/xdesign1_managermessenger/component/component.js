@@ -13,11 +13,9 @@
             this.fn_extends("xdesign1_managermenu");
           }
           fn_onStateChange(){
-            if(!super.fn_onStateChange()){return;} 
             
-            if(!obj_projectTarget){return;}                  
-            this.obj_holder.obj_container.fn_setEnabled();                    
-            //this.fn_createTextEditor();      
+            if(!super.fn_onStateChange()){return;}      
+            
           } 
 
           fn_onPaletteItemSelected(){    //occurs when we click on an item for example
@@ -55,6 +53,9 @@
             
             this.fn_createTextEditor();  
             obj_texteditor=this.fn_getComponent("xdesign1_messengertexteditor");    
+            if(!obj_texteditor){
+              return;
+            }
             /*
             this.fn_removeAllItems();        
             obj_ini=new Holder;        
@@ -131,6 +132,9 @@
             
             let obj_item;
             let obj_dynamicContentHolder=this.fn_getComponent("MessengerDynamicContent");            
+            if(!obj_dynamicContentHolder){
+              return;
+            }
             obj_dynamicContentHolder.fn_prepare();  
 
             let obj_selected=obj_project.obj_palettSelected;            

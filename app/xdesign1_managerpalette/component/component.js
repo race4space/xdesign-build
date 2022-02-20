@@ -17,24 +17,18 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
   }
   fn_onStateChange(){      
     
-    super.fn_onStateChange();
     
-    if(!obj_projectTarget){return;}   
-
-    let bln_value;
-
-    bln_value=true;               
+    if(!super.fn_onStateChange()){return;}          
+    
     
     let obj_item;                        
     obj_item=this.fn_getComponent("xdesign1_addtag");
     if(obj_item){      
-      obj_item.fn_setEnabled(bln_value);
+      obj_item.fn_setEnabled(true);
     }               
     
-    this.obj_holder.obj_container.fn_setEnabled(bln_value);    
-                    
-    
   }  
+  
   fn_getContent(){
     //console.log("rrr fn_getContent");
     this.fn_getListPinnedComponent();            
@@ -76,9 +70,7 @@ class xdesign1_managerpalette extends xdesign1_managermenu{
   
   fn_onPaletteItemSelected(){                                             
     
-    let obj_container=this.fn_validateContainer(obj_project.obj_palettSelected);   
-
-    if(!obj_project.LocationMatchInstance){obj_container=false;}                 
+    let obj_container=this.fn_validateContainer(obj_project.obj_palettSelected);       
                              
     if(!obj_container){              
       this.obj_holder.obj_container.fn_close();                    

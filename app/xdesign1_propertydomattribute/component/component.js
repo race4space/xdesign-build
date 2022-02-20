@@ -122,11 +122,8 @@
               obj_item.fn_setDomAttribute(str_name, foo_value);      
               return true;
             }
-            fn_validateInput(obj_ini){       
+            fn_validateInput(obj_ini){                     
               
-              if(!obj_project.LocationMatchInstance){                
-                return obj_ini;
-            }
               //pls gnore this comment
               obj_ini.obj_domProperty.disabled=false;                   
               return obj_ini;

@@ -38,30 +38,6 @@
         
         this.fn_checkAuthorize();        
     }  
-
-    fn_setLocationMatchInstance(obj_post){            
-      let bln_value, bln_match;
-      bln_value=obj_post.LocationMatchInstance;
-      bln_match=true;                                    
-      if(bln_value===undefined){bln_match=true;}
-      if(bln_value===false){bln_match=false;}            
-      this.LocationMatchInstance=bln_match;            
-    }
-    fn_getLocationMatchInstance(){            
-      return this.LocationMatchInstance;          
-    }
-
-    fn_setLocationMatchComponentCode(obj_post){            
-      let bln_value, bln_match;
-      bln_value=obj_post.LocationMatchComponentCode;
-      bln_match=true;                                    
-      if(bln_value===undefined){bln_match=true;}
-      if(bln_value===false){bln_match=false;}            
-      this.LocationMatchComponentCode=bln_match;            
-    }
-    fn_getLocationMatchComponentCode(){            
-      return this.LocationMatchComponentCode;          
-    }
     
     fn_unLoad(){
 
@@ -71,6 +47,10 @@
       }
       this.obj_palettSelected=false;
       //note  obj_projectTarget.obj_designDelegate will still be undefined at thsi point.                
+      
+      
+      let obj_item=this.obj_holder.obj_xdesign1_managerproject;
+      if(obj_item){obj_item.fn_onProjectUnload();}            
 
       this.fn_onStateChange();                     
 
@@ -97,8 +77,9 @@
     fn_projectTarget_onLoad(){   //project target
       //console.log("fn_projectTarget_onLoad");
 
-      //set reference to design frames publish object, called when that object has loaded in the frame
-      obj_projectTarget=this.obj_holder.obj_xdesign1_padiframe.dom_obj.contentWindow.obj_project;                         
+      //set reference to design frames publish object, called when that object has loaded in the frame      
+      obj_projectTarget=this.fn_getProjectTarget();
+      
       if(!obj_projectTarget){
         console.log("Error: obj_projectTarget is false");
       }
@@ -164,6 +145,10 @@
     }      
     fn_getGlass(){
       return this.obj_holder.obj_xdesign1_padiframe.dom_obj.contentWindow;
+    }
+    fn_getProjectTarget(){
+
+      return this.fn_getGlass().obj_project;
     }
     fn_runAction(str_action,  obj_ini){         
 
@@ -296,19 +281,17 @@
     }
     deleteProject(){  
       this.obj_holder.obj_xdesign1_managerproject.fn_onDeleteProject();      
-    }
-    fn_toggleProjectPin(){//button event 
-      this.obj_holder.obj_xdesign1_managerproject.fn_toggleProjectPin();
-    }
-    toggleProjectPin(){//run action callback
-      this.obj_holder.obj_xdesign1_managerproject.fn_onToggleProjectPin();
-    }          
+    }    
     fn_newProject(){      
       this.obj_holder.obj_xdesign1_managerproject.fn_newProject();
     } 
     newProject(obj_post){             
       this.obj_holder.obj_xdesign1_managerproject.fn_onNewProject(obj_post);  
     }
+    fn_closeProject(){
+      this.obj_holder.obj_xdesign1_managerproject.fn_closeProject();                  
+    }
+    
     fn_openProject(int_idRecord){      
       this.obj_holder.obj_xdesign1_managerproject.fn_openProject(int_idRecord);            
     }
@@ -425,10 +408,17 @@
       let obj_item=this.fn_getComponent("xdesign1_publishProject");            
       if(!obj_item){return;}              
 
+      let bln_value=false;
+      if(obj_item){obj_item.fn_setDisplay(bln_value)};            
+      if(obj_item){obj_item.fn_setEnabled(bln_value)};                        
+
       let str_text="Version";      
       if(this.obj_holder.bln_createRelease){
+        bln_value=true;
         str_text="Release";
       }
+      if(obj_item){obj_item.fn_setDisplay(bln_value)};            
+      if(obj_item){obj_item.fn_setEnabled(bln_value)};                        
       obj_item.fn_setText(str_text);        
     }
     //START Parent XDesginInterface LoginPanel Template 
@@ -439,7 +429,7 @@
       if(int_pos!==-1){str_urlNavigate="http://desk.lokal-mycode.buzz";}                  
       window.location.href=str_urlNavigate;
       //window.open(str_urlNavigate);                  
-    }
+    }    
     fn_onUnAuthorizeUserStatus(obj_post){
       //console.log("AAA XDESIGN fn_onUnAuthorizeUserStatus: " + obj_post.AuthorizeUserStatus);      
       let obj_item;  

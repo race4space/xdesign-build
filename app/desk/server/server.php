@@ -30,8 +30,7 @@ class Desk{
         $obj_post->RecordId=$row["id"];
         $obj_post->RecordName=$row["Name"];        
         $obj_post->RecordType=$row["Type"];        
-        $obj_post->ObjectData=$row["Serialize"];
-        $this->fn_setLocationMatchInstance();       
+        $obj_post->ObjectData=$row["Serialize"];        
       }
     }
 

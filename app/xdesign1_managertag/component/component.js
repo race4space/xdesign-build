@@ -20,14 +20,10 @@
       this.fn_requires("xdesign1_propertydomattribute");    
       this.fn_requires("xdesign1_propertydesign");
     }
-    fn_onStateChange(){
-      super.fn_onStateChange();
+    fn_onStateChange(){      
 
-      if(!obj_projectTarget){return;}                 
+      if(!super.fn_onStateChange()){return;}      
       
-      let bln_value=true;      
-      if(!obj_project.LocationMatchInstance){bln_value=false;}                 
-      this.obj_holder.obj_container.fn_setEnabled(bln_value);
     } 
 
     fn_getContent(){ 
@@ -91,11 +87,6 @@
 
       obj_item=this.obj_holder.obj_xdesign1_propertydesign;
       if(obj_item){obj_item.fn_onPaletteItemSelected(obj_arg);}        
-
-      let bln_value=true;      
-      if(!obj_project.LocationMatchInstance){bln_value=false;}                 
-      //this.obj_holder.obj_container.fn_setEnabled(bln_value);      
-      //this.obj_holder.obj_container.fn_open();
 
     }
 
@@ -200,9 +191,8 @@
       }
     }
     fn_insertTag(){      
-      let obj_item=obj_project.obj_palettSelected;            
-      let obj_localHome=obj_item.fn_getLocalHome();
-      let obj_insertNextTo=obj_clipboard.fn_validateInsert(obj_item, obj_localHome);
+      let obj_item=obj_project.obj_palettSelected;                  
+      let obj_insertNextTo=obj_clipboard.fn_validateInsert(obj_item);
       if(!obj_insertNextTo){return;}
       
       obj_item=obj_clipboard.fn_insert(obj_insertNextTo);                         

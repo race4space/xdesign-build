@@ -19,45 +19,101 @@
           }                   
           
           
+          
           fn_onStateChange(){                
             
             super.fn_onStateChange();
-
+            this.obj_holder.obj_container.fn_setDisplay();
+            this.obj_holder.obj_container.fn_setEnabled();
+            let obj_item;                        
             let bln_value, bln_valueFlip;
+
+            /////////////
             bln_value=false;                        
+            /////////////
+            obj_item=this.obj_holder.obj_xdesign1_newproject;                        
+            if(obj_item){obj_item.fn_setDisplay(bln_value)};                                    
+            if(obj_item){obj_item.fn_setEnabled(bln_value)};                        
+
+            obj_item=this.obj_holder.obj_xdesign1_deleteproject;                        
+            if(obj_item){obj_item.fn_setEnabled(bln_value)};                        
+            if(obj_item){obj_item.fn_setDisplay(bln_value)};            
+
+            obj_item=this.obj_holder.obj_xdesign1_saveproject;       
+            if(obj_item){obj_item.fn_setEnabled(bln_value)};                                        
+            if(obj_item){obj_item.fn_setDisplay(bln_value)};            
+
+            obj_item=this.obj_holder.obj_xdesign1_publishproject;       
+            if(obj_item){obj_item.fn_setDisplay(bln_value)};            
+            if(obj_item){obj_item.fn_setEnabled(bln_value)};                        
+
+            obj_item=this.obj_holder.obj_xdesign1_closeproject;       
+            if(obj_item){obj_item.fn_setDisplay(bln_value)};            
+            if(obj_item){obj_item.fn_setEnabled(bln_value)};                                    
+
+            obj_item=this.obj_holder.obj_xdesign1_openproject;       
+            if(obj_item){obj_item.fn_setDisplay(bln_value)};            
+            if(obj_item){obj_item.fn_setEnabled(bln_value)};                                    
+            
+            /////////////
+            bln_value=true;                        
+            /////////////
+            obj_item=this.obj_holder.obj_xdesign1_newproject;                        
+            if(obj_item){obj_item.fn_setDisplay(bln_value)};                                    
+            if(obj_item){obj_item.fn_setEnabled(bln_value)}; 
+            
+            /*
+            if(!obj_project.obj_holder.bln_toggleChooseProject){
+            obj_item=this.obj_holder.obj_xdesign1_openproject;       
+            if(obj_item){obj_item.fn_setDisplay(bln_value)};            
+            if(obj_item){obj_item.fn_setEnabled(bln_value)};                                    
+            }
+            //*/
+
+            if(obj_projectTarget){                            
+              obj_item=this.obj_holder.obj_xdesign1_saveproject;       
+              if(obj_item){obj_item.fn_setEnabled(bln_value)};                                          
+              if(obj_item){obj_item.fn_setDisplay(bln_value)};            
+
+              obj_item=this.obj_holder.obj_xdesign1_closeproject;       
+              if(obj_item){obj_item.fn_setEnabled(bln_value)};                                          
+              if(obj_item){obj_item.fn_setDisplay(bln_value)};            
+
+              /////////////
+              bln_value=false;                        
+              /////////////
+              obj_item=this.obj_holder.obj_xdesign1_newproject;                        
+              if(obj_item){obj_item.fn_setDisplay(bln_value)};                                      
+              if(obj_item){obj_item.fn_setEnabled(bln_value)};                        
+
+              obj_item=this.obj_holder.obj_xdesign1_openproject;       
+              if(obj_item){obj_item.fn_setDisplay(bln_value)};              
+              if(obj_item){obj_item.fn_setEnabled(bln_value)};                                    
+                              
+            }                                                
+
             if(obj_projectTarget){              
               if(obj_projectTarget.obj_design.int_idRecord){
-                bln_value=true;                               
-            
+                /////////////
+                bln_value=true;                        
+                /////////////
+                obj_item=this.obj_holder.obj_xdesign1_deleteproject;                        
+                if(obj_item){obj_item.fn_setEnabled(bln_value)};                            
+                if(obj_item){obj_item.fn_setDisplay(bln_value)};                            
+                
+                
               }
-            }                                    
-
-            //CHECK PROJECT SERVER LOCKED                              
-            if(!obj_project.LocationMatchInstance){
-              bln_value=false;
-            }                 
+            }            
             
-            bln_valueFlip==obj_shared.fn_flipBool(bln_value);            
-
-            let obj_item;                        
-            obj_item=this.obj_holder.obj_xdesign1_deleteproject;                        
-            if(obj_item){obj_item.fn_setEnabled(bln_value)};            
-            obj_item=this.obj_holder.obj_xdesign1_publishproject;       
-            if(obj_item){obj_item.fn_setEnabled(bln_value)};            
-            obj_item=this.obj_holder.obj_xdesign1_releaseproject;       
-            if(obj_item){obj_item.fn_setEnabled(bln_value)}; 
-            obj_item=this.obj_holder.obj_xdesign1_saveproject;       
-            if(obj_item){obj_item.fn_setEnabled(bln_value)};
-            if(obj_projectTarget){              
-              if(obj_item){obj_item.fn_setEnabled(true)};
-            }
-
-            
-            this.obj_holder.obj_container.fn_setEnabled();                    
           }
           fn_getContent(){
             //console.log("fn_getContent");
-            this.fn_getListProject();            
+            if(!obj_projectTarget){ 
+              
+              //if(obj_project.obj_holder.bln_toggleChooseProject){
+              this.fn_getListProject();   
+              //}         
+            }
           }
           
           fn_getListProject(){                     
@@ -81,7 +137,9 @@
             obj_ini.obj_design.str_name="xdesign1_managercategoryproject";                                    
             obj_ini.obj_design.str_type="xdesign1_managercategoryproject";                                    
             obj_ini.obj_design.str_categoryName=str_CategoryName;                                                    
+            obj_ini.obj_design.bln_registerAtContainer=true;                                                                
             obj_container.fn_addItem(obj_ini);                      
+            //this.fn_register(obj_item);                
 
           }
           
@@ -125,13 +183,14 @@
           }
           fn_onPublishProject(obj_post){
             console.log("Published Project: " + obj_projectTarget.obj_design.str_name);            
-            console.log("URLProjectVersion: " + obj_post.URLProjectVersion);                                    
+            //console.log("URLProjectVersion: " + obj_post.URLProjectVersion);                                    
 
             //obj_projectTarget.obj_design.str_lastVersionDate=obj_post.LastVersionDate;
             
             
+            
             obj_project.fn_onStateChange();            
-            this.fn_viewInBrowser(obj_post.URLProjectVersion);
+            //this.fn_viewInBrowser(obj_post.URLProjectVersion);
           }
           fn_viewInBrowser(str_url){            
             let o=window.open(str_url, "xDesignViewInBrowser");
@@ -140,7 +199,17 @@
           fn_openComponent(){      
             let int_idRecord=obj_project.obj_palettSelected.obj_design.int_idRecord;      
             this.fn_openProject(int_idRecord);
-          }  
+          } 
+          fn_onProjectUnload(){
+            this.obj_holder.obj_container.fn_setText("Project");
+          } 
+          fn_closeProject(){            
+            obj_project.fn_unLoad();
+            let obj_manageriframe=obj_project.fn_getComponent("xdesign1_manageriframe");                                                            
+            obj_manageriframe.fn_reset();
+            this.obj_holder.bln_hasActiveProject=false;
+            obj_project.fn_onStateChange();                    
+          }
           fn_openProject(int_idRecord){//Add Project Item From Project Menu
 
             obj_project.fn_unLoad();                                 
@@ -182,24 +251,23 @@
             if(!bln_success){
               obj_project.fn_onStateChange();
             }
+
           }
           fn_onDeleteProject(){
       
-            console.log("Deleted Project");
-            obj_project.fn_onStateChange();      
-            this.fn_newProject();
+            console.log("Deleted Project");           
+            
+            this.fn_closeProject();
           }
           fn_newProject(){//BUTTON PRESS            
             obj_project.fn_unLoad();                           
             obj_project.fn_runAction("newProject");
           }    
-          fn_onNewProject(obj_post){  
-            obj_project.fn_onStateChange();      
+          fn_onNewProject(obj_post){              
+            
             this.fn_onOpenProject(obj_post);
           }    
           fn_onOpenProject(obj_post){      
-            
-            obj_project.fn_setLocationMatchInstance(obj_post);
                   
             //obj_clipboard.fn_clear();                   
             obj_project.obj_holder.obj_xdesign1_manageriframe.fn_navigateToProjectInstance(obj_post.URLProjectVersion);            
@@ -214,24 +282,12 @@
             //console.log("ReleaseReady: " + obj_post.ReleaseReady);
             obj_project.fn_setVersionButton(obj_post.ReleaseReady);
             
+            obj_project.fn_onStateChange();      
+            
           }    
           fn_onPaletteItemSelected(){
             //console.log("fn_onPaletteItemSelected");            
-          }          
-          fn_toggleProjectPin(){ 
-            
-            if(obj_project.bln_ListAll){
-              obj_project.bln_ListAll=false;
-            }
-            else{
-              obj_project.bln_ListAll=true;
-            }
-            
-            obj_project.fn_onStateChange();      
-          }
-          fn_onToggleProjectPin(){                  
-            obj_project.fn_onStateChange();
-          } 
+          }                    
           fn_saveProject(){//This relates to saving a component via the Global Save Button
       
             obj_project.fn_close();
@@ -287,7 +343,12 @@
             obj_projectTarget.obj_design.str_lastVersionDate="notset";            
             obj_project.fn_onStateChange();
             console.log("Saved: " + this.obj_holder.ObjectSaveInstance.obj_design.str_name);             
-            this.obj_holder.ObjectSaveInstance.obj_designDelegate.fn_setPaletteSelected();            
+            
+
+            this.fn_publishProject();
+
+            
+            //this.obj_holder.ObjectSaveInstance.obj_designDelegate.fn_setPaletteSelected();            
           } 
           //*/                       
 

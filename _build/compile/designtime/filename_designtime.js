@@ -11,11 +11,8 @@ class DesignDelegate{
         this.obj_delegator=obj_delegator;
         let obj_design=this.obj_delegator.obj_design;
 
-        if(obj_design.bln_protectedProjectPin===undefined){obj_design.bln_protectedProjectPin=false;}                        
-        if(obj_design.bln_projectPin===undefined){obj_design.bln_projectPin=false;}
-        if(obj_design.bln_palettePin===undefined){obj_design.bln_palettePin=false;}                
-        if(obj_design.bln_protectedProjectPin===undefined){obj_design.bln_protectedProjectPin=false;}
-        if(obj_design.bln_toggleProjectPin===undefined){obj_design.bln_toggleProjectPin=false;}
+        if(obj_design.bln_protectedPin===undefined){obj_design.bln_protectedPin=false;}                                        
+        if(obj_design.bln_palettePin===undefined){obj_design.bln_palettePin=false;}                                
         if(obj_design.bln_maintainId===undefined){obj_design.bln_maintainId=false;}
         if(obj_design.bln_registerAtProject===undefined){obj_design.bln_registerAtProject=false;}
         if(obj_design.bln_registerAtContainer===undefined){obj_design.bln_registerAtContainer=false;}        
@@ -28,8 +25,7 @@ class DesignDelegate{
             if(obj_shared.fn_inStr(","+obj_design.str_tag+",", ","+str_listIn+",")){bln_typeable=true;}
             if(obj_design.bln_typeable===undefined){obj_design.bln_typeable=bln_typeable;}                                 
         }
-        if(obj_design.str_categoryList===undefined){obj_design.str_categoryList="notset";}                
-        if(!obj_design.str_locationID){obj_design.str_locationID="notset";}//undefined or empty string or false                                
+        if(obj_design.str_categoryList===undefined){obj_design.str_categoryList="notset";}                        
         if(!obj_design.str_nameRelease){obj_design.str_nameRelease="notset";}//reset any previou true settings                
         
         if(obj_design.str_text==undefined){obj_design.str_text="notset";}//Menu Button Only                      
@@ -113,8 +109,7 @@ class DesignDelegate{
         
     
         obj_item.obj_design.int_idRecord=0; 
-        obj_item.obj_design.bln_palettePin=false;        
-        obj_item.obj_design.bln_projectPin=false;              
+        obj_item.obj_design.bln_palettePin=false;                
         obj_item.obj_design.str_categoryList=false;              
         obj_item.obj_design.int_modeExecute=obj_holder.int_modeEdit;                            
         
@@ -559,12 +554,7 @@ class DesignDelegate{
         str_value=this.fn_defaultNotSet(str_value);                
         str_value=obj_shared.fn_formatShortName(str_value);                    
         this.obj_delegator.obj_design.str_classExtend=str_value;
-    }
-    fn_setLocationID(str_value){
-        str_value=this.fn_defaultNotSet(str_value);        
-        str_value=obj_shared.fn_formatShortName(str_value);                    
-        this.obj_delegator.obj_design.str_locationID=str_value;
-    }
+    }    
     fn_setCreatedDate(str_value){
         str_value=this.fn_defaultNotSetDate(str_value);                
         str_value=obj_shared.fn_formatShortDate(str_value);                    
@@ -585,12 +575,9 @@ class DesignDelegate{
             case "str_classList":            
                 this.fn_setClassList(foo_value);                                                                
                 return;                
-                case "str_categoryList":            
+            case "str_categoryList":            
                 this.fn_setCategoryList(foo_value);                                                                
-                return;                
-            case "str_locationID":            
-                this.fn_setLocationID(foo_value);                                                
-                return; 
+                return;                            
             case "str_createdDate":            
                 this.fn_setCreatedDate(foo_value);                                                
                 return; 

@@ -173,6 +173,9 @@ class designfile extends AJAX {
         //console.log("save obj_post.Objectdata: " + obj_post.ObjectData);
         //console.log(obj_post.ObjectData);
         obj_post.ObjectInstance.obj_designDelegate.fn_updateMap(obj_post.ObjectData);//update map        
+        if(obj_post.RELOADREQUIRED){
+            alert("NEW CLASS : RELOADREQUIRED");
+        }
         //*/
     }
     
@@ -238,8 +241,7 @@ class designfile extends AJAX {
             obj_post.ActionCallBack=obj_ini.str_action;                
         }
         obj_post.RecordId=obj_ini.RecordId;//could get complicated if obj_instance supplied                
-        obj_post.Query=obj_ini.Query;
-        obj_post.ProjectPin=obj_ini.bln_projectPin;        
+        obj_post.Query=obj_ini.Query;        
         obj_post.PalettePin=obj_ini.bln_palettePin;        
         obj_post.CatQuery=obj_ini.str_catQuery;            
         obj_post.DynamicPin=obj_ini.bln_dynamicPin;        
@@ -261,13 +263,10 @@ class designfile extends AJAX {
             obj_post.RecordType=obj_instance.obj_design.str_type;            
             obj_post.RecordExtend=obj_instance.obj_design.str_classExtend;
             //console.log("obj_post.RecordExtend: " + obj_post.RecordExtend);
-            obj_post.RecordId=obj_instance.obj_design.int_idRecord;            
-            obj_post.ToggleProjectPin=obj_instance.obj_design.bln_toggleProjectPin;
-            obj_post.ProtectedProjectPin=obj_instance.obj_design.bln_protectedProjectPin;
-            obj_post.ProjectPin=obj_instance.obj_design.bln_projectPin;
+            obj_post.RecordId=obj_instance.obj_design.int_idRecord;                        
+            obj_post.ProtectedPin=obj_instance.obj_design.bln_protectedPin;            
             obj_post.PalettePin=obj_instance.obj_design.bln_palettePin;     
-            obj_post.DynamicPin=obj_instance.obj_design.bln_dynamicPin;                                
-            obj_post.LocationID=obj_instance.obj_design.str_locationID;
+            obj_post.DynamicPin=obj_instance.obj_design.bln_dynamicPin;                                            
             obj_post.CreatedDate=obj_instance.obj_design.str_createdDate;
             obj_post.ModifiedDate=obj_instance.obj_design.str_modifiedDate;            
             obj_post.LastVersionDate=obj_instance.obj_design.str_lastVersionDate;            
@@ -301,7 +300,9 @@ class designfile extends AJAX {
             obj_post.ClassList=str_List3;            
             //console.log("obj_post.ClassList: " + obj_post.ClassList)
             obj_post.IsRoot=obj_instance.obj_holder.bln_isRoot;//Is Project Instance - set Current Project                        
-            obj_post.ComponentCode=obj_instance.obj_holder.str_componentCode;
+            if(obj_projectTarget===obj_instance){
+                obj_post.ComponentCode=obj_instance.obj_holder.str_componentCode;                
+            }
         }
         return obj_post;
     }   
@@ -496,10 +497,8 @@ class designfile extends AJAX {
         //console.log("obj_post.DesignId: " + obj_post.DesignId);
         //console.log("obj_post.RecordName: " + obj_post.RecordName);
         //console.log("obj_post.RecordType: " + obj_post.RecordType);
-        //console.log("obj_post.RecordId: " + obj_post.RecordId);
-        //console.log("obj_post.ToggleProjectPin: " + obj_post.ToggleProjectPin);
-        //console.log("obj_post.ProtectedProjectPin: " + obj_post.ProtectedProjectPin);
-        //console.log("obj_post.ProjectPin: " + obj_post.ProjectPin);
+        //console.log("obj_post.RecordId: " + obj_post.RecordId);        
+        //console.log("obj_post.ProtectedPin: " + obj_post.ProtectedPin);        
         //console.log("obj_post.PalettePin: " + obj_post.PalettePin);
         //console.log("obj_post.DependentId: " + obj_post.DependentId);
         //console.log("obj_post.ClassList: " + obj_post.ClassList);

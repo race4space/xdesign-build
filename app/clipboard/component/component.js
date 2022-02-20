@@ -170,11 +170,11 @@ class clipboard extends component{
 
     let obj_container=obj_insertNextTo.fn_getParentComponent();
     if(!obj_container){
-        if(bln_debug){console.log("VALIDATE INSERT: NO VALID CONTAINER")};   
+        if(bln_debug){console.log("VALIDATE INSERT: NO VALID CONTAINER PARENT IS FALSE")};   
         return false;
     }
 
-    obj_container=obj_project.fn_validateContainer(obj_container, obj_container.obj_design.int_idRecord);                          
+    obj_container=obj_project.fn_validateContainer(obj_container, obj_item.obj_design.int_idRecord);                          
     if(!obj_container){
         if(bln_debug){console.log("VALIDATE INSERT: NO VALID CONTAINER")};   
         return false;

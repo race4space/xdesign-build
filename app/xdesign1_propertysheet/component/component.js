@@ -209,10 +209,6 @@
                 bln_disabled=true;
               }
 
-              if(!obj_project.LocationMatchInstance){              
-                bln_disabled=true;
-              }
-
               obj_ini.obj_domProperty.disabled=bln_disabled;    
               obj_input=obj_container.fn_addItem(obj_ini);//BootItem                             
       
@@ -243,11 +239,8 @@
               }        
               if(this.obj_design.int_modeExecute===obj_holder.int_modeReadOnly){                
                 bln_disabled=true;
-              }    
+              }                
               
-              if(!obj_project.LocationMatchInstance){              
-                bln_disabled=true;
-              }
               
               obj_ini.obj_domProperty.disabled=bln_disabled;    
               obj_input=obj_container.fn_addItem(obj_ini);//BootItem                              

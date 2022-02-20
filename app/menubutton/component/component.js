@@ -101,19 +101,29 @@ class menubutton extends component {
         
         return obj_item;
     }        
-    fn_open(){
+
+    
+    fn_setDisplay(bln_display=true){          
+        
+        if(!bln_display){
+            this.obj_design.bln_pin=undefined;
+        }
+        super.fn_setDisplay(bln_display);
+    }
+    fn_open(){        
         this.fn_openContent();
     }
-    fn_close(){
+    fn_close(){        
         if(!this.obj_design.bln_pin){
             this.fn_closeContent();
-        }        
+        }                
     }
-    fn_openContent(){  
+    fn_openContent(){          
+
         if(this.obj_domProperty.disabled){            
             return;
         }
-
+    
         let obj_container=this.fn_getParentComponent();        
         let str_method="fn_open";        
         if(obj_container && obj_container[str_method]){
@@ -139,7 +149,7 @@ class menubutton extends component {
         
         this.dom_objContentContainer.style.display="none";
         this.obj_design.bln_isOpen=false;                
-
+        
         let arr=this.obj_design.arr_item;
         for(let i=0;i<arr.length;i++){
             let obj_item=arr[i];                                    
