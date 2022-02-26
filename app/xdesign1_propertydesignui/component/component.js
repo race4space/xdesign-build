@@ -25,7 +25,7 @@
               bln_isThemeProject=true;
             }
             
-              let str_listIn="bln_maintainId,bln_palettePin,bln_registerAtContainer,bln_registerAtProject,bln_typeable,dataSVG,filterSVG,gridTemplate,int_idRecord,str_categoryList,str_classExtend,str_classList,str_name,str_nameRegistrator,str_nameTheme,str_subType,str_type,str_tag,str_value,";
+              let str_listIn="bln_maintainId,bln_palettePin,bln_registerAtContainer,bln_registerAtProject,bln_typeable,dataSVG,filterSVG,gridTemplate,int_idRecord,str_categoryList,str_name,str_nameRegistrator,str_nameTheme,str_subType,str_type,str_tag,str_value,";
               //let str_listInProjectOnly="bln_palettePin,";        
               if(obj_selected.fn_getTypeable()){                    
                 str_listIn+="str_text,";          

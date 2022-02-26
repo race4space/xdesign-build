@@ -11,7 +11,7 @@ class recordset extends AJAX{
     this.fn_setType("recordset");      
     this.fn_setTag("recordset");            
     this.obj_design.bln_isGenericTag=true;
-    this.fn_extends("designfile");                    
+    this.fn_extends("AJAX");                    
 
     this.obj_holder.bln_debugServer=false;
 

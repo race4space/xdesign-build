@@ -125,6 +125,11 @@ class Shared{
     let re=new RegExp(str_remove, "g");
     return str_source.replace(re, "");
   }
+  
+  fn_trimComma(str){        
+    str = str.replace(/(^,)|(,$)/g, "")    
+    return str;
+  }
   fn_removeSpace(str){        
     str = str.replace(/\s+/g, '');
     return str;

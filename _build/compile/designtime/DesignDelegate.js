@@ -110,6 +110,7 @@ class DesignDelegate{
         obj_item.obj_design.bln_palettePin=false;                
         obj_item.obj_design.str_categoryList=false;              
         obj_item.obj_design.int_modeExecute=obj_holder.int_modeEdit;                            
+        obj_item.obj_design.bln_classController=false;                            
         
         obj_item.obj_design.str_idXDesign="";
         let str_method="fn_setIDXDesign";

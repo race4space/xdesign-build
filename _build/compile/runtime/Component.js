@@ -41,6 +41,8 @@ class component extends BaseObject {
         this.bln_isComponent=true;                
         if(!this.obj_design.str_classList){this.obj_design.str_classList="notset";}//undefined or empty string or false
         if(!this.obj_design.str_classExtend){this.obj_design.str_classExtend="notset";}//undefined or empty string or false                        
+        if(!this.obj_design.bln_classController){this.obj_design.bln_classController="false";}//undefined or empty string or false                        
+        
         if(!this.obj_design.str_createdDate){this.obj_design.str_createdDate=obj_shared.fn_getDate(obj_const.int_dateNow);}//undefined or empty string or false                
         if(!this.obj_design.str_modifiedDate){this.obj_design.str_modifiedDate=obj_shared.fn_getDate(obj_const.int_dateNow);}//undefined or empty string or false                
 
@@ -202,6 +204,7 @@ class component extends BaseObject {
         this.obj_design.str_classList=str_classList;        
     }
     
+    
     fn_getType(){
         return this.obj_design.str_type;
     }          
@@ -335,6 +338,24 @@ class component extends BaseObject {
     fn_getTypeable(bln_value){                   
         return this.obj_design.bln_typeable;                    
     }
+    fn_setClassController(bln_value){                   
+    }
+    fn_getClassController(){                   
+        let bln_value=obj_shared.fn_parseBool(this.obj_design.bln_classController);        
+        if(!this.fn_proposeClassController()){
+            bln_value=false;
+        }
+        return bln_value;
+    }
+    fn_proposeClassController(){                           
+        let bln_value=true;
+        if(this.obj_design.str_type==="component"){
+            bln_value=false;
+        }        
+        return bln_value;
+    }
+
+    
     
     
     //START COMPONENT EVENT HANDLING - CONSIDER MOVING to BASEOBJECT IF NECESSARY    

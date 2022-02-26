@@ -159,6 +159,11 @@ class Shared{
     let re=new RegExp(str_remove, "g");
     return str_source.replace(re, "");
   }
+  
+  fn_trimComma(str){        
+    str = str.replace(/(^,)|(,$)/g, "")    
+    return str;
+  }
   fn_removeSpace(str){        
     str = str.replace(/\s+/g, '');
     return str;
@@ -1210,7 +1215,7 @@ class BaseObject extends LevelObject{
     fn_compileDependentClassList(){
         let str_val="";        
         str_val+=this.fn_listDependentClass();//Get List of Compone Ids
-        str_val=str_val.slice(0,-1);         
+        str_val=str_val.slice(0,-1);                 
         return str_val;
     }
     fn_listDependentClass(){        
@@ -2112,6 +2117,8 @@ class component extends BaseObject {
         this.bln_isComponent=true;                
         if(!this.obj_design.str_classList){this.obj_design.str_classList="notset";}//undefined or empty string or false
         if(!this.obj_design.str_classExtend){this.obj_design.str_classExtend="notset";}//undefined or empty string or false                        
+        if(!this.obj_design.bln_classController){this.obj_design.bln_classController="false";}//undefined or empty string or false                        
+        
         if(!this.obj_design.str_createdDate){this.obj_design.str_createdDate=obj_shared.fn_getDate(obj_const.int_dateNow);}//undefined or empty string or false                
         if(!this.obj_design.str_modifiedDate){this.obj_design.str_modifiedDate=obj_shared.fn_getDate(obj_const.int_dateNow);}//undefined or empty string or false                
 
@@ -2273,6 +2280,7 @@ class component extends BaseObject {
         this.obj_design.str_classList=str_classList;        
     }
     
+    
     fn_getType(){
         return this.obj_design.str_type;
     }          
@@ -2406,6 +2414,24 @@ class component extends BaseObject {
     fn_getTypeable(bln_value){                   
         return this.obj_design.bln_typeable;                    
     }
+    fn_setClassController(bln_value){                   
+    }
+    fn_getClassController(){                   
+        let bln_value=obj_shared.fn_parseBool(this.obj_design.bln_classController);        
+        if(!this.fn_proposeClassController()){
+            bln_value=false;
+        }
+        return bln_value;
+    }
+    fn_proposeClassController(){                           
+        let bln_value=true;
+        if(this.obj_design.str_type==="component"){
+            bln_value=false;
+        }        
+        return bln_value;
+    }
+
+    
     
     
     //START COMPONENT EVENT HANDLING - CONSIDER MOVING to BASEOBJECT IF NECESSARY    

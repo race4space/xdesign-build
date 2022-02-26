@@ -123,6 +123,10 @@ class xdesign1{
       if(empty($obj_post->DependentId)){
         $obj_post->DependentId="";
       }      
+      
+      if(empty($obj_post->ClassController)){        
+        $obj_post->ClassController=false;        
+      }      
 
       if(empty($obj_post->ClassList)){        
         $obj_post->ClassList="notset";        
@@ -332,9 +336,9 @@ class xdesign1{
     function fn_getFolderPathInstanceRecord($int_idRecord){          
       return $this->fn_getFolderPathInstance()."/".$int_idRecord;    
     }            
-    function fn_getFilePathInstanceRecordColumn($int_id_record, $str_column){    
+    function fn_getFilePathInstanceRecordColumn($int_idRecord, $str_column){    
       
-      $str_path_folder=$this->fn_getFolderPathInstanceRecord($int_id_record);
+      $str_path_folder=$this->fn_getFolderPathInstanceRecord($int_idRecord);
       $str_file_path=$str_path_folder."/".$str_column;      
       return $str_file_path;      
     }                   
@@ -494,8 +498,8 @@ class xdesign1{
       $str_dependentId=$obj_post->DependentId;            
       $str_classList=$obj_post->ClassList;      
       //$this->fn_addEcho("str_classList: ".$str_classList);
-      $str_componentCode=$obj_post->ComponentCode;   
-      //$this->fn_addEcho("str_componentCode: ".$str_componentCode);
+      $str_code=$obj_post->ComponentCode;   
+      //$this->fn_addEcho("str_code: ".$str_code);
       
       
 
@@ -535,22 +539,20 @@ class xdesign1{
 
       $this->fn_updateCategoryList($obj_post);        
       
-
+      
       
       //UPDATE DATABASE FROM SOFTWARE        
       $this->fn_updateInstanceToDatabase($str_nameRecord, $str_nameShortRecord, $str_typeRecord, $int_protectedPin, $int_palettePin, $str_lastVersionDate, $str_categoryList,  $str_dependentId, $str_objectData, $str_createdDate, $str_modifiedDate, $int_idRecord);
+
       if(empty($this->bln_sendBackObjectDate)){
         $obj_post->ObjectData="{}";
       }      
-      //EXPORT FROM DATABASE TO FILE               
+      
+      //EXPORT FROM DATABASE TO FILE     
       $this->fn_exportInstanceToFile($str_nameRecord, $str_nameShortRecord, $str_typeRecord, $int_protectedPin, $int_palettePin, $str_lastVersionDate, $str_categoryList, $str_dependentId, $str_objectData, $str_createdDate, $str_modifiedDate, $int_idRecord);                
 
-            
-      //UPDATE DATABASE FROM SOFTWARE
-      $this->fn_updateComponentToDatabase($str_typeRecord, $str_recordExtend, $str_classList, $str_componentCode, $str_createdDate, $str_modifiedDate);         
-      
-      //EXPORT FROM DATABASE TO FILE               
-      $this->fn_exportComponentToFile($str_typeRecord, $str_recordExtend, $str_classList, $str_componentCode, $str_createdDate, $str_modifiedDate);    
+      //MANAGE COMPONENT SAVE, IF ANY
+      $this->fn_manageComponentSave($str_typeRecord, $str_recordExtend, $str_classList, $str_code, $str_createdDate, $str_modifiedDate);      
     } 
 
     function fn_get_lastVersionDate($bln_version){      
@@ -575,6 +577,7 @@ class xdesign1{
     
     function fn_updateInstanceToDatabase($str_nameRecord, $str_nameShortRecord, $str_typeRecord, $int_protectedPin, $int_palettePin, $str_lastVersionDate, $str_categoryList, $str_dependentId, $str_objectData, $str_createdDate, $str_modifiedDate, $int_idRecord){
 
+
       
       $str_sql="UPDATE `instance` SET `Name`=:Name, `NameShort`=:NameShort,`Type`=:Type, `ProtectedPin`=:ProtectedPin, `PalettePin`=:PalettePin, `LastVersionDate`=:LastVersionDate, `CategoryList`=:CategoryList, `DependentId`=:DependentId, `Serialize`=:Serialize, `CreatedDate`=:CreatedDate, `ModifiedDate`=:ModifiedDate WHERE `id`=:id ;";                             
       
@@ -582,7 +585,7 @@ class xdesign1{
       $stmt->execute([
         'Name' => $str_nameRecord,
         'NameShort' => $str_nameShortRecord,
-        'Type' => $str_typeRecord,        
+        'Type' => $str_typeRecord,                
         'ProtectedPin' => $int_protectedPin,
         'PalettePin' => $int_palettePin,
         'LastVersionDate' => $str_lastVersionDate,
@@ -594,75 +597,63 @@ class xdesign1{
         'id' => $int_idRecord        
       ]);                                    
     }   
-    
 
-    function fn_updateComponentToDatabase($str_dbtype, $str_recordExtend, $str_classList, $str_componentCode, $str_createdDate, $str_modifiedDate){      
+    function fn_manageComponentSave($str_dbtype, $str_recordExtend, $str_classList, $str_code, $str_createdDate, $str_modifiedDate){      
 
-
-      $obj_post=$this->obj_post;      
+      $obj_post=$this->obj_post;            
       
-      //$this->fn_addEcho("xxx str_Code: ".$str_componentCode);
-      //$this->fn_addEcho("str_dbtype: ".$str_dbtype);
-      
-      if(empty($str_componentCode)){
-        //return;//saftey
-      }
-
       if(strtolower($str_dbtype)==="component"){//very important
         return;//must return
-      }
+      }            
       
       $int_idFixed=$this->fn_dbTypeComponentExist(0, $str_dbtype);//check on type only         
       //$this->fn_addEcho("int_idFixed: ".$int_idFixed);
       if($int_idFixed===0){        
         $this->fn_addEcho("NEW CLASS: RE-VERSION XDESIGNER AND RE-LOAD REQUIRED");
         $obj_post->RELOADREQUIRED=true;      
-      }                         
-      $this->fn_updateFileToComponentTable($int_idFixed, $str_dbtype, $str_recordExtend, $str_classList, $str_componentCode, $str_createdDate, $str_modifiedDate);      
+        $obj_post->ClassController=true;
+        $this->fn_insertComponentFromUI($int_idRecord, $str_createdDate);
+      }     
+
+      $bln_classController=$this->fn_get_intBool($obj_post->ClassController);
+      
+      if($bln_classController){
+        $this->fn_updateFileToComponentTable($int_idFixed, $str_dbtype, $str_recordExtend, $str_classList, $str_code, $str_createdDate, $str_modifiedDate);      
+        $this->fn_exportComponentToFile($str_dbtype, $str_recordExtend, $str_classList, $str_code, $str_createdDate, $str_modifiedDate);    
+      }
     }
 
-
-    function fn_updateFileToComponentTable($int_idFixed, $str_dbtype, $str_recordExtend, $str_classList, $str_componentCode, $str_createdDate, $str_modifiedDate){  
-  
-      $int_id_record=$this->fn_dbTypeComponentExist($int_idFixed, $str_dbtype);    
+    function fn_insertComponentFromUI($int_idRecord, $str_createdDate){              
       
-      
-      if($int_id_record===0){        
-        $str_sql="INSERT INTO `component` (`id`, `Type`, `Extend`, `ClassList`,`Code`,`CreatedDate`, `ModifiedDate`) SELECT :id,:Type,:Extend,:ClassList,:Code,:CreatedDate,:ModifiedDate;";
+      if($int_idRecord===0){                
+        $str_sql="INSERT INTO `component` (`id`,`CreatedDate`) SELECT :id,:CreatedDate;";
         $stmt = $this->pdo_user->prepare($str_sql);        
         $stmt->execute([
-          'id' => $int_idFixed,
-          'Type' => $str_dbtype,
-          'Extend' => $str_recordExtend,          
-          'ClassList' => $str_classList,
-          'Code' => $str_componentCode,                    
-          'CreatedDate' => $str_createdDate,
-          'ModifiedDate' => $str_modifiedDate
+          'id' => $int_idRecord,        
+          'CreatedDate' => $str_createdDate
         ]);                                    
       }
-      else{        
-        $str_sql="UPDATE `component` SET `Type`=:Type, `Extend`=:Extend, `ClassList`=:ClassList,`CreatedDate`=:CreatedDate, `ModifiedDate`=:ModifiedDate WHERE `id`=:id";                        
-        $stmt = $this->pdo_user->prepare($str_sql);                        
-        $stmt->execute([
-          'id' => $int_id_record,
-          'Type' => $str_dbtype,
-          'Extend' => $str_recordExtend,          
-          'ClassList' => $str_classList,                  
-          'CreatedDate' => $str_createdDate,
-          'ModifiedDate' => $str_modifiedDate
-        ]);                                    
-
-        if(!empty($str_componentCode)){
-          $str_sql="UPDATE `component` SET `Code`=:Code WHERE `id`=:id;";                        
-          $stmt = $this->pdo_user->prepare($str_sql);                            
-          $stmt->execute([
-            'id' => $int_id_record,
-            'Code' => $str_componentCode
-          ]);                                    
-        }
-      }  
+    }
+    function fn_updateFileToComponentTable($int_idRecord, $str_dbtype, $str_recordExtend, $str_classList, $str_code, $str_createdDate, $str_modifiedDate){         
       
-      return $int_id_record;
+      $str_sql="UPDATE `component` SET `Type`=:Type, `Extend`=:Extend, `ClassList`=:ClassList, `ModifiedDate`=:ModifiedDate WHERE `id`=:id";                        
+      $stmt = $this->pdo_user->prepare($str_sql);                        
+      $stmt->execute([
+        'id' => $int_idRecord,
+        'Type' => $str_dbtype,
+        'Extend' => $str_recordExtend,                    
+        'ClassList' => $str_classList,      
+        'ModifiedDate' => $str_modifiedDate
+      ]);                                    
+
+      if(!empty($str_code)){
+        $str_sql="UPDATE `component` SET `Code`=:Code WHERE `id`=:id;";                        
+        $stmt = $this->pdo_user->prepare($str_sql);                            
+        $stmt->execute([
+          'id' => $int_idRecord,
+          'Code' => $str_code
+        ]);                                    
+      }      
     }
     
 
@@ -697,7 +688,9 @@ class xdesign1{
         return;
       }
 
-      $str_sql="DELETE FROM `instance` WHERE `id`=:id; ";                  
+      
+
+      $str_sql="DELETE FROM `instance` WHERE `id`=:id AND `ProtectedPin`=0; ";                  
       $stmt = $this->pdo_user->prepare($str_sql);                    
       $stmt->execute([
         'id' => $int_idRecord
@@ -726,6 +719,7 @@ class xdesign1{
 
 
     function fn_openProject(){
+      
 
       $obj_post=$this->obj_post;      
       $int_idRecord=$this->obj_post->RecordId;                  
@@ -755,10 +749,9 @@ class xdesign1{
       }
 
       
-      
-      $obj_ini=new stdClass();
+      $obj_ini=new stdClass();      
       $obj_ini->RecordId=$int_idRecord;            
-      $obj_ini->bln_version=false;      
+      $obj_ini->bln_version=false;        
       $this->fn_packageProject($obj_ini);
     }  
 
@@ -777,8 +770,8 @@ class xdesign1{
       $this->fn_addEcho($str_sql);     
       $stmt = $this->pdo_user->prepare($str_sql);                        
       $stmt->execute([
-        'Categoryid' => $int_id_record,        
-        'Instanceid' => $int_id_record
+        'Categoryid' => $int_idRecord,        
+        'Instanceid' => $int_idRecord
       ]);                                    
       
       $row=$stmt->fetch();
@@ -1072,9 +1065,9 @@ class xdesign1{
       
       //$stmt->execute([$str_dbtype]);
       $row=$stmt->fetch();        
-      $int_id_record=0;  
-      if($row){$int_id_record=$row["Id"];}
-      return $int_id_record;  
+      $int_idRecord=0;  
+      if($row){$int_idRecord=$row["Id"];}
+      return $int_idRecord;  
     }         
     function fn_deletePackageFolder($int_idRecord, $str_name_app){      
 
@@ -1132,14 +1125,16 @@ class xdesign1{
 
     
     function fn_packageProject($obj_ini){  
+
+      
       
       $obj_post=$this->obj_post;
       
       $this->obj_record=new stdClass();
       $this->obj_record->Type="notset";
       $int_idRecord=$obj_ini->RecordId;            
-      $bln_version=$obj_ini->bln_version;                              
-
+      $bln_version=$obj_ini->bln_version;                                   
+      
       
       if(empty($obj_post->CreateRelease)){$obj_post->CreateRelease=false;}
       $bln_release=$this->fn_get_intBool($obj_post->CreateRelease);            
@@ -1163,6 +1158,8 @@ class xdesign1{
         $str_nameTargetClass=$row["Type"];        
         $this->obj_record->Type=$row["Type"];
       }//Overide with Custom Project Type, if the component has been Saved, RecordId=x
+
+      
 
       if(empty($str_componentNameShort)){
         $str_componentNameShort=$str_componentName;        
@@ -1245,12 +1242,11 @@ heredoc;
       if(!$bln_version){
         $this->fn_addPalettePinComponentToLinkTable($int_idRecord);//add palette pinned components temporarily to packageproject
       }            
-      
+
       //---Write code base 
       //get dependent code from database 
       $str_code=$this->fn_compileComponentCodeFromLinkTable($int_idRecord); //this is the complex component code function                                     
-      $str_code_project.=$str_code.PHP_EOL.PHP_EOL;            
-
+      $str_code_project.=$str_code.PHP_EOL.PHP_EOL;                  
       //$this->fn_addEcho("str_code_project: " . $str_code_project);
       
       $str_code=$this->fn_getComponentMap();                          
@@ -1537,11 +1533,11 @@ heredoc;
     }
     
 
-    function fn_getPaletteComponentListIdFromLinkTable($int_id_record){        
+    function fn_getPaletteComponentListIdFromLinkTable($int_idRecord){        
       
       $str_sql="SELECT group_concat(distinct `component`.`id`) as `listId` FROM instancelink join instance on LinkDependentId=instance.id join component on instance.type=component.Type ";
       $str_sql.="WHERE ";      
-      $str_sql.="`InstanceId`=".$int_id_record.";";
+      $str_sql.="`InstanceId`=".$int_idRecord.";";
       //$this->fn_addEcho("str_sql: ".$str_sql);                              
       $stmt = $this->pdo_user->prepare($str_sql);
       $stmt->execute();      
@@ -1550,7 +1546,7 @@ heredoc;
       //$this->fn_addEcho("xxx str_listId: ".$str_listId);                              
       return $str_listId;
     }           
-    
+
     function fn_getPaletteComponentListExpand($str_listType){    
 
       
@@ -1624,7 +1620,8 @@ heredoc;
       }           
       $this->str_listClassExpand=trim($this->str_listClassExpand, ",");      
     }
-
+    
+    
     function fn_cleanArray($arr_ToClean){  
       
       //START Clean Array
@@ -1670,33 +1667,35 @@ heredoc;
       $row=$stmt->fetch(); 
       if($row){$str_listType=$row["listType"];}         
       $this->str_listPaletteComponentType=$str_listType;      
-    }
+    }   
+    
 
-    function fn_getInstanceLinkList($str_list){
-
-      $this->str_InstanceLinkList="";
-      $this->fn_getInstanceLinkListRecursive($str_list);            
-      $arr_Clean=$this->fn_cleanArray(explode(",", $this->str_InstanceLinkList));                  
+    function fn_getComponentLinkList($str_list){      
+      
+      $this->str_ComponentLinkList="";
+      $this->fn_getComponentLinkListRecursive($str_list);                  
+      $arr_Clean=$this->fn_cleanArray(explode(",", $this->str_ComponentLinkList));                  
       $str_list=implode(",", $arr_Clean);      
       return $str_list;      
     }
-    function fn_getInstanceLinkListRecursive($str_list){
+    function fn_getComponentLinkListRecursive($str_list){
 
       $arr_list=$this->fn_cleanArray(explode(",", $str_list));
       foreach ($arr_list as $str_type) {  
 
         if($str_type==="notset"){continue;}                
-        $this->str_InstanceLinkList.=$str_type.",";   
-
+        $this->str_ComponentLinkList.=$str_type.",";           
+        
         $str_sql="SELECT Concat(`Extend`, ',', `ClassList`) AS `listExtend` FROM `component` WHERE `Type`=?;";                              
         $stmt = $this->pdo_user->prepare($str_sql);
-        $stmt->execute([$str_type]);              
+        $stmt->execute([$str_type]);         
         $row=$stmt->fetch();            
         if($row){                
           $str_column_value=$row["listExtend"];              
-          if(!empty($str_column_value)){        
-            $this->str_InstanceLinkList=$str_column_value.",".$this->str_InstanceLinkList;
-            $this->fn_getInstanceLinkListRecursive($str_column_value);                              
+          if($str_column_value==="notset, notset"){continue;}                                    
+          if(!empty($str_column_value)){                    
+            $this->str_ComponentLinkList=$str_column_value.",".$this->str_ComponentLinkList;                        
+            $this->fn_getComponentLinkListRecursive($str_column_value);                              
           }
         }              
       }                  
@@ -1709,7 +1708,7 @@ heredoc;
       }
     }
 
-    function fn_compileComponentCodeFromLinkTable($int_id_record){      
+    function fn_compileComponentCodeFromLinkTable($int_idRecord){      
 
       
 
@@ -1724,11 +1723,11 @@ heredoc;
       $str_listCodeClass="//START XTRA CLASSES".PHP_EOL;                  
       
 
-      //$this->fn_addEcho("int_id_record: ".$int_id_record);      
+      //$this->fn_addEcho("int_id_record: ".$int_idRecord);      
       
       //START Get List of Component Ids listed to be written to the browser.
       //important also generates component map      
-      $str_listId=$this->fn_getPaletteComponentListIdFromLinkTable($int_id_record);            
+      $str_listId=$this->fn_getPaletteComponentListIdFromLinkTable($int_idRecord);            
       //$this->fn_addEcho("xxx str_listId: ".$str_listId);
       //END  Get List of Component Ids listed to be written to the browser.                  
       
@@ -1739,15 +1738,16 @@ heredoc;
 
       
       //START get LIST OF XTRA CLASSES            
-      $this->fn_getPaletteComponentListExpand($this->str_listPaletteComponentType);                                    
-      $arr_listClassExpand=$this->fn_dedupeArray(explode(",", $this->str_listClassExpand));                  
+      $this->fn_getPaletteComponentListExpand($this->str_listPaletteComponentType);                                          
+      $arr_listClassExpand=$this->fn_dedupeArray(explode(",", $this->str_listClassExpand));                        
       $this->str_listClassExpand=implode(",", $arr_listClassExpand);                        
       //END get LIST OF XTRA CLASSES 
+      
 
       $str_list1=$this->str_listPaletteComponentType;
-      $str_list2=$this->str_listClassExpand;
-      $str_listDependent=$this->fn_getInstanceLinkList($str_list2.",".$str_list1);                  ;
+      $str_list2=$this->str_listClassExpand;      
       
+      $str_listDependent=$this->fn_getComponentLinkList($str_list2.",".$str_list1);                  ;            
       $str_listClass=$str_listDependent;
       $str_listClass=trim($str_listClass, ',');      
       $arr_listClass=explode(",",$str_listClass);//grab list of child instance ids      
@@ -1861,7 +1861,7 @@ heredoc;
     }
     
 
-    function fn_updateProjectFileWithjsonObject($int_id_record, $bln_version){     
+    function fn_updateProjectFileWithjsonObject($int_idRecord, $bln_version){     
       
       $str_code="";      
       $str_listRecord="";
@@ -1869,7 +1869,7 @@ heredoc;
       
 
       $str_code="";      
-      $str_sql="SELECT group_concat(distinct LinkDependentId) as `list` FROM `instancelink` WHERE `InstanceId`='$int_id_record';";      
+      $str_sql="SELECT group_concat(distinct LinkDependentId) as `list` FROM `instancelink` WHERE `InstanceId`='$int_idRecord';";      
       //$this->fn_addEcho($str_sql);      
       $stmt = $this->pdo_user->prepare($str_sql);
       $stmt->execute();      
@@ -1881,7 +1881,7 @@ heredoc;
         //$this->fn_addEcho("NO CODE FOUND");
       }
 
-      //$str_listRecord.=",".$int_id_record;//add reference to self
+      //$str_listRecord.=",".$int_idRecord;//add reference to self
       
       
       $arr_listRecord=[];
@@ -1974,13 +1974,13 @@ heredoc;
     }
     
 
-    function fn_updateTemplateFile($str_name_file_xdesign, $int_id_record, $str_nameTargetClass){     
+    function fn_updateTemplateFile($str_name_file_xdesign, $int_idRecord, $str_nameTargetClass){     
       
   
       $str_code = file_get_contents($str_name_file_xdesign);  
       
       $str_search="{int_idRecord}";
-      $str_replace=$int_id_record;
+      $str_replace=$int_idRecord;
       $str_code = str_replace($str_search, $str_replace, $str_code);
     
       $str_search="{str_nameTargetClass}";
@@ -2058,12 +2058,12 @@ heredoc;
 ////////////////////////////////
 
 
-function fn_XDesigner_setPalettePinStatus($int_id_record, $bln_status){                
+function fn_XDesigner_setPalettePinStatus($int_idRecord, $bln_status){                
       
   $int_status=0;
   if($bln_status){$int_status=1;}
   
-  $str_sql="UPDATE `instance` SET PalettePin =$int_status WHERE `id`=$int_id_record;";
+  $str_sql="UPDATE `instance` SET PalettePin =$int_status WHERE `id`=$int_idRecord;";
   //$this->fn_addEcho("pin str_sql: ".$str_sql);
   $stmt = $this->pdo_user->prepare($str_sql);
   $stmt->execute();
@@ -2299,7 +2299,7 @@ function fn_XDesigner_transfer_DesigntimeFile(){
 
     //write designtime code from file to database      
     $str_code = file_get_contents($this->str_file_path_designtime);      
-    $this->fn_XDesginer_transferFileToComponentTable($this->dbtype_designtime, "notset", "notset",$str_code, $date_script, $date_script);              
+    $this->fn_XDesginer_transferFileToComponentTable($this->dbtype_designtime, "notset", "notset", $str_code, $date_script, $date_script);              
 
 }
 function fn_XDesigner_transfer_TemplateFile(){
@@ -2397,11 +2397,11 @@ function fn_XDesigner_importAll(){
 function fn_XDesigner_updateFileToInstanceTable($int_idFixed, $str_dbname, $str_dbtype, $str_code){
 
   
-  $int_id_record=$this->fn_XDesigner_dbTypeInstanceExist($int_idFixed, $str_dbtype);  
+  $int_idRecord=$this->fn_XDesigner_dbTypeInstanceExist($int_idFixed, $str_dbtype);  
 
-  //$int_id_record=0;  
+  //$int_idRecord=0;  
   
-  if($int_id_record==0){    
+  if($int_idRecord==0){    
     $str_sql="INSERT INTO `instance` (`id`, `Name`, `Type`, `ProtectedPin`, `DependentId`, `Serialize`) SELECT ?, ?, ?, ?, ?, ?;";
     $stmt = $this->pdo_user->prepare($str_sql);    
     $stmt->execute([$int_idFixed, $str_dbname, $str_dbtype, "1", "", $str_code]);
@@ -2410,7 +2410,7 @@ function fn_XDesigner_updateFileToInstanceTable($int_idFixed, $str_dbname, $str_
   else{
     $str_sql="UPDATE `instance` SET `Serialize`=? WHERE `id`=?;";    
     $stmt = $this->pdo_user->prepare($str_sql);          
-    $stmt->execute([$str_code, $int_id_record]);
+    $stmt->execute([$str_code, $int_idRecord]);
   }  
   
   return $int_idFixed;
@@ -2421,9 +2421,9 @@ function fn_XDesigner_dbTypeInstanceExist($int_idFixed, $str_dbtype){
   $stmt = $this->pdo_user->prepare($str_sql);        
   $stmt->execute([$int_idFixed, $str_dbtype]);
   $row=$stmt->fetch();        
-  $int_id_record=0;  
-  if($row){$int_id_record=$row["Id"];}
-  return $int_id_record;  
+  $int_idRecord=0;  
+  if($row){$int_idRecord=$row["Id"];}
+  return $int_idRecord;  
 }
 
 
@@ -2439,7 +2439,8 @@ function fn_XDesigner_dbTypeInstanceExist($int_idFixed, $str_dbtype){
 
   function fn_importAll(){
     
-    $this->fn_importComponentFiles();  
+    
+    $this->fn_importComponentFiles();      
     $this->fn_importInstanceFiles();
   }
 
@@ -2447,7 +2448,7 @@ function fn_XDesigner_dbTypeInstanceExist($int_idFixed, $str_dbtype){
     
     $arr_fobj = scandir($this->str_folderPathComponentXDesign);
     
-    foreach ($arr_fobj as $str_type) {      
+    foreach ($arr_fobj as $str_type) {
       $this->fn_importComponentFile($str_type);
     }   
   }
@@ -2466,30 +2467,31 @@ function fn_XDesigner_dbTypeInstanceExist($int_idFixed, $str_dbtype){
     if(!is_dir($str_path_folder)){
       return;
     }
-
+    
+    
     $str_file_path=$this->fn_getFilePathComponentRecordColumn($str_type, "Extend");                  
-    $str_Extend=$this->fn_getStringFromFile($str_file_path, "notset");            
+    $str_extend=$this->fn_getStringFromFile($str_file_path, "notset");            
 
     $str_file_path=$this->fn_getFilePathComponentRecordColumn($str_type, "ClassList");                  
-    $str_classList=$this->fn_getStringFromFile($str_file_path, "notset");     
+    $str_classList=$this->fn_getStringFromFile($str_file_path, "notset");                
     
     $str_file_path=$this->fn_getFilePathComponentRecordColumn($str_type, "component.js");                  
-    $str_Code=$this->fn_getStringFromFile($str_file_path, "");        
+    $str_code=$this->fn_getStringFromFile($str_file_path, "");        
     
     $str_file_path=$this->fn_getFilePathComponentRecordColumn($str_type, "CreatedDate");                    
     $str_createdDate=$this->fn_getStringFromFile($str_file_path, NULL);    
 
     $str_file_path=$this->fn_getFilePathComponentRecordColumn($str_type, "ModifiedDate");                      
-    $str_modifiedDate=$this->fn_getStringFromFile($str_file_path, NULL);              
+    $str_modifiedDate=$this->fn_getStringFromFile($str_file_path, NULL);                  
     
-    $this->fn_XDesginer_transferFileToComponentTable($str_type, $str_Extend, $str_classList, $str_Code, $str_createdDate, $str_modifiedDate);                  
+    $this->fn_XDesginer_transferFileToComponentTable($str_type, $str_extend, $str_classList, $str_code, $str_createdDate, $str_modifiedDate);                  
   }
 
-  function fn_exportComponentToFile($str_type, $str_Extend, $str_classList, $str_componentCode, $str_createdDate, $str_modifiedDate){      
+  function fn_exportComponentToFile($str_type, $str_extend, $str_classList, $str_code, $str_createdDate, $str_modifiedDate){      
     
     
     
-    if(empty($str_componentCode)){    //dont create folder etc if empty code
+    if(empty($str_code)){    //dont create folder etc if empty code
       //return;
     }
     
@@ -2506,29 +2508,26 @@ function fn_XDesigner_dbTypeInstanceExist($int_idFixed, $str_dbtype){
       }            
     }
     
-    $str_value=$str_Extend;  
+    $str_value=$str_extend;  
     $str_path_file=$str_path_folder."/"."Extend";
     $this->fn_deleteFile($str_path_file);
     if($str_value!=="notset"){    
       file_put_contents($str_path_file, $str_value);                  
-    }  
+    }      
 
-    $str_value=$str_classList;
+    $str_value=$str_classList;  
     $str_path_file=$str_path_folder."/"."ClassList";
     $this->fn_deleteFile($str_path_file);
-    if(!empty($str_value)){    
-      if($str_value!=="notset"){      
-        file_put_contents($str_path_file, $str_value);                  
-      }
-    }  
-
+    if($str_value!=="notset"){    
+      file_put_contents($str_path_file, $str_value);                  
+    }      
     
-    if(!empty($str_componentCode)){    //dont create folder etc if empty code    
+    if(!empty($str_code)){    //dont create folder etc if empty code    
     
       $str_file_path=$this->fn_getFilePathComponentRecordColumn($str_type, "component.js");                      
       $bln_exist=file_exists($str_file_path);    
       if(!$bln_exist){//If Folder does not exist        
-        $str_value=$str_componentCode;
+        $str_value=$str_code;
         if(!empty($str_value)){    
           $str_path_file=$str_path_folder."/"."component.js";
           file_put_contents($str_path_file, $str_value);
@@ -2551,8 +2550,6 @@ function fn_XDesigner_dbTypeInstanceExist($int_idFixed, $str_dbtype){
     }                   
 
   }
-
-
 
 function fn_exportInstanceToFile($str_name, $str_nameShortRecord, $str_type, $int_protectedPin, $int_palettePin, $str_lastVersionDate, $str_categoryList, $str_dependentId, $str_serialize, $str_createdDate, $str_modifiedDate, $int_idRecord){        
   
@@ -2584,8 +2581,6 @@ function fn_exportInstanceToFile($str_name, $str_nameShortRecord, $str_type, $in
   if(!empty($str_value)){//dont export default values    
     file_put_contents($str_path_file, $str_value);                  
   }
-
-  
   
   $int_value=$int_protectedPin;      
   $str_path_file=$str_path_folder."/"."ProtectedPin";
@@ -2650,20 +2645,19 @@ function fn_exportInstanceToFile($str_name, $str_nameShortRecord, $str_type, $in
   //*/
 }
 
-function fn_XDesginer_transferFileToComponentTable($str_dbtype, $str_typeExtend, $str_classList, $str_code,  $str_createdDate, $str_modifiedDate){        
-
+function fn_XDesginer_transferFileToComponentTable($str_dbtype, $str_extend, $str_classList, $str_code,  $str_createdDate, $str_modifiedDate){          
   
-  //$this->fn_addEcho("fn_XDesginer_transferFileToComponentTable");  
   
   $str_sql="DELETE FROM `component` WHERE `Type`=?";
   //$this->fn_addEcho("str_sql: ".$str_sql);
   $stmt = $this->pdo_user->prepare($str_sql);  
   $stmt->execute([$str_dbtype]);  
+
   
-  $str_sql="INSERT INTO `component` (`Type`, `Extend`, `ClassList`, `Code`, `CreatedDate`, `ModifiedDate`) SELECT ?, ?, ?, ?, ?, ?;";    
-  $stmt = $this->pdo_user->prepare($str_sql);
   
-  $stmt->execute([$str_dbtype, $str_typeExtend, $str_classList, $str_code, $str_createdDate, $str_modifiedDate]);
+  $str_sql="INSERT INTO `component` (`Type`, `Extend`, `ClassList`, `Code`, `CreatedDate`, `ModifiedDate`) SELECT ?,?, ?, ?, ?, ?;";    
+  $stmt = $this->pdo_user->prepare($str_sql);  
+  $stmt->execute([$str_dbtype, $str_extend, $str_classList, $str_code, $str_createdDate, $str_modifiedDate]);
   
 }   
 
@@ -2890,7 +2884,7 @@ function fn_importInstanceFiles(){
     }
     
     $str_file_path=$this->fn_getFilePathInstanceRecordColumn($int_idRecord, "Type");        
-    $str_type=$this->fn_getStringFromFile($str_file_path, "Tag");        
+    $str_type=$this->fn_getStringFromFile($str_file_path, "Tag");            
     
     $str_file_path=$this->fn_getFilePathInstanceRecordColumn($int_idRecord, "DependentId");        
     $str_dependentId=$this->fn_getStringFromFile($str_file_path,"");    

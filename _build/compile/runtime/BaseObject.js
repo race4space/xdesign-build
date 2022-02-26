@@ -617,7 +617,7 @@ class BaseObject extends LevelObject{
     fn_compileDependentClassList(){
         let str_val="";        
         str_val+=this.fn_listDependentClass();//Get List of Compone Ids
-        str_val=str_val.slice(0,-1);         
+        str_val=str_val.slice(0,-1);                 
         return str_val;
     }
     fn_listDependentClass(){        

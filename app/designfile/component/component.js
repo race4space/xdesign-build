@@ -260,8 +260,7 @@ class designfile extends AJAX {
             obj_post.RecordName=obj_instance.obj_design.str_name;
             obj_post.RecordShortName=obj_instance.obj_design.str_variableName;
             
-            obj_post.RecordType=obj_instance.obj_design.str_type;            
-            obj_post.RecordExtend=obj_instance.obj_design.str_classExtend;
+            obj_post.RecordType=obj_instance.obj_design.str_type;                        
             //console.log("obj_post.RecordExtend: " + obj_post.RecordExtend);
             obj_post.RecordId=obj_instance.obj_design.int_idRecord;                        
             obj_post.ProtectedPin=obj_instance.obj_design.bln_protectedPin;            
@@ -271,7 +270,6 @@ class designfile extends AJAX {
             obj_post.ModifiedDate=obj_instance.obj_design.str_modifiedDate;            
             obj_post.LastVersionDate=obj_instance.obj_design.str_lastVersionDate;            
             obj_post.CategoryList=obj_instance.obj_design.str_categoryList;            
-
             obj_post.CreateRelease=obj_project.obj_holder.bln_createRelease;                        
                         
             //get a list of your dependentid
@@ -284,21 +282,28 @@ class designfile extends AJAX {
             
             //get a list of your classlist
             let str_List1=obj_instance.obj_design.str_classList;            
+            
+            //console.log("START TYPE : " + obj_instance.obj_design.str_type);                       
             //console.log("str_List1: " + str_List1);                       
             
             //get a list of every classlist in your child arr item
             //does this need to run on every trip?                                                
             let str_List2=obj_instance.fn_compileDependentClassList();
+            str_List2="";
             //console.log("str_List2: " + str_List2);
 
             //get a comnbined list of the above
-            let str_List3=obj_shared.fn_formatUniqueList(str_List1 + "," + str_List2);            
-            str_List3=obj_shared.fn_remove(str_List3, "notset");
-            str_List3=obj_shared.fn_formatString(str_List3, obj_const.int_trimCommas);
+            let str_List3=str_List1 + "," + str_List2;            
+            str_List3=obj_shared.fn_remove(","+str_List3+",", ",notset,");
+            str_List3=obj_shared.fn_remove(","+str_List3+",", ","+obj_instance.obj_design.str_type+",");                        
+            str_List3=obj_shared.fn_trimComma(str_List3);            
+            str_List3=obj_shared.fn_formatUniqueList(str_List3);            
             //console.log("str_List3: " + str_List3);
-            
-            obj_post.ClassList=str_List3;            
-            //console.log("obj_post.ClassList: " + obj_post.ClassList)
+            //console.log("END  TYPE : " + obj_instance.obj_design.str_type);                       
+            obj_post.ClassList=str_List3;                        
+            obj_post.RecordExtend=obj_instance.obj_design.str_classExtend;            
+            obj_post.ClassController=obj_instance.obj_design.bln_classController;                                    
+
             obj_post.IsRoot=obj_instance.obj_holder.bln_isRoot;//Is Project Instance - set Current Project                        
             if(obj_projectTarget===obj_instance){
                 obj_post.ComponentCode=obj_instance.obj_holder.str_componentCode;                

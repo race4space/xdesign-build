@@ -210,8 +210,8 @@
                 return obj_ini;
               }      
 
-              let str_listIn="bln_isContainer,bln_maintainId,bln_registerAtContainer,bln_showToolbar,bln_themeType,bln_typeable,str_nameRegistrator,bln_registerAtProject,bln_palettePin,dataSVG,filterSVG,gridTemplate,str_categoryList,str_classList,str_classExtend,str_createdDate,str_idProject,str_modifiedDate,str_name,str_nameTheme,str_subType,str_tag,str_text,str_themeType,str_urlServer,str_urlServer, str_value,";              
-              let str_listInProjectOnly="bln_lockComponent,str_nameRelease,str_type,str_urlServer";
+              let str_listIn="bln_isContainer,bln_maintainId,bln_registerAtContainer,bln_showToolbar,bln_themeType,bln_typeable,str_nameRegistrator,bln_registerAtProject,bln_palettePin,dataSVG,filterSVG,gridTemplate,str_categoryList,str_createdDate,str_idProject,str_modifiedDate,str_name,str_nameTheme,str_subType,str_tag,str_text,str_themeType,str_urlServer,str_urlServer, str_value,";              
+              let str_listInProjectOnly="bln_classController,bln_lockComponent,str_classList,str_classExtend,str_nameRelease,str_type,str_urlServer";
               str_listIn+=str_listInProjectOnly;
 
               //obj_design.bln_useOwnButton
@@ -233,13 +233,26 @@
                 if(obj_shared.fn_inStr(","+str_name+",", ","+str_listInProjectOnly+",")){                
                   bln_disabled=true;
                 }            
-              }              
-
+              }                            
+              
               switch(str_name){                        
                 case "str_text": 
                   if(obj_selected.fn_getTypeable()){
                     bln_disabled=false;
                   }            
+                break;
+                
+                case "bln_classController":                                                                           
+                  if(!obj_selected.fn_proposeClassController()){
+                      bln_disabled=true;
+                  }
+                  break;
+                case "str_classList":                                                         
+                case "str_classExtend":                                    
+                  if(!obj_selected.fn_getClassController()){
+                    bln_disabled=true;
+                  }            
+                break;
               }
 
               obj_ini.obj_domProperty.disabled=bln_disabled;                    
