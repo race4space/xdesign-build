@@ -15,7 +15,7 @@
           }
 
           fn_onClick(){      
-            obj_project.fn_publishProject();
+            obj_project.fn_releaseProject();
           }
         }//END CLS
         //END TAG

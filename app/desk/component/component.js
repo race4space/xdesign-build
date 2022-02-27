@@ -20,14 +20,14 @@
                   this.obj_holder.bln_debugServer=false;
                 }
                 fn_onLoad(){ //design project on load
-                  //console.log("ON LOAD");
+                  console.log("ON LOAD");
                   super.fn_onLoad();                        
                   this.fn_runAction("GetListProgram", {});            
                 }  
                 fn_runAction(str_action,  obj_ini){         
 
                   let obj_serverManager=this.fn_getComponent("DeskServerManager");     
-                  
+                  console.log("obj_serverManager: " + obj_serverManager);
                   if(!obj_serverManager){return;}     
                   
                   if(!obj_ini){obj_ini=new Object;}

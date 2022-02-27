@@ -195,7 +195,11 @@ class xdesign1{
         break;
         case "getListProjectInCategory":                  
           $this->fn_getListProjectInCategory();          
-        break;                
+        break;      
+        
+        case "releaseProject":
+          $this->fn_releaseProject();
+        break;        
         case "save":
           $this->fn_saveComponent();
         break;        
@@ -796,6 +800,19 @@ class xdesign1{
       $obj_ini->bln_version=$bln_version;                    
       $this->fn_packageProject($obj_ini);
     }
+
+    function fn_releaseProject(){
+
+      $this->obj_post->CreateRelease=true;          
+      
+      $obj_ini=new stdClass();
+      $obj_ini->RecordId=$this->obj_post->RecordId;        
+      $obj_ini->bln_version=false;                    
+      $this->fn_packageProject($obj_ini);
+
+    }
+    
+          
     
     
 
@@ -1312,18 +1329,31 @@ heredoc;
       //Remove ExisitngEntries In Instance Link
       
       //create independent reelase 
+      
       if($bln_release){    
         
-        $str_sql = "SELECT `instance`.`Id`, `instance`.`Name` AS `Name` FROM `categorylink` JOIN `instance` ON `categorylink`.`InstanceId`=`instance`.`id` WHERE `CategoryId`=? AND `CategoryId`<>`InstanceId`;";
+        //*
+        //$str_sql = "SELECT `instance`.`Id`, `instance`.`Name` AS `Name` FROM `categorylink` JOIN `instance` ON `categorylink`.`InstanceId`=`instance`.`id` WHERE `CategoryId`=? AND `CategoryId`<>`InstanceId`;";
+        $str_sql = "SELECT `instance`.`Id`, `instance`.`Name` AS `Name` FROM `instance` WHERE `instance`.`Id`=?";
+        $this->fn_addEcho($str_sql);                        
+        //$this->fn_addEcho("int_idRecord: ".$int_idRecord);                        
         $stmt = $this->pdo_user->prepare($str_sql);
         $stmt->execute([$int_idRecord]);      
-        while($row=$stmt->fetch()){                                   
-          $str_componentName=$row["Name"];          
+        //while($row=$stmt->fetch()){                         
+          $row=$stmt->fetch();            
+          if($row){                
+          
+          //*                    
+          $str_componentName=$row["Name"];                    
+          $this->fn_addEcho("str_componentName: ".$str_componentName);                        
+          
           if(empty($str_componentNameShort)){
             $str_componentNameShort=$str_componentName;        
           }
           $str_componentNameShort=str_replace(' ', '', strtolower($str_componentNameShort));                          
           $obj_path_instancelink=$this->fn_createPackageFolder($int_idRecord, $str_componentNameShort);                               
+          //$this->fn_addEcho("obj_path_instancelink: ".$obj_path_instancelink->obj_pathAppName->str_folderPathAppName);                        
+          
           //DELETE UNDEEDED RUCKSACK AND COMPONENT
           $this->fn_deleteFolder($obj_path_instancelink->obj_pathAppName->str_folderPathRucksack);        
           $this->fn_deleteFolder($obj_path_instancelink->obj_pathAppName->str_folderPathComponent);        
@@ -1332,7 +1362,13 @@ heredoc;
           $bln_empty=$this->fn_isEmptyFolder($obj_path_instancelink->obj_pathAppName->str_folderPathAppName);          
           if($bln_empty){$this->fn_deleteFolder($obj_path_instancelink->obj_pathAppName->str_folderPathAppName);}
           //DELETE FOLDER IF EXMPTY         
-        }
+            }
+          //*/
+        
+        //}
+        //*/
+
+        $this->fn_addEcho("obj_post->RecordShortName: ".$obj_post->RecordShortName);                        
 
         //*   
         //Parent of current subdomain.        
@@ -1356,7 +1392,7 @@ heredoc;
         
         
         $str_sql = "SELECT * FROM `control`.`desktop` WHERE `Subdomain`=:Subdomain;";                      
-        //$this->fn_addEcho($str_sql);                        
+        $this->fn_addEcho($str_sql);                        
         $stmt = $this->obj_loginpanel->pdo_standard->prepare($str_sql);
         $stmt->execute([
           'Subdomain' => $obj_post->RecordShortName
@@ -1366,7 +1402,7 @@ heredoc;
         }
         else{
           $str_sql = "INSERT INTO `control`.`desktop` (`Subdomain`)  VALUES (:Subdomain);";                      
-          //$this->fn_addEcho($str_sql);                        
+          $this->fn_addEcho($str_sql);                        
           $stmt = $this->obj_loginpanel->pdo_standard->prepare($str_sql);
           $stmt->execute([
             'Subdomain' => $obj_post->RecordShortName

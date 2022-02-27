@@ -258,7 +258,7 @@ class designfile extends AJAX {
         if(obj_instance){            
             obj_post.DesignId=obj_instance.obj_design.str_idXDesign;            
             obj_post.RecordName=obj_instance.obj_design.str_name;
-            obj_post.RecordShortName=obj_instance.obj_design.str_variableName;
+            obj_post.RecordShortName=obj_instance.obj_design.str_variableName;            
             
             obj_post.RecordType=obj_instance.obj_design.str_type;                        
             //console.log("obj_post.RecordExtend: " + obj_post.RecordExtend);
@@ -271,6 +271,7 @@ class designfile extends AJAX {
             obj_post.LastVersionDate=obj_instance.obj_design.str_lastVersionDate;            
             obj_post.CategoryList=obj_instance.obj_design.str_categoryList;            
             obj_post.CreateRelease=obj_project.obj_holder.bln_createRelease;                        
+            //console.log("obj_post.CreateRelease: " + obj_post.CreateRelease);
                         
             //get a list of your dependentid
             //does this need to run on every trip?                                                

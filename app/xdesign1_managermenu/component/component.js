@@ -127,6 +127,8 @@
             obj_row=arr_row[i];      
       
             if(obj_shared.fn_isObjectEmpty(obj_row)){continue;}//RowData Can contain a single empty object                             
+
+            
             
             
             let str_color="orange";              
@@ -134,18 +136,25 @@
             let bln_valid=obj_shared.fn_validDate(str_LastVersionDate);
             if(bln_valid ||obj_row.InstanceType==="category"){
               str_color="white";
-            }
+            }            
             
             obj_ini=new Holder;            
+            obj_ini.obj_design.str_LastVersionDate=str_LastVersionDate;
+            obj_ini.obj_design.bln_dynamicPin=true;                                        
             obj_ini.obj_design.bln_dynamicPin=true;                                        
             obj_ini.obj_design.str_text=obj_row.InstanceName;
             obj_ini.obj_design.str_type="button";
             obj_ini.obj_design.int_idRecordTarget=obj_row.InstanceId;
             obj_ini.obj_design.str_typeRecord=obj_row.InstanceType;
             obj_ini.obj_design.str_nameEventClick=obj_project.obj_holder.str_prefix + "myDesignerButtonClick";            
+            obj_ini.LastVersionDate=str_LastVersionDate;
             this.fn_formatRecordSetItem(obj_ini, obj_row);
             obj_item=obj_container.fn_addItem(obj_ini);
             obj_item.fn_setColor(str_color);
+            if(obj_item.obj_design.bln_disabled){
+              obj_item.fn_setDisabled(true);
+            }
+            
           }
         }
 

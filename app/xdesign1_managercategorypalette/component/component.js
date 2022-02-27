@@ -36,6 +36,14 @@
               }
       
               fn_formatRecordSetItem(obj_ini, obj_row){
+
+                let str_LastVersionDate=obj_ini.obj_design.str_LastVersionDate;
+                let bln_valid=obj_shared.fn_validDate(str_LastVersionDate);                
+                if(!bln_valid){      
+                  obj_ini.obj_design.bln_disabled=true;                
+                }            
+                
+                
                 
                 obj_ini.obj_design.str_name="xdesign1_buttonAddPaletteItem" + obj_row.InstanceName;            
                 obj_ini.obj_design.str_valueEventClick="fn_addComponentItem";            

@@ -12,8 +12,8 @@ class accordion extends component {
         
         //START INITIALIZE STYLE              
         if(this.obj_domStyle.width===undefined){this.obj_domStyle.width="100%";}            
-        if(this.obj_domStyle.padding===undefined){this.obj_domStyle.padding="10px";}            
-        if(this.obj_domStyle.display===undefined){this.obj_domStyle.display="block";}            
+        if(this.obj_domStyle.padding===undefined){this.obj_domStyle.padding="10px";}
+        if(this.obj_domStyle.display===undefined){this.obj_domStyle.display="block";}
         /*
         if(this.obj_domStyle.display===undefined){this.obj_domStyle.display="flex";}                    
         this.fn_setStyleProperty("align-items", "flex-start");

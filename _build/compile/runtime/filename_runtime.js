@@ -20,11 +20,14 @@ class Path {
   fn_getAppPath(str_name_app){    
       return this.str_path_folder_app+"/"+str_name_app;
   }
-  fn_getURLAssetFile(str_name_app, str_name_file){    
+  fn_getURLAssetFile(str_name_app, str_name_file){          
       return this.fn_getAppPath(str_name_app)+"/"+this.str_name_folder_asset+"/"+str_name_file;        
   }  
   fn_getURLServerFile(str_name_app, str_name_file){
-      return this.fn_getAppPath(str_name_app)+"/"+this.str_name_folder_server+"/"+str_name_file;            
+      
+      let str_value=this.fn_getAppPath(str_name_app)+"/"+this.str_name_folder_server+"/"+str_name_file;            
+      //console.log("str_value: " + str_value);
+      return str_value;
   }
 }
 //END Path.js

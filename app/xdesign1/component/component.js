@@ -402,25 +402,8 @@
     //END COMPONENT EVENT HANDLING   
     
 
-    /////////////////////  
-    fn_setVersionButton(bln_createRelease=false){
-      this.obj_holder.bln_createRelease=bln_createRelease;
-      let obj_item=this.fn_getComponent("xdesign1_publishProject");            
-      if(!obj_item){return;}              
-
-      let bln_value=false;
-      if(obj_item){obj_item.fn_setDisplay(bln_value)};            
-      if(obj_item){obj_item.fn_setEnabled(bln_value)};                        
-
-      let str_text="Version";      
-      if(this.obj_holder.bln_createRelease){
-        bln_value=true;
-        str_text="Release";
-      }
-      if(obj_item){obj_item.fn_setDisplay(bln_value)};            
-      if(obj_item){obj_item.fn_setEnabled(bln_value)};                        
-      obj_item.fn_setText(str_text);        
-    }
+    /////////////////////     
+    
     //START Parent XDesginInterface LoginPanel Template 
     fn_navigateURLLogin(){
       let int_pos=window.location.href.indexOf("lokal");//localhost                   

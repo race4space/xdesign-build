@@ -99,8 +99,14 @@
                 /////////////
                 obj_item=this.obj_holder.obj_xdesign1_deleteproject;                        
                 if(obj_item){obj_item.fn_setEnabled(bln_value)};                            
-                if(obj_item){obj_item.fn_setDisplay(bln_value)};                            
+                if(obj_item){obj_item.fn_setDisplay(bln_value)};                                                       
                 
+                if(obj_shared.fn_validDate(obj_projectTarget.obj_design.str_lastVersionDate)){      
+                  obj_item=this.obj_holder.obj_xdesign1_publishproject;       
+                  if(obj_item){obj_item.fn_setDisplay(true)};            
+                  if(obj_item){obj_item.fn_setEnabled(true)};                        
+                  if(obj_item){obj_item.fn_setText("Release")};                        
+                }            
                 
               }
             }            
@@ -154,7 +160,12 @@
 
             obj_project.fn_close();
 
-            obj_project.fn_runAction("releaseProject");
+            obj_projectTarget.obj_holder.bln_createRelease=true;            
+            
+            let obj_ini=new Object;
+            obj_ini.obj_instance=obj_projectTarget;                                                     
+            obj_project.fn_runAction("releaseProject", obj_ini);
+            
           }
           fn_onReleaseProject(obj_post){
             console.log("Released Project: " + obj_projectTarget.obj_design.str_name);                        
@@ -170,7 +181,7 @@
 
             obj_project.fn_close();
 
-            obj_projectTarget.obj_holder.bln_createRelease=true;
+            //obj_projectTarget.obj_holder.bln_createRelease=true;
       
             
             let obj_serverManager=obj_project.obj_holder.obj_xdesign1_designfile;
@@ -185,8 +196,7 @@
             console.log("Published Project: " + obj_projectTarget.obj_design.str_name);            
             //console.log("URLProjectVersion: " + obj_post.URLProjectVersion);                                    
 
-            //obj_projectTarget.obj_design.str_lastVersionDate=obj_post.LastVersionDate;
-            
+            obj_projectTarget.obj_design.str_lastVersionDate=obj_post.LastVersionDate;                        
             
             
             obj_project.fn_onStateChange();            
@@ -280,11 +290,33 @@
             obj_project.fn_consoleLog("Loaded: " + obj_post.RecordName);
             
             //console.log("ReleaseReady: " + obj_post.ReleaseReady);
-            obj_project.fn_setVersionButton(obj_post.ReleaseReady);
+            this.fn_setVersionButton(obj_post.ReleaseReady);
             
             obj_project.fn_onStateChange();      
             
           }    
+          fn_setVersionButton(bln_createRelease=false){
+            return;
+          }
+
+          xfn_setVersionButton(bln_createRelease=false){
+            obj_project.obj_holder.bln_createRelease=bln_createRelease;
+            let obj_item=this.fn_getComponent("xdesign1_publishProject");            
+            if(!obj_item){return;}              
+      
+            let bln_value=false;
+            if(obj_item){obj_item.fn_setDisplay(bln_value)};            
+            if(obj_item){obj_item.fn_setEnabled(bln_value)};                        
+      
+            let str_text="Version";      
+            if(obj_project.obj_holder.bln_createRelease){
+              bln_value=true;
+              str_text="Release";
+            }
+            if(obj_item){obj_item.fn_setDisplay(bln_value)};            
+            if(obj_item){obj_item.fn_setEnabled(bln_value)};                        
+            obj_item.fn_setText(str_text);        
+          }
           fn_onPaletteItemSelected(){
             //console.log("fn_onPaletteItemSelected");            
           }                    
