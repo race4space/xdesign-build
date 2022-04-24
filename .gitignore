@@ -1,0 +1,6 @@
+*.nosync
+server-key.php
+build/
+vendor/
+package/
+sendgrid.env
