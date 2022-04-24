@@ -1,0 +1,207 @@
+gcloud compute ssh --zone "europe-west1-c" "vm-myrsstestdomain-belgium" --project "spartan-context-260412"
+
+**********UPGRADE LINUX
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get dist-upgrade
+sudo apt autoremove
+**********UPGRADE LINUX
+
+cd /var/www/html/vm-racespace/mycode.buzz/
+cd /var/www/html/vm-racespace/xdesign-build
+cd /var/www/html/vm-myrsstestdomain/
+cd /var/www/html/vm-myrsstestdomain/myrsstestdomain.com/rss/casefunnel
+sudo nano server-key.php
+
+**********RESTART APACHE
+sudo systemctl reload apache2
+sudo apache2ctl configtest
+sudo service apache2 restart  
+**********RESTART APACHE
+
+***************NEXT STEPS
+1. All paths to server should be to warehouse/server/componentname.php
+2. When compiling or adding  a instance to a project, add the component server folder to the project warehouse foloder 
+
+3.When building  or verisoning
+copy warehouse folder (if any) into the target folder
+copy contents of root folder  (if any) into the target folder
+
+4. When releasing 
+Create a folder named after the component name, 1 level from the subdomain root.
+Place the verison folder here.
+***************NEXT STEPS
+
+
+--------------------CREATE PHP NFO FILE
+<?php
+phpinfo();
+?>
+
+ls -l
+/etc/apache2/sites-available 
+
+If must rebuild on server 
+---------------------
+sudo rm -R /var/www/html/vm-racespace/xdesign
+sudo -u www-data git clone git@github.com:race4space/xdesign.git
+
+sudo rm -R /var/www/html/vm-racespace/xdesign-build
+sudo -u www-data git clone git@github.com:race4space/xdesign-build.git
+
+sudo rm -R /var/www/html/vm-racespace/mycode.buzz
+sudo -u www-data git clone git@github.com:race4space/mycode.buzz.git
+
+sudo rm -R /var/www/html/vm-myrsstestdomain
+sudo -u www-data git clone git@github.com:race4space/vm-myrsstestdomain.git
+
+https://xdesign-build.mycode.buzz/github.php
+sudo -u www-data php github.php
+
+cd /var/www/html/vm-myrsstestdomain
+
+*********RUN LINUX RECURSIVE COMPOSER UPDATE INSTALL PRODUCTION
+cd /var/www/html/vm-myrsstestdomain/myrsstestdomain.com
+cd /var/www/html/vm-racespace/mycode.buzz
+cd /var/www/html/vm-racespace/xdesign-build
+sudo find . -maxdepth 10 -name composer.json -printf '%h\n' -execdir composer install \;
+https://www.bram.us/2014/02/16/installing-dependencies-in-all-subfolder-organised-projects/
+*********RUN LINUX RECURSIVE COMPOSER UPDATE INSTALL PRODUCTION
+
+*********RUN WINDOWS RECURSIVE COMPOSER UPDATE DEVELOPMENT
+D:\var\www\html\vm-myrsstestdomain\myrsstestdomain.com
+D:\var\www\html\vm-racespace\mycode.buzz
+clear;$cpath=Get-Location;foreach ($file in Get-Childitem -Include composer.json -Recurse | ? {$_.FullName -notmatch 'vendor'} ) {$file.Directory.FullName;Set-Location -Path $file.Directory.FullName;composer update; }Set-Location -Path $cpath;
+*********RUN WINDOWS RECURSIVE COMPOSER UPDATE DEVELOPMENT
+
+
+To create/edit server-key file
+---------------------
+cd /var/www/html/vm-racespace/mycode.buzz/app/xdesign/server
+cd /var/www/html/vm-racespace/app/xdesign-build/server
+sudo -u www-data nano server-key.php
+
+
+Dump/Install the Database
+---------------------
+Dont forget to dump and store  the xdesign.zip sql
+
+mysql -u chris.owtram@gmail.com -p
+
+mysql -u remote_user -h localhost -p test < xdesign.sql
+
+mysqldump -u remote_user -h localhost -p --all-databases > all_databases.sql
+mysql -u remote_user -h 146.148.26.192 -p < all_databases.sql
+
+mysqldump -u remote_user -h localhost -p xdesign > xdesign.sql
+mysql -u remote_user -h 146.148.26.192  -p xdesign < xdesign.sql
+
+mysqldump -u chris.owtram@gmail.com -h localhost -p --all-databases > all_databases.sql
+
+When deplying for the first time, its necessary to create and copy the index.html and mjs 
+---------------------
+
+VHOSTS
+Subdomain
+Subdomain
+cd /var/www/html/vm-racespace/
+sudo mkdir xdesign.mycode.buzz
+cd /var/www/html/vm-racespace/xdesign.mycode.buzz
+sudo nano index.html
+
+cd /etc/apache2/sites-available
+sudo cp test.mycode.buzz.conf xdesign.mycode.buzz.conf
+sudo nano xdesign.mycode.buzz.conf
+sudo nano xdesign.mycode.buzz-le-ssl.conf
+sudo nano xdesign-build.mycode.buzz-le-ssl.conf
+
+
+change test.mycode.buzz to xdesign.mycode.buzz
+
+sudo nano xdesign.mycode.buzz.conf
+
+sudo a2dissite xdesign.mycode.buzz
+sudo a2ensite xdesign.mycode.buzz
+sudo rm -R xdesign.mycode.buzz
+
+sudo systemctl reload apache2
+sudo apache2ctl configtest
+sudo service apache2 restart  
+
+///////////////////SAMPLE VHOST FILE
+<VirtualHost *:80>
+     ServerAdmin webmaster@mycode.buzz
+     ServerName xdesign-build.mycode.buzz
+     DocumentRoot /var/www/html/vm-racespace/xdesign-build
+     
+
+     <Directory /var/www/html/vm-racespace/xdesign-build>
+        Options -Indexes +FollowSymLinks
+        AllowOverride All
+    </Directory>
+    
+     ErrorLog ${APACHE_LOG_DIR}/xdesign.mycode.buzz-error.log
+    CustomLog ${APACHE_LOG_DIR}/xdesign.mycode.buzz-access.log combined
+</VirtualHost>
+///////////////////SAMPLE VHOST FILE
+
+VIRTUAL HOST ALIAS
+---------------------
+https://www.digitalocean.com/community/questions/automatically-manage-subdomains-without-editing-vhosts-apache
+https://www.digitalocean.com/community/tutorials/how-to-acquire-a-let-s-encrypt-certificate-using-dns-validation-with-acme-dns-certbot-on-ubuntu-18-04
+
+sudo certbot certonly --test-cert --manual --manual-auth-hook /etc/letsencrypt/acme-dns-auth.py --preferred-challenges dns --debug-challenges -d \*.mycode.buzz -d mycode.buzz
+
+mod_vhost_alias
+
+sudo a2enmod vhost_alias
+sudo systemctl restart apache2
+cd /etc/apache2/mods-enabled
+
+<VirtualHost *:80>
+     ServerAdmin webmaster@mycode.buzz
+     ServerName %1.mycode.buzz
+     DocumentRoot /var/www/html/vm-racespace/%1/hotrelease         
+</VirtualHost>
+
+---------------------
+
+
+login to clodflare and create a name "xdesign" pointing to ip address e.g. 146.148.26.192 proxied
+or alter windows local host file
+C:\Windows\System32\drivers\etc
+Add to letsecncryprt
+sudo certbot --apache
+https://www.digitalocean.com/community/tutorials/how-to-secure-apache-with-let-s-encrypt-on-ubuntu-20-04
+
+To add webhook to github
+---------------------
+https://mycode.buzz/github.php
+https://xdesign-build.mycode.buzz//github.php
+
+
+********************Edit PHP INI
+copy file
+cd /etc/php/7.4/apache2
+sudo -u www-data cp /etc/php/7.4/apache2/php.ini /var/www/html/vm-racespace/mycode.buzz/copy
+https://mycode.buzz/copy/php.ini
+sudo cp /etc/php/7.4/apache2/php.ini /etc/php/7.4/apache2/php.ini-bck
+sudo cp -r /var/www/html/vm-racespace/xdesign-build/upload/php.ini /etc/php/7.4/apache2/php.ini
+
+sudo apache2ctl configtest
+sudo systemctl reload apache2
+https://xdesign-build.mycode.buzz/phpinfo.php
+
+********************Edit PHP INI
+
+********************Edit APACHE CONF
+copy file
+cd /etc/apache2/
+
+sudo -u www-data cp /etc/apache2/apache2.conf /var/www/html/vm-racespace/mycode.buzz/copy/apache2.conf.txt
+https://mycode.buzz/copy/apache2.conf.txt
+sudo cp /etc/apache2/apache2.conf /etc/apache2/apache2.conf.bck
+sudo cp -r /var/www/html/vm-racespace/xdesign-build/upload/apache2.conf /etc/apache2/apache2.conf
+********************Edit APACHE CONF
+
+
