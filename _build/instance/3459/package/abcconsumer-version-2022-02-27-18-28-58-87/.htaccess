@@ -1,5 +1,0 @@
-# MIME TYPES
-<IfModule mod_mime.c>
-    AddType text/javascript .mjs
-</IfModule>
-ErrorDocument 404 /404.html

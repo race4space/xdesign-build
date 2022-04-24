@@ -85,9 +85,7 @@ class loginpanel{
       return $this->fn_dataConnect($obj_connect);                              
     }
     
-    function fn_execute() {     
-
-      
+    function fn_execute() {           
       
       $obj_post=$this->obj_post;
       if(empty($obj_post->Execute)){$obj_post->Execute=false;}                       
